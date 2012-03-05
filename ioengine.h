@@ -1,6 +1,8 @@
 #ifndef FIO_IOENGINE_H
 #define FIO_IOENGINE_H
 
+#include <time.h>
+
 #define FIO_IOOPS_VERSION	13
 
 enum {
@@ -50,6 +52,8 @@ struct io_u {
 	void *buf;
 	unsigned long buflen;
 	unsigned long long offset;
+	unsigned long long orig_offset;
+    time_t time_version;
 
 	/*
 	 * Initial seed for generating the buffer contents

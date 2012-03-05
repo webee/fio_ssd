@@ -1,6 +1,7 @@
 #ifndef FIO_VERIFY_H
 #define FIO_VERIFY_H
 
+#include <time.h>
 #include <stdint.h>
 
 #define FIO_HDR_MAGIC	0xacca
@@ -30,9 +31,11 @@ enum {
 struct verify_header {
 	uint16_t magic;
 	uint16_t verify_type;
+	uint64_t offset;
 	uint32_t len;
 	uint64_t rand_seed;
 	uint32_t crc32;
+    time_t time_version;
 };
 
 struct vhdr_md5 {

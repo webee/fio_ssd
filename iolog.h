@@ -1,6 +1,7 @@
 #ifndef FIO_IOLOG_H
 #define FIO_IOLOG_H
 
+#include <time.h>
 #include "lib/ieee754.h"
 
 /*
@@ -67,6 +68,7 @@ struct io_piece {
 	unsigned long long offset;
 	unsigned long len;
 	unsigned int flags;
+    time_t time_version;
 	enum fio_ddir ddir;
 	union {
 		unsigned long delay;

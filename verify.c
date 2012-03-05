@@ -573,7 +573,10 @@ static int verify_io_u_md5(struct verify_header *hdr, struct vcont *vc)
 		.hash = hash,
 	};
 
-	dprint(FD_VERIFY, "md5 verify io_u %p, len %u\n", vc->io_u, hdr->len);
+	//dprint(FD_VERIFY, "md5 verify io_u %p, hdr offset %0.8llx, io_u offset %0.8llx/%0.8llx, len %u\n",
+     //       vc->io_u, hdr->offset, vc->io_u->offset, vc->io_u->orig_offset, hdr->len);
+	dprint(FD_VERIFY, "md5 verify io_u %p, hdr offset %0.8llx, io_u offset %0.8llx, len %u\n",
+            vc->io_u, hdr->offset, vc->io_u->offset, hdr->len);
 
 	fio_md5_init(&md5_ctx);
 	fio_md5_update(&md5_ctx, p, hdr->len - hdr_size(hdr));
@@ -701,6 +704,26 @@ int verify_io_u(struct thread_data *td, struct io_u *io_u)
 				hdr->magic, FIO_HDR_MAGIC,
 				io_u->file->file_name,
 				io_u->offset + hdr_num * hdr->len, hdr->len);
+			return EILSEQ;
+		}
+
+        //uint64_t offset = io_u->orig_offset + hdr_num * hdr_inc;
+        uint64_t offset = io_u->offset + hdr_num * hdr_inc;
+		if (hdr->offset != offset) {
+			log_err("verify: bad offset header 0x%0.8llx, wanted 0x%0.8llx at "
+				"file %s, length %u\n",
+				hdr->offset, offset,
+				io_u->file->file_name,
+				hdr->len);
+			return EILSEQ;
+		}
+
+		if (hdr->time_version != io_u->time_version) {
+			log_err("verify: bad version header %u, wanted %u at "
+				"file %s, length %u\n",
+				hdr->time_version, io_u->time_version,
+				io_u->file->file_name,
+				hdr->len);
 			return EILSEQ;
 		}
 
@@ -857,6 +880,9 @@ static void populate_hdr(struct thread_data *td, struct io_u *io_u,
 
 	hdr->magic = FIO_HDR_MAGIC;
 	hdr->verify_type = td->o.verify;
+	hdr->offset = io_u->offset + header_num * header_len;
+    bcopy(&io_u->time_version, &hdr->time_version, sizeof(time_t));
+    dprint(FD_VERIFY, "fill header time version %u/%u\n", hdr->time_version, io_u->time_version);
 	hdr->len = header_len;
 	hdr->rand_seed = io_u->rand_seed;
 	hdr->crc32 = fio_crc32c(p, offsetof(struct verify_header, crc32));
@@ -866,8 +892,8 @@ static void populate_hdr(struct thread_data *td, struct io_u *io_u,
 	data = p + hdr_size(hdr);
 	switch (td->o.verify) {
 	case VERIFY_MD5:
-		dprint(FD_VERIFY, "fill md5 io_u %p, len %u\n",
-						io_u, hdr->len);
+		dprint(FD_VERIFY, "fill md5 io_u %p, offset %0.8llx, len %u\n",
+						io_u, hdr->offset, hdr->len);
 		fill_md5(hdr, data, data_len);
 		break;
 	case VERIFY_CRC64:
@@ -966,9 +992,13 @@ int get_next_verify(struct thread_data *td, struct io_u *io_u)
 	if (ipo) {
 		td->io_hist_len--;
 
-		io_u->offset = ipo->offset;
+		//io_u->offset = ipo->offset;
+		io_u->offset = (ipo->offset + ipo->len)%td->o.size;
+		//io_u->offset = (ipo->offset + ipo->len);
+		//io_u->orig_offset = ipo->offset;
 		io_u->buflen = ipo->len;
 		io_u->file = ipo->file;
+        bcopy(&ipo->time_version, &io_u->time_version, sizeof(time_t));
 
 		if (ipo->flags & IP_F_TRIMMED)
 			io_u->flags |= IO_U_F_TRIMMED;

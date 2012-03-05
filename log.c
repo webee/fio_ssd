@@ -15,8 +15,11 @@ int log_valist(const char *str, va_list args)
 
 	if (log_syslog)
 		syslog(LOG_INFO, "%s", buffer);
-	else
+	else {
+        if (f_out != stderr)
+            len = fwrite(buffer, len, 1, stderr);
 		len = fwrite(buffer, len, 1, f_out);
+    }
 
 	return len;
 }
@@ -43,8 +46,11 @@ int log_local(const char *format, ...)
 
 	if (log_syslog)
 		syslog(LOG_INFO, "%s", buffer);
-	else
+	else {
+        if (f_out != stderr)
+            len = fwrite(buffer, len, 1, stderr);
 		len = fwrite(buffer, len, 1, f_out);
+    }
 
 	return len;
 }

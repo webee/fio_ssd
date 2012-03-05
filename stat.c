@@ -1101,8 +1101,9 @@ void show_run_stats(void)
 
 	if (is_backend)
 		fio_server_send_du();
-	else if (!terse_output)
+	else if (!terse_output) {
 		show_disk_util(0);
+    }
 
 	free_disk_util();
 
