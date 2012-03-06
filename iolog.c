@@ -189,7 +189,10 @@ void log_io_piece(struct thread_data *td, struct io_u *io_u)
 	ipo->file = io_u->file;
 	ipo->offset = io_u->offset;
 	ipo->len = io_u->buflen;
-    bcopy(&io_u->time_version, &ipo->time_version, sizeof(time_t));
+    if (td->o.verify_inner) {
+        memcpy(&ipo->time_version, &io_u->time_version, sizeof(struct timeval));
+        dprint(FD_VERIFY, "fill log piece time version %u/%u\n", ipo->time_version.tv_sec, ipo->time_version.tv_usec);
+    }
 
 	if (io_u_should_trim(td, io_u)) {
 		flist_add_tail(&ipo->trim_list, &td->trim_list);

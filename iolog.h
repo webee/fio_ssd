@@ -68,7 +68,7 @@ struct io_piece {
 	unsigned long long offset;
 	unsigned long len;
 	unsigned int flags;
-    time_t time_version;
+    struct timeval time_version;
 	enum fio_ddir ddir;
 	union {
 		unsigned long delay;

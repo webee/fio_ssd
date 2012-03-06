@@ -128,3 +128,5 @@ install: $(PROGS) $(SCRIPTS)
 ifneq ($(wildcard .depend),)
 include .depend
 endif
+
+.PHONY: clean

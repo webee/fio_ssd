@@ -1,0 +1,12 @@
+[global]
+bs=4k
+ioengine=sync
+size=10m
+direct=1
+filename=/data1/xxx
+
+[write]
+verify=md5
+verify_inner
+#verify_pattern=0x41
+rw=write

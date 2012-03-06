@@ -1518,6 +1518,13 @@ static struct fio_option options[FIO_MAX_OPTS] = {
 		},
 	},
 	{
+		.name	= "verify_inner",
+		.type	= FIO_OPT_STR_SET,
+		.off1	= td_var_offset(verify_inner),
+		.help	= "Verify disk inner error",
+		.parent = "verify",
+	},
+	{
 		.name	= "do_verify",
 		.type	= FIO_OPT_BOOL,
 		.off1	= td_var_offset(do_verify),

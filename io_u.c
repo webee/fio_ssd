@@ -1226,7 +1226,10 @@ struct io_u *get_io_u(struct thread_data *td)
 
 		if (io_u->ddir == DDIR_WRITE) {
 			if (td->o.verify != VERIFY_NONE) {
-                io_u->time_version = time(NULL);
+                if (td->o.verify_inner) {
+                    fio_gettime(&io_u->time_version, NULL);
+                    dprint(FD_VERIFY, "get time version %u/%u\n", io_u->time_version.tv_sec, io_u->time_version.tv_usec);
+                }
 				populate_verify_io_u(td, io_u);
             }else if (td->o.refill_buffers) {
 				io_u_fill_buffer(td, io_u,
@@ -1251,8 +1254,9 @@ struct io_u *get_io_u(struct thread_data *td)
 out:
 	assert(io_u->file);
 	if (!td_io_prep(td, io_u)) {
-		if (!td->o.disable_slat)
+		if (!td->o.disable_slat) {
 			fio_gettime(&io_u->start_time, NULL);
+        }
 		if (do_scramble)
 			small_content_scramble(io_u);
 		return io_u;

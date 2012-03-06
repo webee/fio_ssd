@@ -129,6 +129,7 @@ struct thread_options {
 	unsigned int pre_read;
 	unsigned int sync_io;
 	unsigned int verify;
+	unsigned int verify_inner;
 	unsigned int do_verify;
 	unsigned int verifysort;
 	unsigned int verify_interval;
