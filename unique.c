@@ -42,7 +42,7 @@ load_unique(struct thread_data *td, const char *name)
     struct unique_ops *ops, *ret;
     char unique[NAME_LEN];
 
-    dprint(FD_VERIFY, "uniuqe %s loading.\n", td->unique_ops->name);
+    dprint(FD_VERIFY, "uniuqe %s loading.\n", name);
 
     strncpy(unique, name, sizeof(unique)-1);
 

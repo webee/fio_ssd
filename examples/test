@@ -1,7 +1,8 @@
 [global]
 bs=4k
 ioengine=sync
-size=10m
+unique=time
+size=16m
 direct=1
 filename=/data1/xxx
 

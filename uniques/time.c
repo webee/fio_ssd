@@ -18,7 +18,8 @@ fio_time_copy(struct fio_unique *udst, struct fio_unique *usrc)
 static char *
 fio_time_to_string(struct fio_unique *u, char *s)
 {
-    snprintf(s, STRING_LEN, "%u/%u", u->time.tv_sec, u->time.tv_usec);
+    snprintf(s, STRING_LEN, "%lu/%lu",
+            (unsigned long)(u->time.tv_sec), (unsigned long)(u->time.tv_usec));
     s[STRING_LEN-1] = '\0';
     return s;
 }
