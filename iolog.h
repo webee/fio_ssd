@@ -2,6 +2,7 @@
 #define FIO_IOLOG_H
 
 #include <time.h>
+#include "unique.h"
 #include "lib/ieee754.h"
 
 /*
@@ -68,7 +69,8 @@ struct io_piece {
 	unsigned long long offset;
 	unsigned long len;
 	unsigned int flags;
-    struct timeval time_version;
+    /* for verification */
+    struct fio_unique unique_version;
 	enum fio_ddir ddir;
 	union {
 		unsigned long delay;

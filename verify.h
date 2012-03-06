@@ -5,9 +5,6 @@
 
 #define FIO_HDR_MAGIC	0xacca
 
-#define time_version_match(x, y)\
-    (((x).tv_sec == (y).tv_sec)&&((x).tv_usec == (y).tv_usec))
-
 enum {
 	VERIFY_NONE = 0,		/* no verification */
 	VERIFY_MD5,			/* md5 sum data blocks */
@@ -37,7 +34,8 @@ struct verify_header {
 	uint32_t len;
 	uint64_t rand_seed;
 	uint32_t crc32;
-    struct timeval time_version;
+    /* for verification */
+    struct fio_unique unique_version;
 };
 
 struct vhdr_md5 {

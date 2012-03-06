@@ -1,6 +1,8 @@
 #ifndef FIO_IOENGINE_H
 #define FIO_IOENGINE_H
 
+#include "unique.h"
+
 #define FIO_IOOPS_VERSION	13
 
 enum {
@@ -43,7 +45,8 @@ struct io_u {
 	};
 	struct timeval start_time;
 	struct timeval issue_time;
-	struct timeval time_version;
+    /* for verification */
+	struct fio_unique unique_version;
 
 	/*
 	 * Allocated/set buffer and length

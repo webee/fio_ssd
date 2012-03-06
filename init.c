@@ -336,6 +336,8 @@ static void put_job(struct thread_data *td)
 	fio_options_free(td);
 	if (td->io_ops)
 		free_ioengine(td);
+	if (td->unique_ops)
+		free_unique(td);
 
 	memset(&threads[td->thread_number - 1], 0, sizeof(*td));
 	thread_number--;
@@ -682,6 +684,22 @@ void td_fill_rand_seeds(struct thread_data *td)
 	init_rand_seed(&td->buf_state, td->rand_seeds[7]);
 }
 
+/*
+ *  load the unique configured for a job.
+ */
+int unique_load(struct thread_data *td)
+{
+	if (td->unique_ops)
+		return 0;
+
+	td->unique_ops = load_unique(td, td->o.unique);
+	if (!td->unique_ops) {
+		log_err("fio: failed to load unique %s\n", td->o.unique);
+		return 1;
+	}
+
+	return 0;
+}
 
 /*
  * Initializes the ioengine configured for a job, if it has not been done so
@@ -767,6 +785,9 @@ static int add_job(struct thread_data *td, const char *jobname, int job_add_num)
 	}
 
 	if (profile_td_init(td))
+		goto err;
+
+	if (unique_load(td))
 		goto err;
 
 	if (ioengine_load(td))

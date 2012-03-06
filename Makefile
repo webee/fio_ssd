@@ -9,12 +9,13 @@ PROGS	= fio
 SCRIPTS = fio_generate_plots
 UNAME  := $(shell uname)
 
-SOURCE := gettime.c fio.c ioengines.c init.c stat.c log.c time.c filesetup.c \
+SOURCE := unique.c gettime.c fio.c ioengines.c init.c stat.c log.c time.c filesetup.c \
 		eta.c verify.c memory.c io_u.c parse.c mutex.c options.c \
 		rbtree.c smalloc.c filehash.c profile.c debug.c lib/rand.c \
 		lib/num2str.c lib/ieee754.c $(wildcard crc/*.c) engines/cpu.c \
 		engines/mmap.c engines/sync.c engines/null.c engines/net.c \
-		memalign.c server.c client.c iolog.c backend.c libfio.c flow.c
+		memalign.c server.c client.c iolog.c backend.c libfio.c flow.c\
+		uniques/time.c
 
 ifeq ($(UNAME), Linux)
   SOURCE += diskutil.c fifo.c blktrace.c helpers.c cgroup.c trim.c \

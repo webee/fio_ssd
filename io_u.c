@@ -1227,8 +1227,9 @@ struct io_u *get_io_u(struct thread_data *td)
 		if (io_u->ddir == DDIR_WRITE) {
 			if (td->o.verify != VERIFY_NONE) {
                 if (td->o.verify_inner) {
-                    fio_gettime(&io_u->time_version, NULL);
-                    dprint(FD_VERIFY, "get time version %u/%u\n", io_u->time_version.tv_sec, io_u->time_version.tv_usec);
+                    fio_string_unique(s_version);
+                    td->unique_ops->set(&io_u->unique_version);
+                    dprint(FD_VERIFY, "set io_u unique version: %s\n", td->unique_ops->to_string(&io_u->unique_version, s_version));
                 }
 				populate_verify_io_u(td, io_u);
             }else if (td->o.refill_buffers) {

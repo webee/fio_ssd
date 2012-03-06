@@ -716,11 +716,13 @@ int verify_io_u(struct thread_data *td, struct io_u *io_u)
 		}
 
         if (td->o.verify_inner)
-            if (!time_version_match(hdr->time_version, io_u->time_version)) {
-                log_err("verify: bad header version %u/%u, wanted %u/%u at "
+            if (!td->unique_ops->is_match(&hdr->unique_version, &io_u->unique_version)) {
+                fio_string_unique(s1);
+                fio_string_unique(s2);
+                log_err("verify: bad header version %s, wanted %s at "
                     "file %s, offset 0x%0.8llx length %u\n",
-                    hdr->time_version.tv_sec, hdr->time_version.tv_usec,
-                    io_u->time_version.tv_sec, io_u->time_version.tv_usec,
+                    td->unique_ops->to_string(&hdr->unique_version, s1),
+                    td->unique_ops->to_string(&io_u->unique_version, s2),
                     io_u->file->file_name,
                     hdr->offset, hdr->len);
                 return EILSEQ;
@@ -881,8 +883,9 @@ static void populate_hdr(struct thread_data *td, struct io_u *io_u,
 	hdr->verify_type = td->o.verify;
 	hdr->offset = io_u->offset + header_num * header_len;
     if (td->o.verify_inner) {
-        memcpy(&hdr->time_version, &io_u->time_version, sizeof(struct timeval));
-        dprint(FD_VERIFY, "fill header time version %u/%u\n", hdr->time_version.tv_sec, hdr->time_version.tv_usec);
+        fio_string_unique(s_version);
+        td->unique_ops->copy(&hdr->unique_version, &io_u->unique_version);
+        dprint(FD_VERIFY, "fill header unique version: %s\n", td->unique_ops->to_string(&hdr->unique_version, s_version));
     }
 	hdr->len = header_len;
 	hdr->rand_seed = io_u->rand_seed;
@@ -997,7 +1000,7 @@ int get_next_verify(struct thread_data *td, struct io_u *io_u)
 		io_u->buflen = ipo->len;
 		io_u->file = ipo->file;
         if (td->o.verify_inner)
-            memcpy(&io_u->time_version, &ipo->time_version, sizeof(struct timeval));
+            td->unique_ops->copy(&io_u->unique_version, &ipo->unique_version);
 
 		if (ipo->flags & IP_F_TRIMMED)
 			io_u->flags |= IO_U_F_TRIMMED;

@@ -190,8 +190,9 @@ void log_io_piece(struct thread_data *td, struct io_u *io_u)
 	ipo->offset = io_u->offset;
 	ipo->len = io_u->buflen;
     if (td->o.verify_inner) {
-        memcpy(&ipo->time_version, &io_u->time_version, sizeof(struct timeval));
-        dprint(FD_VERIFY, "fill log piece time version %u/%u\n", ipo->time_version.tv_sec, ipo->time_version.tv_usec);
+        fio_string_unique(s_version);
+        td->unique_ops->copy(&ipo->unique_version, &io_u->unique_version);
+        dprint(FD_VERIFY, "fill log piece unique version: %s\n", td->unique_ops->to_string(&ipo->unique_version, s_version));
     }
 
 	if (io_u_should_trim(td, io_u)) {

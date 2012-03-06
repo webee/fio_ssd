@@ -969,6 +969,25 @@ static struct fio_option options[FIO_MAX_OPTS] = {
 	},
 
 	{
+		.name	= "unique",
+		.type	= FIO_OPT_STR_STORE,
+		.off1	= td_var_offset(unique),
+		.help	= "unique to use",
+		.def	= FIO_DEF_UNIQUE,
+		.posval	= {
+			  { .ival = "time",
+			    .help = "Use gettimeofday()",
+			  },
+			  { .ival = "uuid",
+			    .help = "Use uuid",
+			  },
+			  { .ival = "guid",
+			    .help = "Use guid",
+			  },
+        }
+    },
+
+	{
 		.name	= "ioengine",
 		.type	= FIO_OPT_STR_STORE,
 		.off1	= td_var_offset(ioengine),

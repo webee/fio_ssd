@@ -39,6 +39,7 @@ struct thread_data;
 #include "server.h"
 #include "stat.h"
 #include "flow.h"
+#include "unique.h"
 
 #ifdef FIO_HAVE_GUASI
 #include <guasi.h>
@@ -91,6 +92,7 @@ struct thread_options {
 	char *filename;
 	char *opendir;
 	char *ioengine;
+	char *unique;
 	enum td_ddir td_ddir;
 	unsigned int rw_seq;
 	unsigned int kb_base;
@@ -354,6 +356,11 @@ struct thread_data {
 	 * to any of the available IO engines.
 	 */
 	struct ioengine_ops *io_ops;
+
+    /*
+     * unique (engine) to generate global uniqe code.
+     */
+    struct unique_ops *unique_ops;
 
 	/*
 	 * Queue depth of io_u's that fio MIGHT do
