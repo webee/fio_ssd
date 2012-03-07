@@ -2,14 +2,14 @@
 bs=4k
 ioengine=sync
 unique=uuid
-size=16k
+size=100m
 direct=1
 filename=/data1/xxx
 
 [write]
 verify=md5
-verify_inner
+#verify_inner
 #verify_pattern=0x41
-verify_backlog=3
-verify_backlog_batch=0
+verify_backlog=1024
+#verify_backlog_batch=1024
 rw=write

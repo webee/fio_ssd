@@ -696,6 +696,8 @@ int verify_io_u(struct thread_data *td, struct io_u *io_u)
 			memswp(p, p + td->o.verify_offset, header_size);
 		hdr = p;
 
+        //debug use.
+        log_local("=======>verify: offset %llu, length %u\n", io_u->offset + hdr_num * hdr->len, hdr->len);
 		if (!verify_header(hdr)) {
 			log_err("verify: bad magic header %x, wanted %x at "
 				"file %s offset %llu, length %u\n",
