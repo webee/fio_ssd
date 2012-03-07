@@ -1281,13 +1281,18 @@ static int set_debug(const char *string)
 
 	while ((opt = strsep(&p, ",")) != NULL) {
 		int found = 0;
+        int disable=0;
+
 
 		if (!strncmp(opt, "all", 3)) {
 			log_info("fio: set all debug options\n");
 			fio_debug = ~0UL;
 			continue;
 		}
-
+        if (*opt == '-') {
+            disable = 1;
+            opt++;
+        }
 		for (i = 0; debug_levels[i].name; i++) {
 			dl = &debug_levels[i];
 			found = !strncmp(opt, dl->name, strlen(dl->name));
@@ -1305,8 +1310,13 @@ static int set_debug(const char *string)
 				log_info("fio: set debug jobno %d\n",
 							fio_debug_jobno);
 			} else {
-				log_info("fio: set debug option %s\n", opt);
-				fio_debug |= (1UL << dl->shift);
+                if (!disable) {
+                    log_info("fio: set debug option %s\n", opt);
+                    fio_debug |= (1UL << dl->shift);
+                }else {
+                    log_info("fio: unset debug option %s\n", opt);
+                    fio_debug &= ~(1UL << dl->shift);
+                }
 			}
 			break;
 		}
