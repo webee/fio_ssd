@@ -1229,7 +1229,8 @@ struct io_u *get_io_u(struct thread_data *td)
                 if (td->o.verify_inner) {
                     fio_string_unique(s_version);
                     td->unique_ops->set(&io_u->unique_version);
-                    dprint(FD_VERIFY, "set io_u unique version: %s\n", td->unique_ops->to_string(&io_u->unique_version, s_version));
+                    dprint(FD_VERIFY, "set io_u(unique version): %s\n",
+                            td->unique_ops->to_string(&io_u->unique_version, s_version));
                 }
 				populate_verify_io_u(td, io_u);
             }else if (td->o.refill_buffers) {

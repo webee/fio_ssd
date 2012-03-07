@@ -1,8 +1,8 @@
 [global]
 bs=4k
 ioengine=sync
-unique=time
-size=16m
+unique=uuid
+size=16k
 direct=1
 filename=/data1/xxx
 
@@ -10,4 +10,6 @@ filename=/data1/xxx
 verify=md5
 verify_inner
 #verify_pattern=0x41
+verify_backlog=3
+verify_backlog_batch=0
 rw=write

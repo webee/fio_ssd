@@ -192,7 +192,8 @@ void log_io_piece(struct thread_data *td, struct io_u *io_u)
     if (td->o.verify_inner) {
         fio_string_unique(s_version);
         td->unique_ops->copy(&ipo->unique_version, &io_u->unique_version);
-        dprint(FD_VERIFY, "fill log piece unique version: %s\n", td->unique_ops->to_string(&ipo->unique_version, s_version));
+        dprint(FD_VERIFY, "io_u copy to io_piece(unique version): %s\n",
+                td->unique_ops->to_string(&ipo->unique_version, s_version));
     }
 
 	if (io_u_should_trim(td, io_u)) {

@@ -885,7 +885,8 @@ static void populate_hdr(struct thread_data *td, struct io_u *io_u,
     if (td->o.verify_inner) {
         fio_string_unique(s_version);
         td->unique_ops->copy(&hdr->unique_version, &io_u->unique_version);
-        dprint(FD_VERIFY, "fill header unique version: %s\n", td->unique_ops->to_string(&hdr->unique_version, s_version));
+        dprint(FD_VERIFY, "io_u copy to verify_header(unique version): %s\n",
+                td->unique_ops->to_string(&hdr->unique_version, s_version));
     }
 	hdr->len = header_len;
 	hdr->rand_seed = io_u->rand_seed;
@@ -996,11 +997,17 @@ int get_next_verify(struct thread_data *td, struct io_u *io_u)
 	if (ipo) {
 		td->io_hist_len--;
 
+        //simulate inner error.
+		//io_u->offset = ipo->offset+ipo->len)%td->o.size;
 		io_u->offset = ipo->offset;
 		io_u->buflen = ipo->len;
 		io_u->file = ipo->file;
-        if (td->o.verify_inner)
+        if (td->o.verify_inner) {
+            fio_string_unique(s_version);
             td->unique_ops->copy(&io_u->unique_version, &ipo->unique_version);
+            dprint(FD_VERIFY, "io_piece copy to io_u(unique version): %s\n",
+                    td->unique_ops->to_string(&io_u->unique_version, s_version));
+        }
 
 		if (ipo->flags & IP_F_TRIMMED)
 			io_u->flags |= IO_U_F_TRIMMED;

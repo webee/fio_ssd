@@ -2,11 +2,12 @@
 #define FIO_UNIQUE_H
 
 #include <sys/time.h>
+#include <uuid/uuid.h>
 
-#define FIO_DEF_UNIQUE "time"
+#define FIO_DEF_UNIQUE "uuid"
 
 #define NAME_LEN    16
-#define STRING_LEN    32
+#define STRING_LEN    40
 
 #define fio_string_unique(s)\
     char s[STRING_LEN]
@@ -14,6 +15,7 @@
 struct fio_unique {
     union {
         struct timeval time;
+        uuid_t uuid;
     };
 };
 
