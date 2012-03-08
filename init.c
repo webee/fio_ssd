@@ -414,6 +414,10 @@ static int fixup_options(struct thread_data *td)
 	if (o->zone_size && o->open_files == 1)
 		o->zone_size = 0;
 
+    /* randomagain */
+    if (!td_random(td))
+        o->randomagain = 0;
+
     if (o->randomagain && o->norandommap)
         o->norandommap = 0;
 	/*
