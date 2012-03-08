@@ -415,11 +415,15 @@ static int fixup_options(struct thread_data *td)
 		o->zone_size = 0;
 
     /* randomagain */
-    if (!td_random(td))
+    if (!td_random(td)||!td_write(td))
         o->randomagain = 0;
 
-    if (o->randomagain && o->norandommap)
+    if (o->randomagain && o->verify && o->norandommap)
         o->norandommap = 0;
+
+    /* randomagain && no verify equal norandommap */
+    if (o->randomagain && !o->verify)
+        o->norandommap = 1;
 	/*
 	 * If zone_range isn't specified, backward compatibility dictates it
 	 * should be made equal to zone_size.
