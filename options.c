@@ -1202,6 +1202,13 @@ static struct fio_option options[FIO_MAX_OPTS] = {
 		.parent = "rw",
 	},
 	{
+		.name	= "randomagain",
+		.type	= FIO_OPT_STR_SET,
+		.off1	= td_var_offset(randomagain),
+		.help	= "Accept potential duplicate random blocks",
+		.parent = "rw",
+	},
+	{
 		.name	= "norandommap",
 		.type	= FIO_OPT_STR_SET,
 		.off1	= td_var_offset(norandommap),

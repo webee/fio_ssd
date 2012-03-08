@@ -1,0 +1,15 @@
+[global]
+bs=4k
+ioengine=sync
+unique=uuid
+size=16k
+direct=1
+filename=/data1/xxx
+
+[write]
+verify=md5
+#verify_inner
+#verify_pattern=0x41
+verify_backlog=2
+#verify_backlog_batch=1024
+rw=write

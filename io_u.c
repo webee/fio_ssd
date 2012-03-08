@@ -159,7 +159,7 @@ static int get_next_free_block(struct thread_data *td, struct fio_file *f,
 }
 
 static int get_next_rand_offset(struct thread_data *td, struct fio_file *f,
-				enum fio_ddir ddir, unsigned long long *b)
+				enum fio_ddir ddir, unsigned long long *b, int *randomagain)
 {
 	unsigned long long rmax, r, lastb;
 	int loops = 5;
@@ -180,7 +180,7 @@ static int get_next_rand_offset(struct thread_data *td, struct fio_file *f,
 
 		*b = (lastb - 1) * (r / ((unsigned long long) rmax + 1.0));
 
-		dprint(FD_RANDOM, "off rand %llu\n", r);
+		dprint(FD_RANDOM, "off rand %llu, %llu\n", r, *b);
 
 
 		/*
@@ -194,6 +194,15 @@ static int get_next_rand_offset(struct thread_data *td, struct fio_file *f,
 		 */
 		if (random_map_free(f, *b))
 			goto ret_good;
+
+        /*
+         * it isn't free is just ok.
+         */
+        if (td->o.randomagain) {
+            *randomagain=1;
+			goto ret_good;
+        }
+
 
 		dprint(FD_RANDOM, "get_next_rand_offset: offset %llu busy\n",
 									*b);
@@ -236,9 +245,10 @@ ret:
 }
 
 static int get_next_rand_block(struct thread_data *td, struct fio_file *f,
-			       enum fio_ddir ddir, unsigned long long *b)
+			       enum fio_ddir ddir, unsigned long long *b, int *randomagain)
 {
-	if (get_next_rand_offset(td, f, ddir, b)) {
+    *randomagain=0;
+	if (get_next_rand_offset(td, f, ddir, b, randomagain)) {
 		dprint(FD_IO, "%s: rand offset failed, last=%llu, size=%llu\n",
 				f->file_name, f->last_pos, f->real_file_size);
 		return 1;
@@ -279,7 +289,7 @@ static int get_next_block(struct thread_data *td, struct io_u *io_u,
 
 	if (rw_seq) {
 		if (td_random(td))
-			ret = get_next_rand_block(td, f, ddir, b);
+			ret = get_next_rand_block(td, f, ddir, b, &io_u->randomagain);
 		else
 			ret = get_next_seq_block(td, f, ddir, b);
 	} else {
@@ -288,7 +298,7 @@ static int get_next_block(struct thread_data *td, struct io_u *io_u,
 		if (td->o.rw_seq == RW_SEQ_SEQ) {
 			ret = get_next_seq_block(td, f, ddir, b);
 			if (ret)
-				ret = get_next_rand_block(td, f, ddir, b);
+				ret = get_next_rand_block(td, f, ddir, b, &io_u->randomagain);
 		} else if (td->o.rw_seq == RW_SEQ_IDENT) {
 			if (f->last_start != -1ULL)
 				*b = (f->last_start - f->file_offset)
@@ -700,7 +710,7 @@ static int fill_io_u(struct thread_data *td, struct io_u *io_u)
 	/*
 	 * mark entry before potentially trimming io_u
 	 */
-	if (td_random(td) && file_randommap(td, io_u->file))
+	if (td_random(td) && file_randommap(td, io_u->file) && !io_u->randomagain)
 		mark_random_map(td, io_u);
 
 	/*
@@ -1228,8 +1238,15 @@ struct io_u *get_io_u(struct thread_data *td)
 		if (io_u->ddir == DDIR_WRITE) {
 			if (td->o.verify != VERIFY_NONE) {
                 if (td->o.verify_inner) {
+                    if (td_random(td)&&td->o.randomagain) {
+                        if (io_u->randomagain) {
+                            td->unique_ops->set(&td->unique);
+                        }
+                        td->unique_ops->copy(&io_u->unique_version, &td->unique);
+                    }else {
+                        td->unique_ops->set(&io_u->unique_version);
+                    }
                     fio_string_unique(s_version);
-                    td->unique_ops->set(&io_u->unique_version);
                     dprint(FD_VERIFY, "set io_u(unique version): %s\n",
                             td->unique_ops->to_string(&io_u->unique_version, s_version));
                 }
@@ -1401,8 +1418,9 @@ static void io_completed(struct thread_data *td, struct io_u *io_u,
 
 		if (td_write(td) && idx == DDIR_WRITE &&
 		    td->o.do_verify &&
-		    td->o.verify != VERIFY_NONE)
+		    td->o.verify != VERIFY_NONE) {
 			log_io_piece(td, io_u);
+        }
 
 		icd->bytes_done[idx] += bytes;
 

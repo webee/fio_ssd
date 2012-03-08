@@ -48,6 +48,9 @@ struct io_u {
     /* for verification */
 	struct fio_unique unique_version;
 
+    /* for randomagain */
+    int randomagain;
+
 	/*
 	 * Allocated/set buffer and length
 	 */

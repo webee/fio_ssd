@@ -153,6 +153,7 @@ struct thread_options {
 	unsigned int write_bw_log;
 	unsigned int write_iops_log;
 	unsigned int log_avg_msec;
+	unsigned int randomagain; /* whether accept duplicate offset */
 	unsigned int norandommap;
 	unsigned int softrandommap;
 	unsigned int bs_unaligned;
@@ -360,6 +361,7 @@ struct thread_data {
     /*
      * unique (engine) to generate global uniqe code.
      */
+    struct fio_unique unique;
     struct unique_ops *unique_ops;
 
 	/*

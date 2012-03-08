@@ -414,6 +414,8 @@ static int fixup_options(struct thread_data *td)
 	if (o->zone_size && o->open_files == 1)
 		o->zone_size = 0;
 
+    if (o->randomagain && o->norandommap)
+        o->norandommap = 0;
 	/*
 	 * If zone_range isn't specified, backward compatibility dictates it
 	 * should be made equal to zone_size.
@@ -697,6 +699,9 @@ int unique_load(struct thread_data *td)
 		log_err("fio: failed to load unique %s\n", td->o.unique);
 		return 1;
 	}
+
+    /* by the way. init setting the td->unique. */
+    td->unique_ops->set(&td->unique);
 
 	return 0;
 }

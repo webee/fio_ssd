@@ -573,7 +573,7 @@ static int verify_io_u_md5(struct verify_header *hdr, struct vcont *vc)
 		.hash = hash,
 	};
 
-	dprint(FD_VERIFY, "md5 verify io_u %p, hdr offset %0.8llx, io_u offset %0.8llx, len %u\n",
+	dprint(FD_VERIFY, "md5 verify io_u %p, hdr offset %llu, io_u offset %llu, len %u\n",
             vc->io_u, hdr->offset, vc->io_u->offset, hdr->len);
 
 	fio_md5_init(&md5_ctx);
@@ -711,7 +711,7 @@ int verify_io_u(struct thread_data *td, struct io_u *io_u)
 
         uint64_t offset = io_u->offset + hdr_num * hdr_inc;
 		if (hdr->offset != offset) {
-			log_err("verify: bad offset header 0x%0.8llx, wanted 0x%0.8llx at "
+			log_err("verify: bad offset header %llu, wanted %llu at "
 				"file %s, length %u\n",
 				hdr->offset, offset,
 				io_u->file->file_name,
@@ -724,7 +724,7 @@ int verify_io_u(struct thread_data *td, struct io_u *io_u)
                 fio_string_unique(s1);
                 fio_string_unique(s2);
                 log_err("verify: bad header version %s, wanted %s at "
-                    "file %s, offset 0x%0.8llx length %u\n",
+                    "file %s, offset %llu length %u\n",
                     td->unique_ops->to_string(&hdr->unique_version, s1),
                     td->unique_ops->to_string(&io_u->unique_version, s2),
                     io_u->file->file_name,
@@ -901,7 +901,7 @@ static void populate_hdr(struct thread_data *td, struct io_u *io_u,
 	data = p + hdr_size(hdr);
 	switch (td->o.verify) {
 	case VERIFY_MD5:
-		dprint(FD_VERIFY, "fill md5 io_u %p, offset %0.8llx, len %u\n",
+		dprint(FD_VERIFY, "fill md5 io_u %p, offset %llu, len %u\n",
 						io_u, hdr->offset, hdr->len);
 		fill_md5(hdr, data, data_len);
 		break;
@@ -1034,7 +1034,7 @@ int get_next_verify(struct thread_data *td, struct io_u *io_u)
 
 		remove_trim_entry(td, ipo);
 		free(ipo);
-		dprint(FD_VERIFY, "get_next_verify: ret io_u %p, offset 0x%0.8llx len %u\n",
+		dprint(FD_VERIFY, "get_next_verify: ret io_u %p, offset %llu len %u\n",
                 io_u, io_u->offset, io_u->buflen);
 		return 0;
 	}
