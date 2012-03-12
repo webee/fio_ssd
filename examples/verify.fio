@@ -1,8 +1,9 @@
 [global]
-bs=4k
+#bs=4k
+bsrange=4k-12k
 #ioengine=libaio
 ioengine=sync
-unique=uuid
+unique=time_n
 size=16k
 #iodepth=1
 direct=1
@@ -12,7 +13,7 @@ filename=/data1/xxx
 verify=md5
 verify_inner
 #norandommap
-randomagain
+#randomagain
 #verify_pattern=0x41
 #verify_backlog=1024
 #verify_backlog_batch=1024

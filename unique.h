@@ -12,8 +12,14 @@
 #define fio_string_unique(s)\
     char s[STRING_LEN]
 
+struct time_number {
+    struct timeval time;
+    uint32_t number;
+};
+
 struct fio_unique {
     union {
+        struct time_number time_n;
         struct timeval time;
         uuid_t uuid;
     };
