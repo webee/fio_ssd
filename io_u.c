@@ -1139,6 +1139,7 @@ static int check_get_verify(struct thread_data *td, struct io_u *io_u)
 
 		if (get_verify && !get_next_verify(td, io_u)) {
 			td->verify_batch--;
+            io_u->flags |= IO_U_F_VERIFY;
 			return 1;
 		}
 	}
@@ -1201,6 +1202,7 @@ struct io_u *get_io_u(struct thread_data *td)
 		return NULL;
 	}
 
+    io_u->flags &= ~(IO_U_F_VERIFY);
 	if (check_get_verify(td, io_u))
 		goto out;
 	if (check_get_trim(td, io_u))
@@ -1242,10 +1244,8 @@ struct io_u *get_io_u(struct thread_data *td)
                         if (io_u->randomagain) {
                             td->unique_ops->set(&td->unique);
                         }
-                        td->unique_ops->copy(&io_u->unique_version, &td->unique);
-                    }else {
-                        td->unique_ops->set(&io_u->unique_version);
                     }
+                    td->unique_ops->copy(&io_u->unique_version, &td->unique);
                     fio_string_unique(s_version);
                     dprint(FD_VERIFY, "set io_u(unique version): %s\n",
                             td->unique_ops->to_string(&io_u->unique_version, s_version));
@@ -1387,7 +1387,8 @@ static void io_completed(struct thread_data *td, struct io_u *io_u,
 		td->io_blocks[idx]++;
 		td->this_io_blocks[idx]++;
 		td->io_bytes[idx] += bytes;
-		td->this_io_bytes[idx] += bytes;
+        if (!(io_u->flags & IO_U_F_VERIFY))
+            td->this_io_bytes[idx] += bytes;
 
 		if (idx == DDIR_WRITE) {
 			f = io_u->file;

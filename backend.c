@@ -590,7 +590,7 @@ static void do_io(struct thread_data *td)
 		 * a previously written file.
 		 */
 		if (td->o.verify != VERIFY_NONE && io_u->ddir == DDIR_READ &&
-		    !td_rw(td)) {
+                (io_u->flags & IO_U_F_VERIFY)) {
 			if (td->o.verify_async)
 				io_u->end_io = verify_io_u_async;
 			else
