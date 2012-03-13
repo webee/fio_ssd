@@ -247,7 +247,6 @@ ret:
 static int get_next_rand_block(struct thread_data *td, struct fio_file *f,
 			       enum fio_ddir ddir, unsigned long long *b, int *randomagain)
 {
-    *randomagain=0;
 	if (get_next_rand_offset(td, f, ddir, b, randomagain)) {
 		dprint(FD_IO, "%s: rand offset failed, last=%llu, size=%llu\n",
 				f->file_name, f->last_pos, f->real_file_size);
@@ -287,6 +286,7 @@ static int get_next_block(struct thread_data *td, struct io_u *io_u,
 
 	assert(ddir_rw(ddir));
 
+    io_u->randomagain = 0;
 	if (rw_seq) {
 		if (td_random(td))
 			ret = get_next_rand_block(td, f, ddir, b, &io_u->randomagain);
@@ -300,11 +300,13 @@ static int get_next_block(struct thread_data *td, struct io_u *io_u,
 			if (ret)
 				ret = get_next_rand_block(td, f, ddir, b, &io_u->randomagain);
 		} else if (td->o.rw_seq == RW_SEQ_IDENT) {
-			if (f->last_start != -1ULL)
+			if (f->last_start != -1ULL) {
 				*b = (f->last_start - f->file_offset)
 					/ td->o.min_bs[ddir];
-			else
+                io_u->randomagain = 1;
+            }else {
 				*b = 0;
+            }
 			ret = 0;
 		} else {
 			log_err("fio: unknown rw_seq=%d\n", td->o.rw_seq);
@@ -1240,11 +1242,8 @@ struct io_u *get_io_u(struct thread_data *td)
 		if (io_u->ddir == DDIR_WRITE) {
 			if (td->o.verify != VERIFY_NONE) {
                 if (td->o.verify_inner) {
-                    if (td_random(td)&&td->o.randomagain) {
-                        if (io_u->randomagain) {
-                            td->unique_ops->set(&td->unique);
-                        }
-                    }
+                    if (io_u->randomagain)
+                        td->unique_ops->set(&td->unique);
                     td->unique_ops->copy(&io_u->unique_version, &td->unique);
                     fio_string_unique(s_version);
                     dprint(FD_VERIFY, "set io_u(unique version): %s\n",

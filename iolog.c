@@ -217,7 +217,7 @@ void log_io_piece(struct thread_data *td, struct io_u *io_u)
 	 */
 	if ((!td_random(td) || !td->o.overwrite) &&
 	      (file_randommap(td, ipo->file) || td->o.verify == VERIFY_NONE) &&
-          (!td->o.randomagain || td->o.verify == VERIFY_NONE)) {
+          (!td->o.randomagain || td->o.verify == VERIFY_NONE) && td->o.ddir_seq_nr < 2) {
 		INIT_FLIST_HEAD(&ipo->list);
 		flist_add_tail(&ipo->list, &td->io_hist_list);
 		ipo->flags |= IP_F_ONLIST;
