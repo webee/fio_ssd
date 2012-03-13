@@ -3,17 +3,17 @@
  */
 #include "../fio.h"
 
+static struct timeval last_time;
 static uint32_t last_number;
 
 static void
 fio_time_number_set(struct fio_unique *u)
 {
-    struct timeval time;
     if (last_number == 0) {
-        fio_gettime(&time, NULL);
-        u->time_n.tv_sec = time.tv_sec;
+        fio_gettime(&last_time, NULL);
     }
 
+    memcpy(&u->time_n.tv_sec, &last_time.tv_sec, sizeof(last_time.tv_sec));
     u->time_n.number = last_number;
     last_number++;
 }
