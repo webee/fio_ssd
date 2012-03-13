@@ -28,7 +28,7 @@ static char *
 fio_time_number_to_string(struct fio_unique *u, char *s)
 {
     snprintf(s, STRING_LEN, "%lu+%lu",
-            (unsigned long)(u->time_n.tv_sec), u->time_n.number);
+            (unsigned long)(u->time_n.tv_sec), (unsigned long)u->time_n.number);
     s[STRING_LEN-1] = '\0';
     return s;
 }
@@ -36,7 +36,7 @@ fio_time_number_to_string(struct fio_unique *u, char *s)
 static int
 fio_time_number_is_match(struct fio_unique *u1, struct fio_unique *u2)
 {
-    return (u1->time_n.tv_sec, u2->time_n.tv_sec)&&(u1->time_n.number == u2->time_n.number);
+    return (u1->time_n.tv_sec == u2->time_n.tv_sec)&&(u1->time_n.number == u2->time_n.number);
 }
 
 static struct unique_ops unique = {
