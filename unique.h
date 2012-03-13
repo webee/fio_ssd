@@ -4,7 +4,7 @@
 #include <sys/time.h>
 #include <uuid/uuid.h>
 
-#define FIO_DEF_UNIQUE "uuid"
+#define FIO_DEF_UNIQUE "time_n"
 
 #define NAME_LEN    16
 #define STRING_LEN    40
@@ -13,7 +13,7 @@
     char s[STRING_LEN]
 
 struct time_number {
-    struct timeval time;
+    time_t tv_sec;
     uint32_t number;
 };
 
@@ -21,7 +21,6 @@ struct fio_unique {
     union {
         struct time_number time_n;
         struct timeval time;
-        uuid_t uuid;
     };
 };
 

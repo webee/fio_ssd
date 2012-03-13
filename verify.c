@@ -573,8 +573,8 @@ static int verify_io_u_md5(struct verify_header *hdr, struct vcont *vc)
 		.hash = hash,
 	};
 
-	dprint(FD_VERIFY, "md5 verify io_u %p, hdr offset %llu, io_u offset %llu, len %u\n",
-            vc->io_u, hdr->offset, vc->io_u->offset, hdr->len);
+	dprint(FD_VERIFY, "md5 verify#%u io_u %p, hdr offset %llu, io_u offset %llu, len %u\n",
+            vc->hdr_num, vc->io_u, hdr->offset, vc->io_u->offset, hdr->len);
 
 	fio_md5_init(&md5_ctx);
 	fio_md5_update(&md5_ctx, p, hdr->len - hdr_size(hdr));

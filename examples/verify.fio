@@ -1,7 +1,8 @@
 [global]
 #bs=4k
-bsrange=4k-12k
+bsrange=4k-8k
 #ioengine=libaio
+#bssplit=5k/50:6k/50
 ioengine=sync
 unique=time_n
 size=16k
