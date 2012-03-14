@@ -1137,6 +1137,21 @@ static int check_get_verify(struct thread_data *td, struct io_u *io_u)
 			if (!td->verify_batch)
 				td->verify_batch = td->o.verify_backlog;
 			get_verify = 1;
+
+            /*
+             * invalidate cache, to make sure we really
+             * read from disk.
+             */
+            struct fio_file *f;
+            unsigned int i;
+            for_each_file(td, f, i) {
+                if (!fio_file_open(f))
+                    continue;
+                if (file_invalidate_cache(td, f))
+                    break;
+            }
+
+            td_set_runstate(td, TD_VERIFYING);
 		}
 
 		if (get_verify && !get_next_verify(td, io_u)) {
