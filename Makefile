@@ -77,6 +77,8 @@ T_IEEE_PROGS = t/ieee754
 
 T_OBJS = $(T_SMALLOC_OBJS)
 T_OBJS += $(T_IEEE_OBJS)
+T_PROGS = $(T_SMALLOC_PROGS)
+T_PROGS += $(T_IEEE_PROGS)
 
 ifneq ($(findstring $(MAKEFLAGS),s),s)
 ifndef V
