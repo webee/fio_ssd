@@ -40,7 +40,6 @@ struct thread_data;
 #include "stat.h"
 #include "flow.h"
 #include "unique.h"
-#include "ihash.h"
 
 #ifdef FIO_HAVE_GUASI
 #include <guasi.h>
@@ -452,7 +451,8 @@ struct thread_data {
 	 */
 	struct rb_root io_hist_tree;
 	struct flist_head io_hist_list;
-	HashMap io_hist_hashmap;
+    struct flist_head *iohist_hash;
+
 	unsigned long io_hist_len;
 
 	/*

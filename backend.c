@@ -970,7 +970,6 @@ static void *thread_main(void *data)
 	INIT_FLIST_HEAD(&td->trim_list);
 	pthread_mutex_init(&td->io_u_lock, NULL);
 	td->io_hist_tree = RB_ROOT;
-    hash_init(&td->io_hist_hashmap, 1024*1024, hashfunc_uint64, hashmatch_uint64);
 
 	pthread_condattr_init(&attr);
 	pthread_cond_init(&td->verify_cond, &attr);

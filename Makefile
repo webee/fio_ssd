@@ -16,7 +16,7 @@ SOURCE := unique.c gettime.c fio.c ioengines.c init.c stat.c log.c time.c filese
 		engines/mmap.c engines/sync.c engines/null.c engines/net.c \
 		memalign.c server.c client.c iolog.c backend.c libfio.c flow.c\
 		uniques/time.c uniques/time_num.c\
-		ihash.c
+		seg_2bitsmap.c	iohist_hash.c
 
 ifeq ($(UNAME), Linux)
   SOURCE += diskutil.c fifo.c blktrace.c helpers.c cgroup.c trim.c \

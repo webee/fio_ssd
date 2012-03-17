@@ -6,11 +6,11 @@ struct iohist_key {
 	unsigned long long offset;
 };
 
-void iohist_hash_init(void);
-void iohist_hash_exit(void);
-struct io_piece *lookup_iohist_hash(const char *);
-struct io_piece *add_iohist_hash(struct io_piece *);
-void remove_iohist_hash(struct io_piece *);
+void iohist_hash_init(struct thread_data *td);
+void iohist_hash_exit(struct thread_data *td);
+struct io_piece *lookup_iohist_hash(struct thread_data *td, const struct iohist_key *pkey);
+struct io_piece *add_iohist_hash(struct thread_data *, struct io_piece *);
+void remove_iohist_hash(struct thread_data *, struct io_piece *);
 
 static inline void set_iohist_key(struct io_piece *ipo, struct iohist_key *pkey)
 {
