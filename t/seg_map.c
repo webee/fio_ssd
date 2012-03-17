@@ -10,12 +10,12 @@
 #define blocks   (4 * BLKS_PER_MAP2)
 #define nmaps   (blocks/BLKS_PER_MAP2)
 
-#define maxlen  (2)
+#define maxlen  (8)
 
 #define EMPTY   (0x0)
 #define START   (0x2)
 #define IN      (0x3)
-#define END     (0x1)    
+#define ERR     (0x1)    
 
 unsigned long map2[nmaps];
 
@@ -58,23 +58,23 @@ insert_seg(unsigned long long offset, unsigned long len)
         //if len>this.len remove this.
         //else this.offset += len
         //      this.len -= len
-        printf("idx=%u,bit=%u\n", idx, bit);
-    }else if(blk==IN|blk==END) {
+        printf("\t>idx=%u,bit=%u\n", idx, bit);
+    }else if(blk==IN) {
         //change pre bit stat.
-        unsigned int prev_idx,prev_bit;
-        if (bit==0) {
-            prev_bit = BLKS_PER_MAP2-1;
-            prev_idx = idx-1;
-        }else {
-            prev_bit = bit-1;
-            prev_idx = idx;
-        }
-        blk = get_blk(prev_idx, prev_bit);
-        if (blk==START) {
-        }else if (blk==IN) {
-            //change prev bit stat IN to END.
-            set_bit(prev_idx, prev_bit, END);
-        }
+        unsigned int prev_idx = idx;
+        unsigned int prev_bit = bit;
+        do {
+            if (bit==0) {
+                prev_bit = BLKS_PER_MAP2-1;
+                prev_idx -= 1;
+            }else {
+                prev_bit -= 1;
+            }
+            blk = get_blk(prev_idx, prev_bit);
+        }while (blk != START);
+        printf("\t>idx=%u,bit=%u\n", idx, bit);
+    }else if(blk==ERR) {
+        //2bits-map error.
     }
     //start.
     set_bit(idx, bit, START);
@@ -85,18 +85,11 @@ insert_seg(unsigned long long offset, unsigned long len)
         bit=0;
     }
     //in.
-    while (finish<len-1) {
+    while (finish<len) {
+        blk = get_blk(idx, bit);
+        if (blk==START)
+            printf("\t>idx=%u,bit=%u\n", idx, bit);
         set_bit(idx, bit, IN);
-        finish++;
-        bit++;
-        if (bit == BLKS_PER_MAP2) {
-            idx++;
-            bit=0;
-        }
-    }
-    //end.
-    if (finish < len) {
-        set_bit(idx, bit, END);
         finish++;
         bit++;
         if (bit == BLKS_PER_MAP2) {
@@ -109,11 +102,11 @@ insert_seg(unsigned long long offset, unsigned long len)
     unsigned int next_idx,next_bit;
     next_bit = bit;
     next_idx = idx;
-    if (next_idx <= nmaps) {
+    if (next_idx < nmaps) {
         blk = get_blk(next_idx, next_bit);
         if (blk==EMPTY) {
         }else if (blk==START) {
-        }else if (blk==IN|blk==END) {
+        }else if (blk==IN) {
             //change post bit stat IN or END to START.
             set_bit(next_idx, next_bit, START);
         }
@@ -153,8 +146,8 @@ print_map(void)
                 printf("*#");
             }else if(blk==IN) {
                 printf("##");
-            }else if(blk==END) {
-                printf("#*");
+            }else if(blk==ERR) {
+                printf("$$");
             }
             mask <<= 2;
         }
@@ -176,7 +169,7 @@ main(int argc, char *argv[])
         generate_seg(&offset, &len);
         printf("%llu,%lu\n", offset, len);
         insert_seg(offset, len);
-        getchar();
+        //getchar();
         print_map();
         printf("\n");
         size += len;
