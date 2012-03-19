@@ -34,6 +34,51 @@ static int random_map_free(struct fio_file *f, const unsigned long long block)
 	return (f->file_map[idx] & (1UL << bit)) == 0;
 }
 
+static void mark_bit_map(struct thread_data *td, struct io_u *io_u)
+{
+	unsigned int min_bs = td->o.rw_min_bs;
+	struct fio_file *f = io_u->file;
+	unsigned long long block;
+	unsigned int nr_blocks;
+    int busy_check;
+
+    /* rw=randomxx:n,rw_sequencer=identical.
+     * 2~n, do io as 1st one.
+     */ 
+	busy_check = !(io_u->flags & IO_U_F_BUSY_OK);
+    if (!busy_check) {
+        io_u->randomagain = 1;
+        return;
+    }
+	block = (io_u->offset - f->file_offset) / (unsigned long long) min_bs;
+	nr_blocks = (io_u->buflen + min_bs - 1) / min_bs;
+
+	while (nr_blocks) {
+		unsigned int idx, bit;
+		unsigned long mask, this_blocks;
+
+		idx = RAND_MAP_IDX(f, block);
+		bit = RAND_MAP_BIT(f, block);
+		fio_assert(td, idx < f->num_maps);
+
+		this_blocks = nr_blocks;
+		if (this_blocks + bit > BLOCKS_PER_MAP)
+			this_blocks = BLOCKS_PER_MAP - bit;
+
+        if (this_blocks == BLOCKS_PER_MAP)
+            mask = -1UL;
+        else
+            mask = ((1UL << this_blocks) - 1) << bit;
+
+        if ((f->file_map[idx] & mask))
+            io_u->randomagain = 1;
+
+		f->file_map[idx] |= mask;
+		nr_blocks -= this_blocks;
+		block += this_blocks;
+    }
+}
+
 /*
  * Mark a given offset as used in the map.
  */
@@ -159,7 +204,7 @@ static int get_next_free_block(struct thread_data *td, struct fio_file *f,
 }
 
 static int get_next_rand_offset(struct thread_data *td, struct fio_file *f,
-				enum fio_ddir ddir, unsigned long long *b, int *randomagain)
+				enum fio_ddir ddir, unsigned long long *b)
 {
 	unsigned long long rmax, r, lastb;
 	int loops = 5;
@@ -186,7 +231,7 @@ static int get_next_rand_offset(struct thread_data *td, struct fio_file *f,
 		/*
 		 * if we are not maintaining a random map, we are done.
 		 */
-		if (!file_randommap(td, f))
+		if (!file_randommap(td, f)||td->o.randomagain)
 			goto ret_good;
 
 		/*
@@ -194,15 +239,6 @@ static int get_next_rand_offset(struct thread_data *td, struct fio_file *f,
 		 */
 		if (random_map_free(f, *b))
 			goto ret_good;
-
-        /*
-         * it isn't free is just ok.
-         */
-        if (td->o.randomagain) {
-            *randomagain=1;
-			goto ret_good;
-        }
-
 
 		dprint(FD_RANDOM, "get_next_rand_offset: offset %llu busy\n",
 									*b);
@@ -245,9 +281,9 @@ ret:
 }
 
 static int get_next_rand_block(struct thread_data *td, struct fio_file *f,
-			       enum fio_ddir ddir, unsigned long long *b, int *randomagain)
+			       enum fio_ddir ddir, unsigned long long *b)
 {
-	if (get_next_rand_offset(td, f, ddir, b, randomagain)) {
+	if (get_next_rand_offset(td, f, ddir, b)) {
 		dprint(FD_IO, "%s: rand offset failed, last=%llu, size=%llu\n",
 				f->file_name, f->last_pos, f->real_file_size);
 		return 1;
@@ -286,10 +322,9 @@ static int get_next_block(struct thread_data *td, struct io_u *io_u,
 
 	assert(ddir_rw(ddir));
 
-    io_u->randomagain = 0;
 	if (rw_seq) {
 		if (td_random(td))
-			ret = get_next_rand_block(td, f, ddir, b, &io_u->randomagain);
+			ret = get_next_rand_block(td, f, ddir, b);
 		else
 			ret = get_next_seq_block(td, f, ddir, b);
 	} else {
@@ -298,12 +333,11 @@ static int get_next_block(struct thread_data *td, struct io_u *io_u,
 		if (td->o.rw_seq == RW_SEQ_SEQ) {
 			ret = get_next_seq_block(td, f, ddir, b);
 			if (ret)
-				ret = get_next_rand_block(td, f, ddir, b, &io_u->randomagain);
+				ret = get_next_rand_block(td, f, ddir, b);
 		} else if (td->o.rw_seq == RW_SEQ_IDENT) {
 			if (f->last_start != -1ULL) {
 				*b = (f->last_start - f->file_offset)
 					/ td->o.min_bs[ddir];
-                io_u->randomagain = 1;
             }else {
 				*b = 0;
             }
@@ -431,6 +465,9 @@ static unsigned int __get_next_buflen(struct thread_data *td, struct io_u *io_u)
 
 	} while (!io_u_fits(td, io_u, buflen));
 
+    /* buflen must be n*minbs */
+    buflen /= minbs;
+    buflen *= minbs;
 	return buflen;
 }
 
@@ -714,6 +751,8 @@ static int fill_io_u(struct thread_data *td, struct io_u *io_u)
 	 */
 	if (td_random(td) && file_randommap(td, io_u->file) && !io_u->randomagain)
 		mark_random_map(td, io_u);
+    if (td->o.randomagain)
+        mark_bit_map(td, io_u);
 
 	/*
 	 * If using a write iolog, store this entry.
@@ -1219,6 +1258,7 @@ struct io_u *get_io_u(struct thread_data *td)
 		return NULL;
 	}
 
+    io_u->randomagain = 0;
     io_u->flags &= ~(IO_U_F_VERIFY);
 	if (check_get_verify(td, io_u))
 		goto out;
