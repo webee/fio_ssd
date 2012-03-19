@@ -60,6 +60,9 @@ struct fio_file {
 	struct flist_head hash_list;
 	enum fio_filetype filetype;
 
+    /* thread_data belong to.*/
+    struct thread_data *td;
+
 	void *file_data;
 	int fd;
 #ifdef WIN32

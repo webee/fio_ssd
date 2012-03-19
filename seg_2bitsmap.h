@@ -17,6 +17,13 @@ typedef unsigned long ul;
 #define ERR     (0x1)    
 
 
-typedef void (*OverlapFunc)(ull offset, ull start, ul len, void *ctx); 
+typedef void (*OverlapFunc)(ull block, ull start, ul len, void *ctx); 
+
+void remove_seg(ul map2[], ull block);
+void insert_seg(ul map2[], ull block, ul nr_blk, OverlapFunc overlap, void *ctx);
+void print_map(unsigned long map2[], unsigned long nmaps);
+
+/* overlap handlers */
+void overlap_divide(ull block, ull start, ul len, void *ctx);
 
 #endif /* FIO_SEG_2BITS_MAP */

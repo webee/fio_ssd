@@ -17,7 +17,7 @@ static unsigned short hash(const struct iohist_key *pkey)
 	return jhash((void *)pkey, sizeof(struct iohist_key), 0) & HASH_MASK;
 }
 
-void remove_iohist_hash(struct thread_data *td, struct io_piece *ipo)
+void iohist_hash_del(struct thread_data *td, struct io_piece *ipo)
 {
 	if (io_piece_hashed(ipo)) {
 		assert(!flist_empty(&ipo->hash_list));
@@ -26,7 +26,7 @@ void remove_iohist_hash(struct thread_data *td, struct io_piece *ipo)
 	}
 }
 
-static struct io_piece *__lookup_iohist_hash(struct thread_data *td, const struct iohist_key *pkey)
+static struct io_piece *__iohist_hash_find(struct thread_data *td, const struct iohist_key *pkey)
 {
     struct flist_head *iohist_hash=td->iohist_hash;
 	struct flist_head *bucket = &iohist_hash[hash(pkey)];
@@ -35,7 +35,7 @@ static struct io_piece *__lookup_iohist_hash(struct thread_data *td, const struc
 	flist_for_each(n, bucket) {
         struct iohist_key _key;
 		struct io_piece *ipo = flist_entry(n, struct io_piece, hash_list);
-        set_iohist_key(ipo, &_key);
+        set_iohist_key(&_key, ipo->file, ipo->block);
 
 		if (!memcmp(&_key, pkey, sizeof(struct iohist_key)))
 			return ipo;
@@ -44,16 +44,16 @@ static struct io_piece *__lookup_iohist_hash(struct thread_data *td, const struc
 	return NULL;
 }
 
-struct io_piece *lookup_iohist_hash(struct thread_data *td, const struct iohist_key *pkey)
+struct io_piece *iohist_hash_find(struct thread_data *td, const struct iohist_key *pkey)
 {
     //struct flist_head *iohist_hash=td->iohist_hash;
 	struct io_piece *ipo;
 
-	ipo = __lookup_iohist_hash(td, pkey);
+	ipo = __iohist_hash_find(td, pkey);
 	return ipo;
 }
 
-struct io_piece *add_iohist_hash(struct thread_data *td, struct io_piece *ipo)
+struct io_piece *iohist_hash_add(struct thread_data *td, struct io_piece *ipo)
 {
     struct flist_head *iohist_hash=td->iohist_hash;
 	struct io_piece *_ipo;
@@ -62,10 +62,10 @@ struct io_piece *add_iohist_hash(struct thread_data *td, struct io_piece *ipo)
 	if (io_piece_hashed(ipo))
 		return NULL;
 
-    set_iohist_key(ipo, &key);
+    set_iohist_key(&key, ipo->file, ipo->block);
 	INIT_FLIST_HEAD(&ipo->hash_list);
 
-	_ipo = __lookup_iohist_hash(td, &key);
+	_ipo = __iohist_hash_find(td, &key);
 	if (!_ipo) {
 		io_piece_set_hashed(ipo);
 		flist_add_tail(&ipo->hash_list, &iohist_hash[hash(&key)]);
@@ -89,13 +89,20 @@ void iohist_hash_exit(struct thread_data *td)
 	iohist_hash = NULL;
 }
 
-void iohist_hash_init(struct thread_data *td)
+int iohist_hash_init(struct thread_data *td)
 {
     struct flist_head *iohist_hash;
 	unsigned int i;
 
+    if (!((td->o.randomagain || td->o.norandommap))&&
+                (td->o.min_bs[DDIR_WRITE] != td->o.max_bs[DDIR_WRITE])) {
+        return 0;
+    }
 	td->iohist_hash = malloc(HASH_BUCKETS*sizeof(struct flist_head));
+    if (!td->iohist_hash)
+        return 1;
     iohist_hash=td->iohist_hash;
 	for (i = 0; i < HASH_BUCKETS; i++)
 		INIT_FLIST_HEAD(&iohist_hash[i]);
+    return 0;
 }

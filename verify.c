@@ -12,6 +12,7 @@
 #include "verify.h"
 #include "smalloc.h"
 #include "trim.h"
+#include "iohist_hash.h"
 #include "lib/rand.h"
 
 #include "crc/md5.h"
@@ -78,8 +79,11 @@ static unsigned int get_hdr_inc(struct thread_data *td, struct io_u *io_u)
 	unsigned int hdr_inc;
 
 	hdr_inc = io_u->buflen;
-	if (td->o.verify_interval && td->o.verify_interval <= io_u->buflen)
+    if (td->o.randomagain) {
+        hdr_inc = td->o.rw_min_bs;
+    }else if (td->o.verify_interval && td->o.verify_interval <= io_u->buflen) {
 		hdr_inc = td->o.verify_interval;
+    }
 
 	return hdr_inc;
 }
@@ -996,6 +1000,12 @@ int get_next_verify(struct thread_data *td, struct io_u *io_u)
 		flist_del(&ipo->list);
 		assert(ipo->flags & IP_F_ONLIST);
 		ipo->flags &= ~IP_F_ONLIST;
+        if (io_piece_hashed(ipo)) {
+            iohist_hash_del(td, ipo);
+            unsigned int min_bs = td->o.rw_min_bs;
+            ipo->offset = ipo->block * min_bs + ipo->file->file_offset;
+            ipo->len = ipo->nr_blk * min_bs;
+        }
 	}
 
 	if (ipo) {

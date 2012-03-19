@@ -680,6 +680,10 @@ int setup_files(struct thread_data *td)
 	if (err)
 		return err;
 
+    /* setup belong to thread_data */
+	for_each_file(td, f, i) {
+        f->td = td;
+	}
 	/*
 	 * check sizes. if the files/devices do not exist and the size
 	 * isn't passed to fio, abort.

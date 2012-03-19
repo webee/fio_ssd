@@ -68,8 +68,14 @@ struct io_piece {
 		int fileno;
 		struct fio_file *file;
 	};
-	unsigned long long offset;
-	unsigned long len;
+    union {
+        unsigned long long offset;
+        unsigned long long block;
+    };
+    union {
+        unsigned long len;
+        unsigned long nr_blk;
+    };
 	unsigned int flags;
     /* for verification */
     struct fio_unique unique_version;

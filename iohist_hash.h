@@ -1,21 +1,23 @@
-#ifndef FIO_FILE_HASH_H
-#define FIO_FILE_HASH_H
+#ifndef FIO_IOHIST_HASH_H
+#define FIO_IOHIST_HASH_H
+
+#include "fio.h"
 
 struct iohist_key {
     struct fio_file *file;
-	unsigned long long offset;
+	unsigned long block;
 };
 
-void iohist_hash_init(struct thread_data *td);
+int iohist_hash_init(struct thread_data *td);
 void iohist_hash_exit(struct thread_data *td);
-struct io_piece *lookup_iohist_hash(struct thread_data *td, const struct iohist_key *pkey);
-struct io_piece *add_iohist_hash(struct thread_data *, struct io_piece *);
-void remove_iohist_hash(struct thread_data *, struct io_piece *);
+struct io_piece *iohist_hash_find(struct thread_data *td, const struct iohist_key *pkey);
+struct io_piece *iohist_hash_add(struct thread_data *, struct io_piece *);
+void iohist_hash_del(struct thread_data *, struct io_piece *);
 
-static inline void set_iohist_key(struct io_piece *ipo, struct iohist_key *pkey)
+static inline void set_iohist_key(struct iohist_key *pkey, struct fio_file *file, unsigned long block)
 {
-    pkey->file = ipo->file;
-    pkey->offset = ipo->offset;
+    pkey->file = file;
+    pkey->block = block;
 }
 static inline void io_piece_set_hashed(struct io_piece *ipo)
 {
