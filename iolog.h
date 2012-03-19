@@ -48,9 +48,10 @@ struct io_log {
 };
 
 enum {
-	IP_F_ONRB	= 1,
-	IP_F_ONLIST	= 2,
-	IP_F_TRIMMED	= 4,
+    IP_F_ONRB   = 1,
+    IP_F_ONLIST = 2,
+    IP_F_TRIMMED= 4,
+    IP_F_HASHED = 8,
 };
 
 /*
@@ -61,13 +62,20 @@ struct io_piece {
 		struct rb_node rb_node;
 		struct flist_head list;
 	};
+	struct flist_head hash_list;
 	struct flist_head trim_list;
 	union {
 		int fileno;
 		struct fio_file *file;
 	};
-	unsigned long long offset;
-	unsigned long len;
+    union {
+        unsigned long long offset;
+        unsigned long long block;
+    };
+    union {
+        unsigned long len;
+        unsigned long nr_blk;
+    };
 	unsigned int flags;
     /* for verification */
     struct fio_unique unique_version;

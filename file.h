@@ -60,6 +60,9 @@ struct fio_file {
 	struct flist_head hash_list;
 	enum fio_filetype filetype;
 
+    /* thread_data belong to.*/
+    struct thread_data *td;
+
 	void *file_data;
 	int fd;
 #ifdef WIN32
@@ -107,6 +110,7 @@ struct fio_file {
 	 * block map for random io
 	 */
 	unsigned long *file_map;
+	unsigned long *file_map2;
 	unsigned long num_maps;
 	unsigned long last_free_lookup;
 	unsigned failed_rands;
@@ -175,6 +179,8 @@ static inline void fio_file_reset(struct fio_file *f)
 	f->file_pos = -1ULL;
 	if (f->file_map)
 		memset(f->file_map, 0, f->num_maps * sizeof(unsigned long));
+	if (f->file_map2)
+		memset(f->file_map2, 0, 2 * f->num_maps * sizeof(unsigned long));
 }
 
 #endif

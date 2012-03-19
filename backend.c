@@ -48,6 +48,7 @@
 #include "lib/rand.h"
 #include "memalign.h"
 #include "server.h"
+#include "iohist_hash.h"
 
 static pthread_t disk_util_thread;
 static struct fio_mutex *startup_mutex;
@@ -1058,6 +1059,9 @@ static void *thread_main(void *data)
 	if (init_random_map(td))
 		goto err;
 
+    if (iohist_hash_init(td))
+        goto err;
+
 	if (td->o.exec_prerun) {
 		if (exec_string(td->o.exec_prerun))
 			goto err;
@@ -1186,6 +1190,7 @@ err:
 	close_ioengine(td);
 	cleanup_io_u(td);
 	cgroup_shutdown(td, &cgroup_mnt);
+    iohist_hash_exit(td);
 
 	if (td->o.cpumask_set) {
 		int ret = fio_cpuset_exit(&td->o.cpumask);

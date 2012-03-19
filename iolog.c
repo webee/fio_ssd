@@ -10,6 +10,8 @@
 #include "fio.h"
 #include "verify.h"
 #include "trim.h"
+#include "seg_2bitsmap.h"
+#include "iohist_hash.h"
 
 static const char iolog_ver2[] = "fio version 2 iolog";
 
@@ -187,14 +189,39 @@ void log_io_piece(struct thread_data *td, struct io_u *io_u)
 	ipo = malloc(sizeof(struct io_piece));
 	init_ipo(ipo);
 	ipo->file = io_u->file;
-	ipo->offset = io_u->offset;
-	ipo->len = io_u->buflen;
     if (td->o.verify_inner) {
         fio_string_unique(s_version);
         td->unique_ops->copy(&ipo->unique_version, &io_u->unique_version);
         dprint(FD_VERIFY, "io_u copy to io_piece(unique version): %s\n",
                 td->unique_ops->to_string(&ipo->unique_version, s_version));
     }
+
+    /* if bs is variable and may generate duplicate offset.
+     * we use the seg_2bitsmap+list.
+     */
+    if (((td->o.randomagain || !file_randommap(td, ipo->file))
+            &&(td->o.min_bs[DDIR_WRITE] != td->o.max_bs[DDIR_WRITE]))
+            ||(td->o.ddir_seq_nr > 1)) {
+        unsigned int min_bs = td->o.rw_min_bs;
+        /* use offset && len */
+        ipo->block = (io_u->offset - io_u->file->file_offset) / (unsigned long long) min_bs;
+        ipo->nr_blk = (io_u->buflen + min_bs - 1) / min_bs;
+        printf("<<<<<<<<<<ADD:%p,%llu-%llu\n",ipo, ipo->block, ipo->block+ipo->nr_blk);
+        // insert to seg_2bitsmap.
+        insert_seg(ipo->file->file_map2, ipo->block, ipo->nr_blk, overlap_divide, ipo->file);
+        // add to hashtable.
+        iohist_hash_add(td, ipo);
+        // add to io_hist_list.
+		INIT_FLIST_HEAD(&ipo->list);
+		flist_add_tail(&ipo->list, &td->io_hist_list);
+		ipo->flags |= IP_F_ONLIST;
+		td->io_hist_len++;
+        return;
+    }
+
+    /* use offset && len */
+	ipo->offset = io_u->offset;
+	ipo->len = io_u->buflen;
 
 	if (io_u_should_trim(td, io_u)) {
 		flist_add_tail(&ipo->trim_list, &td->trim_list);
@@ -218,13 +245,16 @@ void log_io_piece(struct thread_data *td, struct io_u *io_u)
 	if ((!td_random(td) || !td->o.overwrite) &&
 	      (file_randommap(td, ipo->file) || td->o.verify == VERIFY_NONE) &&
           (!td->o.randomagain || td->o.verify == VERIFY_NONE) && td->o.ddir_seq_nr < 2) {
+        if (td->o.verifysort)
+            goto rb_tree;
 		INIT_FLIST_HEAD(&ipo->list);
 		flist_add_tail(&ipo->list, &td->io_hist_list);
 		ipo->flags |= IP_F_ONLIST;
 		td->io_hist_len++;
 		return;
 	}
-   
+
+rb_tree:
 	RB_CLEAR_NODE(&ipo->rb_node);
 
 	/*

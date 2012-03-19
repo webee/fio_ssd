@@ -749,7 +749,7 @@ static int fill_io_u(struct thread_data *td, struct io_u *io_u)
 	/*
 	 * mark entry before potentially trimming io_u
 	 */
-	if (td_random(td) && file_randommap(td, io_u->file) && !io_u->randomagain)
+	if (td_random(td) && file_randommap(td, io_u->file)&&!td->o.randomagain)
 		mark_random_map(td, io_u);
     if (td->o.randomagain)
         mark_bit_map(td, io_u);

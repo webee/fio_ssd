@@ -680,6 +680,10 @@ int setup_files(struct thread_data *td)
 	if (err)
 		return err;
 
+    /* setup belong to thread_data */
+	for_each_file(td, f, i) {
+        f->td = td;
+	}
 	/*
 	 * check sizes. if the files/devices do not exist and the size
 	 * isn't passed to fio, abort.
@@ -851,12 +855,15 @@ int init_random_map(struct thread_data *td)
 				(unsigned long long) BLOCKS_PER_MAP;
 		if (num_maps == (unsigned long) num_maps) {
 			f->file_map = smalloc(num_maps * sizeof(unsigned long));
-			if (f->file_map) {
+			f->file_map2 = smalloc(2 * num_maps * sizeof(unsigned long));
+			if (f->file_map && f->file_map2) {
 				f->num_maps = num_maps;
 				continue;
 			}
-		} else
+		} else {
 			f->file_map = NULL;
+			f->file_map2 = NULL;
+        }
 
 		if (!td->o.softrandommap) {
 			log_err("fio: failed allocating random map. If running"
@@ -907,6 +914,8 @@ void close_and_free_files(struct thread_data *td)
 		f->file_name = NULL;
 		sfree(f->file_map);
 		f->file_map = NULL;
+		sfree(f->file_map2);
+		f->file_map2 = NULL;
 		sfree(f);
 	}
 
