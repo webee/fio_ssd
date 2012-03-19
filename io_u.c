@@ -753,6 +753,8 @@ static int fill_io_u(struct thread_data *td, struct io_u *io_u)
 		mark_random_map(td, io_u);
     if (td->o.randomagain)
         mark_bit_map(td, io_u);
+    else if (td->o.norandommap)
+        io_u->randomagain = 1;
 
 	/*
 	 * If using a write iolog, store this entry.
