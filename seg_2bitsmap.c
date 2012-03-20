@@ -27,7 +27,7 @@ set_bit(unsigned long map2[], unsigned int idx, unsigned int bit, unsigned char 
 }
 
 void
-remove_seg(ul map2[], ull block)
+remove_seg(ul map2[], ul num, ull block)
 {
     unsigned int idx, bit;
     idx = MAP2_IDX(block);
@@ -40,7 +40,8 @@ remove_seg(ul map2[], ull block)
             idx++;
             bit=0;
         }
-    }while (test_blk(map2, idx, bit, IN));
+    }while (idx<num && test_blk(map2, idx, bit, IN));
+    printf("<<<<<<<<<<REMOVE:%llu-%llu\n", block, (ull)MAP2_BLK(idx, bit)-1);
 }
 
 void
@@ -101,6 +102,7 @@ print_map(unsigned long map2[], unsigned long nmaps)
 {
     int idx,bit;
     unsigned char blk;
+    printf("%p::", map2);
     for (idx=0; idx<nmaps; idx++) {
         for (bit=0; bit<BLKS_PER_MAP2; bit++) {
             blk = get_blk(map2, idx, bit);
@@ -118,6 +120,7 @@ print_map(unsigned long map2[], unsigned long nmaps)
         }
         printf("|");
     }
+    printf("\n");
 }
 
 void
@@ -178,5 +181,16 @@ overlap_divide(ull block, ull start, ul len, void *ctx)
         // change origanal ipo's len.
         ipo->nr_blk = start - block;
         printf("<<<<<<<<<<CHG:%p,%llu-%llu\n",ipo, ipo->block, ipo->block+ipo->nr_blk);
+    }
+}
+
+void
+clear_map(ul map2[], void *ctx)
+{
+    struct fio_file *f = (struct fio_file *)ctx;
+    struct thread_data *td = f->td;
+    if (map2) {
+        if (!(td && td->io_hist_len))
+            memset(f->file_map2, 0, 2 * f->num_maps * sizeof(unsigned long));
     }
 }

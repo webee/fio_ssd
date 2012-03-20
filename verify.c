@@ -13,6 +13,7 @@
 #include "smalloc.h"
 #include "trim.h"
 #include "iohist_hash.h"
+#include "seg_2bitsmap.h"
 #include "lib/rand.h"
 
 #include "crc/md5.h"
@@ -1001,9 +1002,13 @@ int get_next_verify(struct thread_data *td, struct io_u *io_u)
 		assert(ipo->flags & IP_F_ONLIST);
 		ipo->flags &= ~IP_F_ONLIST;
         if (io_piece_hashed(ipo)) {
+            struct fio_file *f = ipo->file;
+            /* delete from seg_2bitsmap */
+            remove_seg(f->file_map2, f->num_maps, ipo->block);
+            /* delete from hashtable */
             iohist_hash_del(td, ipo);
             unsigned int min_bs = td->o.rw_min_bs;
-            ipo->offset = ipo->block * min_bs + ipo->file->file_offset;
+            ipo->offset = ipo->block * min_bs + f->file_offset;
             ipo->len = ipo->nr_blk * min_bs;
         }
 	}

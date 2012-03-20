@@ -5,6 +5,7 @@
 #include "compiler/compiler.h"
 #include "io_ddir.h"
 #include "flist.h"
+#include "seg_2bitsmap.h"
 
 /*
  * The type of object we are working on
@@ -180,7 +181,7 @@ static inline void fio_file_reset(struct fio_file *f)
 	if (f->file_map)
 		memset(f->file_map, 0, f->num_maps * sizeof(unsigned long));
 	if (f->file_map2)
-		memset(f->file_map2, 0, 2 * f->num_maps * sizeof(unsigned long));
+        clear_map(f->file_map2, f);
 }
 
 #endif
