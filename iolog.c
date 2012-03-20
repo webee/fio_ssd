@@ -203,12 +203,13 @@ void log_io_piece(struct thread_data *td, struct io_u *io_u)
             &&(td->o.min_bs[DDIR_WRITE] != td->o.max_bs[DDIR_WRITE]))
             ||(td->o.ddir_seq_nr > 1)) {
         unsigned int min_bs = td->o.rw_min_bs;
+        struct fio_file *f = io_u->file;
         /* use offset && len */
-        ipo->block = (io_u->offset - io_u->file->file_offset) / min_bs;
+        ipo->block = (io_u->offset - f->file_offset) / min_bs;
         ipo->nr_blk = (io_u->buflen + min_bs - 1) / min_bs;
         // insert to seg_2bitsmap.
-        insert_seg(ipo->file->file_map2, ipo->block, ipo->nr_blk, overlap_divide, ipo->file);
-        printf("<<<<<<<<<<ADD:%p,%llu-%llu\n",ipo, ipo->block, ipo->block+ipo->nr_blk-1);
+        insert_seg(f->file_map2, ipo->block, ipo->nr_blk, overlap_divide, f);
+        dprintf("%p<<<ADD:%p,%llu-%llu\n", f->file_map2, ipo, ipo->block, ipo->block+ipo->nr_blk-1);
         // add to hashtable.
         iohist_hash_add(td, ipo);
         // add to io_hist_list.

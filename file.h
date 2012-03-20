@@ -181,7 +181,7 @@ static inline void fio_file_reset(struct fio_file *f)
 	if (f->file_map)
 		memset(f->file_map, 0, f->num_maps * sizeof(unsigned long));
 	if (f->file_map2)
-        clear_map(f->file_map2, f);
+        clean_map(f->file_map2, f);
 }
 
 #endif

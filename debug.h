@@ -20,6 +20,7 @@ enum {
 	FD_TIME,
 	FD_NET,
 	FD_DEBUG_MAX,
+    FD_BITMAP,
 };
 
 extern unsigned int fio_debug_jobno, *fio_debug_jobp;

@@ -41,7 +41,7 @@ remove_seg(ul map2[], ul num, ull block)
             bit=0;
         }
     }while (idx<num && test_blk(map2, idx, bit, IN));
-    printf("<<<<<<<<<<REMOVE:%llu-%llu\n", block, (ull)MAP2_BLK(idx, bit)-1);
+    dprint(FD_BITMAP,"%p<<<REMOVE:%llu-%llu\n", map2, block, (ull)MAP2_BLK(idx, bit)-1);
 }
 
 void
@@ -58,7 +58,6 @@ insert_seg(ul map2[], ull block, ul nr_blk, OverlapFunc overlap, void *ctx)
     blk = get_blk(map2, idx, bit);
     if (blk==EMPTY) {
     }else if(blk==START) {
-        printf("START0<<<<<<block: %llu, start: %llu, len: %lu\n", block, block, nr_blk);
         overlap(block, block, nr_blk, ctx);
     }else if(blk==IN) {
         unsigned int prev_idx = idx;
@@ -68,7 +67,6 @@ insert_seg(ul map2[], ull block, ul nr_blk, OverlapFunc overlap, void *ctx)
             prev_idx = prev_bit > BLKS_PER_MAP2 ? prev_idx : prev_idx-1;
             prev_bit = (prev_bit-1)%BLKS_PER_MAP2;
         }while (!test_blk(map2, prev_idx, prev_bit, START));
-        printf("START1<<<<<<block: %llu, start: %llu, len: %lu\n", (ull)MAP2_BLK(prev_idx, prev_bit), block, nr_blk);
         overlap((ull)MAP2_BLK(prev_idx,prev_bit), block, nr_blk, ctx);
     }else if(blk==ERR) {
         //2bits-map error.
@@ -84,7 +82,6 @@ insert_seg(ul map2[], ull block, ul nr_blk, OverlapFunc overlap, void *ctx)
     //in.
     while (finish<nr_blk) {
         if (test_blk(map2, idx, bit, START)) {
-            printf("IN<<<<<<block: %llu(%u,%u), start: %llu, len: %lu\n", (ull)MAP2_BLK(idx,bit), idx, bit, block, nr_blk);
             overlap(MAP2_BLK(idx,bit), block, nr_blk, ctx);
         }
         set_bit(map2, idx, bit, IN);
@@ -102,25 +99,23 @@ print_map(unsigned long map2[], unsigned long nmaps)
 {
     int idx,bit;
     unsigned char blk;
-    printf("%p::", map2);
+    dprint(FD_BITMAP,"%p::", map2);
     for (idx=0; idx<nmaps; idx++) {
         for (bit=0; bit<BLKS_PER_MAP2; bit++) {
             blk = get_blk(map2, idx, bit);
             if (blk==EMPTY) {
-                //printf("%02d",j);
-                printf("-+");
-                //printf("=+");
+                dprint(FD_BITMAP,"-+");
             }else if(blk==START) {
-                printf("*#");
+                dprint(FD_BITMAP,"*#");
             }else if(blk==IN) {
-                printf("##");
+                dprint(FD_BITMAP,"##");
             }else if(blk==ERR) {
-                printf("$$");
+                dprint(FD_BITMAP,"$$");
             }
         }
-        printf("|");
+        dprint(FD_BITMAP,"|");
     }
-    printf("\n");
+    dprint(FD_BITMAP,"\n");
 }
 
 void
@@ -128,6 +123,7 @@ overlap_divide(ull block, ull start, ul len, void *ctx)
 {
     struct fio_file *f = (struct fio_file *)ctx;
     struct thread_data *td = f->td;
+    unsigned long *map2 = f->file_map2;
     struct io_piece *ipo;
     struct iohist_key key;
     set_iohist_key(&key, f, block);
@@ -145,17 +141,17 @@ overlap_divide(ull block, ull start, ul len, void *ctx)
             // change hash, then add.
             set_iohist_key(&key, f, ipo->block);
             iohist_hash_add(td, ipo);
-            printf("<<<<<<<<<<CHG:%p,%llu-%llu\n",ipo, ipo->block, ipo->block+ipo->nr_blk);
+            dprint(FD_BITMAP,"%p<<<CHG:%p,%llu-%llu\n", map2, ipo, ipo->block, ipo->block+ipo->nr_blk-1);
         }else {
             // deleted from hashtable.
             iohist_hash_del(td, ipo);
             // deleted from list.
-            printf("<<<<<<<<<<DEL:%p,%llu-%llu\n",ipo, ipo->block, ipo->block+ipo->nr_blk);
             flist_del(&ipo->list);
             assert(ipo->flags & IP_F_ONLIST);
             ipo->flags &= ~IP_F_ONLIST;
             td->io_hist_len--;
             free(ipo);
+            dprint(FD_BITMAP,"%p<<<DEL:%p,%llu-%llu\n", map2, ipo, ipo->block, ipo->block+ipo->nr_blk-1);
         }
     }else {
         if (start+len < block + ipo->nr_blk) {
@@ -172,7 +168,7 @@ overlap_divide(ull block, ull start, ul len, void *ctx)
             set_iohist_key(&key, f, tail_ipo->block);
             iohist_hash_add(td, tail_ipo);
             // add tail_ipo to list.
-            printf("<<<<<<<<<<ADD:%p, %llu-%llu\n",tail_ipo, tail_ipo->block, tail_ipo->block+tail_ipo->nr_blk);
+            dprint(FD_BITMAP,"%p<<<ADD:%p, %llu-%llu\n", map2, tail_ipo, tail_ipo->block, tail_ipo->block+tail_ipo->nr_blk-1);
             INIT_FLIST_HEAD(&tail_ipo->list);
             flist_add_tail(&tail_ipo->list, &td->io_hist_list);
             tail_ipo->flags |= IP_F_ONLIST;
@@ -180,17 +176,19 @@ overlap_divide(ull block, ull start, ul len, void *ctx)
         }
         // change origanal ipo's len.
         ipo->nr_blk = start - block;
-        printf("<<<<<<<<<<CHG:%p,%llu-%llu\n",ipo, ipo->block, ipo->block+ipo->nr_blk);
+        dprint(FD_BITMAP,"%p<<<CHG:%p,%llu-%llu\n", map2, ipo, ipo->block, ipo->block+ipo->nr_blk-1);
     }
 }
 
 void
-clear_map(ul map2[], void *ctx)
+clean_map(ul map2[], void *ctx)
 {
     struct fio_file *f = (struct fio_file *)ctx;
     struct thread_data *td = f->td;
     if (map2) {
-        if (!(td && td->io_hist_len))
+        if (!(td && td->io_hist_len)) {
             memset(f->file_map2, 0, 2 * f->num_maps * sizeof(unsigned long));
+            dprint(FD_BITMAP,"%p<<<CLEAN:%p\n",map2);
+        }
     }
 }

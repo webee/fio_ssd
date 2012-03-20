@@ -25,6 +25,6 @@ void print_map(unsigned long map2[], unsigned long nmaps);
 
 /* overlap handlers */
 void overlap_divide(ull block, ull start, ul len, void *ctx);
-void clear_map(ul map2[], void *ctx);
+void clean_map(ul map2[], void *ctx);
 
 #endif /* FIO_SEG_2BITS_MAP */
