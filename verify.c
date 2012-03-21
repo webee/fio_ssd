@@ -1027,6 +1027,7 @@ int get_next_verify(struct thread_data *td, struct io_u *io_u)
             dprint(FD_VERIFY, "io_piece copy to io_u(unique version): %s\n",
                     td->unique_ops->to_string(&io_u->unique_version, s_version));
         }
+		io_u->flags |= IO_U_F_VER_LIST;
 
 		if (ipo->flags & IP_F_TRIMMED)
 			io_u->flags |= IO_U_F_TRIMMED;

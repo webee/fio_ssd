@@ -495,7 +495,10 @@ sync_done:
 		if (full || !td->o.iodepth_batch_complete) {
 			min_events = min(td->o.iodepth_batch_complete,
 					 td->cur_depth);
-			if (full && !min_events && td->o.iodepth_batch_complete != 0)
+			/*
+			 * if the queue is full, we MUST reap at least 1 event
+			 */
+			if (full && !min_events)
 				min_events = 1;
 
 			do {
@@ -556,7 +559,8 @@ static void do_io(struct thread_data *td)
 		td_set_runstate(td, TD_RUNNING);
 
 	while ((td->o.read_iolog_file && !flist_empty(&td->io_log_list)) ||
-		(!flist_empty(&td->trim_list)) || !io_bytes_exceeded(td)) {
+		(!flist_empty(&td->trim_list)) || !io_bytes_exceeded(td) ||
+		td->o.time_based) {
 		struct timeval comp_time;
 		unsigned long bytes_done[2] = { 0, 0 };
 		int min_evts = 0;
@@ -587,11 +591,12 @@ static void do_io(struct thread_data *td)
 		ddir = io_u->ddir;
 
 		/*
-		 * Add verification end_io handler, if asked to verify
-		 * a previously written file.
+		 * Add verification end_io handler if:
+		 *	- Asked to verify (!td_rw(td))
+		 *	- Or the io_u is from our verify list (mixed write/ver)
 		 */
 		if (td->o.verify != VERIFY_NONE && io_u->ddir == DDIR_READ &&
-                (io_u->flags & IO_U_F_VERIFY)) {
+		    ((io_u->flags & IO_U_F_VER_LIST) || !td_rw(td))) {
 			if (td->o.verify_async)
 				io_u->end_io = verify_io_u_async;
 			else
@@ -676,7 +681,10 @@ sync_done:
 		if (full || !td->o.iodepth_batch_complete) {
 			min_evts = min(td->o.iodepth_batch_complete,
 					td->cur_depth);
-			if (full && !min_evts && td->o.iodepth_batch_complete != 0)
+			/*
+			 * if the queue is full, we MUST reap at least 1 event
+			 */
+			if (full && !min_evts)
 				min_evts = 1;
 
 			if (__should_check_rate(td, 0) ||

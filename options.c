@@ -1138,6 +1138,14 @@ static struct fio_option options[FIO_MAX_OPTS] = {
 		.def	= "0",
 	},
 	{
+		.name	= "offset_increment",
+		.type	= FIO_OPT_STR_VAL,
+		.off1	= td_var_offset(offset_increment),
+		.help	= "What is the increment from one offset to the next",
+		.parent = "offset",
+		.def	= "0",
+	},
+	{
 		.name	= "bs",
 		.alias	= "blocksize",
 		.type	= FIO_OPT_INT,
@@ -2053,6 +2061,13 @@ static struct fio_option options[FIO_MAX_OPTS] = {
 		.maxval	= 100,
 		.minval	= 1,
 		.help	= "How compressible the buffer is (approximately)",
+	},
+	{
+		.name	= "buffer_compress_chunk",
+		.type	= FIO_OPT_INT,
+		.off1	= td_var_offset(compress_chunk),
+		.parent	= "buffer_compress_percentage",
+		.help	= "Size of compressible region in buffer",
 	},
 	{
 		.name	= "clat_percentiles",
