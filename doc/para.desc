@@ -1,0 +1,127 @@
+description             : Text job description
+name                    : Name of this job
+directory               : Directory to store files in
+filename                : File(s) to use for the workload
+  lockfile              : Lock file when doing IO to it
+kb_base                 : How many bytes per KB for reporting (1000 or 1024)
+opendir                 : Recursively add files from this directory and down
+rw                      : IO direction
+  bs                    : Block size unit
+  ba                    : IO block offset alignment
+  bsrange               : Set block size range (in more detail than bs)
+  bssplit               : Set a specific mix of block sizes
+  bs_unaligned          : Don't sector align IO buffer sizes
+  randrepeat            : Use repeatable random IO pattern
+  use_os_rand           : Set to use OS random generator
+  norandommap           : Accept potential duplicate random blocks
+    softrandommap       : Set norandommap if randommap allocation fails
+rw_sequencer            : IO offset generator modifier
+ioengine                : IO engine to use
+iodepth                 : Number of IO buffers to keep in flight
+  iodepth_batch         : Number of IO buffers to submit in one go
+  iodepth_batch_complete: Number of IO buffers to retrieve in one go
+  iodepth_low           : Low water mark for queuing depth
+size                    : Total size of device or files
+fill_device             : Write until an ENOSPC error occurs
+filesize                : Size of individual files
+offset                  : Start IO from this offset
+nrfiles                 : Split job workload between this number of files
+  file_service_type     : How to select which file to service next
+openfiles               : Number of files to keep open at the same time
+fallocate               : Whether pre-allocation is performed when laying out files
+fadvise_hint            : Use fadvise() to advise the kernel on IO pattern
+fsync                   : Issue fsync for writes every given number of blocks
+fdatasync               : Issue fdatasync for writes every given number of blocks
+write_barrier           : Make every Nth write a barrier write
+sync_file_range         : Use sync_file_range()
+direct                  : Use O_DIRECT IO (negates buffered)
+buffered                : Use buffered IO (negates direct)
+  sync                  : Use O_SYNC for buffered writes
+overwrite               : When writing, set whether to overwrite current data
+loops                   : Number of times to run the job
+numjobs                 : Duplicate this job this many times
+startdelay              : Only start job when this period has passed
+runtime                 : Stop workload when this amount of time has passed
+time_based              : Keep running until runtime/timeout is met
+ramp_time               : Ramp up time before measuring performance
+clocksource             : What type of timing source to use
+mem                     : Backing type for IO buffers
+verify                  : Verify data written
+  do_verify             : Run verification stage after write
+  verifysort            : Sort written verify blocks for read back
+  verify_interval       : Store verify buffer header every N bytes
+  verify_offset         : Offset verify header location by N bytes
+  verify_pattern        : Fill pattern for IO buffers
+  verify_fatal          : Exit on a single verify failure, don't continue
+  verify_dump           : Dump contents of good and bad blocks on failure
+  verify_async          : Number of async verifier threads to use
+  verify_backlog        : Verify after this number of blocks are written
+  verify_backlog_batch  : Verify this number of IO blocks
+  trim_percentage       : Number of verify blocks to discard/trim
+    trim_verify_zero    : Verify that trim/discarded blocks are returned as zeroes
+    trim_backlog        : Trim after this number of blocks are written
+    trim_backlog_batch  : Trim this number of IO blocks
+write_iolog             : Store IO pattern to file
+read_iolog              : Playback IO pattern from file
+  replay_no_stall       : Playback IO pattern file as fast as possible without stalls
+  replay_redirect       : Replay all I/O onto this device, regardless of trace device
+exec_prerun             : Execute this file prior to running job
+exec_postrun            : Execute this file after running job
+ioscheduler             : Use this IO scheduler on the backing device
+zonesize                : Give size of an IO zone
+zoneskip                : Space between IO zones
+lockmem                 : Lock down this amount of memory
+rwmixread               : Percentage of mixed workload that is reads
+rwmixwrite              : Percentage of mixed workload that is writes
+nice                    : Set job CPU nice value
+prio                    : Set job IO priority value
+prioclass               : Set job IO priority class
+thinktime               : Idle time between IO buffers (usec)
+  thinktime_spin        : Start think time by spinning this amount (usec)
+  thinktime_blocks      : IO buffer period between 'thinktime'
+rate                    : Set bandwidth rate
+  ratemin               : Job must meet this rate or it will be shutdown
+  ratecycle             : Window average for rate limits (msec)
+rate_iops               : Limit IO used to this number of IO operations/sec
+  rate_iops_min         : Job must meet this rate or it will be shut down
+invalidate              : Invalidate buffer/page cache prior to running job
+create_serialize        : Serialize creating of job files
+create_fsync            : fsync file after creation
+create_on_open          : Create files when they are opened for IO
+pre_read                : Pre-read files before starting official testing
+cpuload                 : Use this percentage of CPU
+  cpuchunks             : Length of the CPU burn cycles (usecs)
+cpumask                 : CPU affinity mask
+cpus_allowed            : Set CPUs allowed
+end_fsync               : Include fsync at the end of job
+fsync_on_close          : fsync files on close
+unlink                  : Unlink created files after job has completed
+exitall                 : Terminate all jobs when one exits
+stonewall               : Insert a hard barrier between this job and previous
+new_group               : Mark the start of a new group (for reporting)
+thread                  : Use threads instead of forks
+write_bw_log            : Write log of bandwidth during run
+write_lat_log           : Write log of latency during run
+write_iops_log          : Write log of IOPS during run
+log_avg_msec            : Average bw/iops/lat logs over this period of time
+hugepage-size           : When using hugepages, specify size of each page
+group_reporting         : Do reporting on a per-group basis
+zero_buffers            : Init IO buffers to all zeroes
+refill_buffers          : Refill IO buffers on every IO submit
+scramble_buffers        : Slightly scramble buffers on every IO submit
+clat_percentiles        : Enable the reporting of completion latency percentiles
+percentile_list         : Specify a custom list of percentiles to report
+disk_util               : Log disk utilization statistics
+gtod_reduce             : Greatly reduce number of gettimeofday() calls
+  disable_lat           : Disable latency numbers
+  disable_clat          : Disable completion latency numbers
+  disable_slat          : Disable submission latency numbers
+  disable_bw_measurement: Disable bandwidth logging
+gtod_cpu                : Set up dedicated gettimeofday() thread on this CPU
+continue_on_error       : Continue on non-fatal errors during IO
+profile                 : Select a specific builtin performance test
+cgroup                  : Add job to cgroup of this name
+cgroup_weight           : Use given weight for cgroup
+cgroup_nodelete         : Do not delete cgroups after job completion
+uid                     : Run job with this user ID
+gid                     : Run job with this group ID

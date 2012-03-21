@@ -1,0 +1,2223 @@
+1 feddf10395ef589a0a6a06023c1f63da9c2fa39a [BIT] fix some compiling bugs(gcc).
+2 9f13996fa84d030854161eac89341c475c61ab78 start bit.
+3 5383a0e2e65429493ff8d50ce54089dddd6caa92 Add branch bit.
+4 61d2407131bc52eb80a0cebc8b974c197034b402 Fio 1.99.9
+5 18320cf4da7b93c5294c239b86a949f437fa6fec Turn old debug printf() into a proper log_err()
+6 9f170691560bacdcd8cef6296d14fc0a8467a9dd Fix klibc getopt_long_only() for optional arguments
+7 203913ea773a19dce4a885204e9d7681b89429fe Fix OSX build
+8 cc60438162ca9936f48ee1c59198ac1f8323a59d Fix printf() being used instead of log_info()
+9 3d7cd9b4c2570548bebfae4871c3ca068c5a29fe Fix error in disk util stats for terse output
+10 83881283564820dabaa07c1bdea0e75e686efcaa Update command line usage help
+11 4d658652bac63fd72af8302e27deba5beb381906 Add terse version 2 output format
+12 c376910cc9a32c98829ceec19f35d7aae0a11e23 Fio 1.99.8
+13 3899076470e108d9815a322aaa97e662d141b50c Fix possible use-after-free on client disconnect
+14 498c92c27b475bcc0cb65e529fb02713bc1fb62c client: pass back server side error to client exit value
+15 11e950bd785d9f03b7d35a8ee4b4704256217504 client/server: send back nr_jobs and error exit code
+16 72c27ff8f2eaf945ae34776dab4da3fee753707d Fix problem with mixing is_backend and terse_output
+17 67f15dcf689815ec4fbe2cbb01f141ffc7b34c74 Fix fragmented package opcode mismatch
+18 01be038efc66ea1b49b4471f2ba9dd2d7121cfe7 Don't request ETA until server has started jobs
+19 4c8e9640702d90f9e2c5d5d5f5f9e299c67978eb Fix strip blank space for empty string
+20 43f747922e001a7bfb904dfcaa51934b986345ae Fix off-by-one in fgets() size
+21 92ac72c415e7688f1423d24058eff19de590b32e Fio 1.99.7
+22 7e1773ba2033a2f70bcbb36c07dc8743c6ce05d1 Pretty up output a bit
+23 7e356b2dee2e86f3684424fc6e903f1ef9f00ef4 Memory leak fixes
+24 b7017e324de0484b5b4db881bdb280611523cf7e Scale bw output to MB/sec if larger than 99999 KB/sec
+25 5e726d0a29b815f526f835e44afe3225522c6c20 Add fio version to terse output
+26 259e47dea8db94a372a73b07b5245d43d4f9ab92 Only print ts->description if set for non-terse output
+27 065248bfdd0f48aaf67f41055ec5185434acbafa Man page typo
+28 49da1240830d202892231238e197bde6a472f293 Update man page
+29 581b048d6f8f7a381d7e5c617e57469aa6b86a2e Fio 1.99.6
+30 4b0f22588568035952ea4c4673fdb1d7f5444eed Check string length of ts->description, not value
+31 c7c6cb4cb3114ec4ce3107e15c184e161b50122e Move IEEE754 support code to lib/
+32 f2f788dd732d97c2c3a5f5dd93223a7bfafcc410 Add disk utilization to terse format output
+33 1db92cb6b3db5965a52359cb2dab7ebd3f476f53 Add completion latency percentiles to terse output format
+34 f6dea4d33fb57a6e7cb64414793c57f10b702851 Don't output version for terse output
+35 312b4af22018a73a445ae6ecf640d71f12120ab9 Add IOPS to terse output
+36 74c04efa0408b0da0524bda0a39c00ac8fb0ab2a Update TODO
+37 0766d92e06a119eea489e74d80d5840813559752 Silence uninitialized mem warning on disk_util send
+38 07511a632ef219eb578d8c7f12825a275c640bcf Break double loop on end-of-clat percentiles
+39 d09a64a01a6c807596e9286c93f6c6f30fd2ea26 client/server: add support for passing disk_util structures
+40 4f6f8298a2d3f19cec0ba65525930a62eee3967f Adapt clat percentiles for min/max values
+41 0dc1bc03182ff0c8d1f3b1c36ce8e2f5bba52af6 Disable clat percentiles if gtod_reduce=1 is set
+42 467b35ed060e8feebd756bd399f095913281cd2a Enable completion latency percentiles by default
+43 250506294d3658d0eab0139d3829917a58b62c9a Remove extra \n before printing run status
+44 a31c5611355449a18e22128b9f8176da5ef7e4e7 Fio 1.99.5
+45 cfc03e4639fc29bf879f565300fe0238dd8b5ba9 server: fix bug in converting/storing clat percentiles
+46 351de8de68623375d2693192047cef7411f16442 Be a bit more defensive in clat percentile calc and display
+47 81ab0b3ab4db39033e020a1e611197fe04df6c3e Pretty up clat percentile display so it's actually readable
+48 731e3f7882e286742af32866cf2dcac1ba9d6a38 Fix clat percentile display
+49 b4f3c497738816693f853fd1161a214158bc14ca Correct Windows fio version
+50 fddc6604f91ebf76d9090741f9d4f5a4d33be0c6 Merge branch 'master' into client-server
+51 15b87723551b424d0db4c53577b567e670c7d4d8 Fix bad random offset generation for file map
+52 b814fb2694fe178b5cb94e046b9d31944e752f4a Fix off-by-one in jobs_eta allocation
+53 d2333358fb3729de6681ed5cc3ec45cd86b5cfb8 client: cleanup bit printing
+54 38fdef226f1a1fa053ab53005abbc184143bff65 server: include 32/64-bit in probe
+55 df380934e53c645b4b7cdec882b512b4d20ebc14 client/server: fix ptr <-> uint64_t casting warnings on 32-bit builds
+56 5fd0acbd212296542d396b07e1873b9e3093b76f client: dec sum_stat_clients if one a client is disconnected
+57 37f0c1ae23ad1716403d3d113c3dfdf41c47e329 client: display summed total of all clients when all stats have been received
+58 7b8216842eb888ff626f616c2770a2548b0b0bf9 server: error handling fixes
+59 ea5aa1be68de71f9f02eb3d6f4db726adcafb40a server: assume PID is dead on ESRCH
+60 89c1707cb512e562b55b56c268f7fad612be6f04 client/server: track and handle command timeouts
+61 56f521340fd00eea217988fed8929b4327bce5ea Fio 1.99.4
+62 bfc3b17986fb80aeb5a6ea962bb38fc1509d60a8 server: fread() - check <= 0 return value
+63 3f3a4542887ba038231144be08b2c36d7cc83424 client: duplicate arguments to "empty" clients
+64 13755d946d034eb7395a818db7ace2c9cb60b4cb server: improve pidfile and log handling
+65 402668f3e05259bfc135fc097136428feda01006 server: write pid file for backgrounded server to specified file
+66 f77d2676c36ec30cfb765b90505bdda7208c9796 client: properly assign client eta in flight
+67 5b9babb7fb9ac46c0e960ccd88c2d85ba3065c01 Abstract out and export summation of thread_stats
+68 7f868316a7244cad23735e44e6ef66e5779c9660 client/server: few select speedups
+69 82c1ed38d6c90c03beda072ed064a445ecb56aca client: track pending ETA requests
+70 60862e579e7f47ceede8f8d105413c2114687c2a init: typo, remove -> remote.
+71 af9c9fb34e420fc4d9cf317aa0f3cf6795a5a07f client/server: request ETA instead of having the server send it automatically
+72 48fbb46e7c9a2721b3b23898ab9ec79727ab4e9b client: sum running ETA of jobs
+73 b51eedb75e3f1a9db33fa488ff7d9cc0a956b8ee client: fix jobs_eta conversion typo
+74 427ee9f97da48c1f790d249409625b41f373c9ce Update TODO
+75 fa2ea806de0d6410320abd97599bc52f5a3e72cc Add protocol support for an arbitrary number of command line arguments
+76 72ddbe7981ab5d1c0eb64c952b29bdf6505afdec Fix Windows issue with socklen_t
+77 f1415a9fa9c892b6aa146ef87ca78471bcb57bdb Fix compile on FreeBSD
+78 b5296ddb3f34610e4bd90272bf5035a41691d00f client: used hostname passed back in probe as log prefix
+79 bcd528f5ffee78b7e5266b208d72afdb978c9452 Fio 1.99.3
+80 b7eec5046cec8fb7e5c948034c0367b5bfbf50a8 Makefile: use -O3 by default
+81 1f4c0a4f558557d45e6b186033577ec0b16872e5 Fix warning when clang is used as the compiler
+82 213a01b0699d88b20dfb9ed78db1f293a85d2bdc Makefile: move -rdynamic to linking flag
+83 c71233ee4aa050efc8a099df1482238b12f826ef client: pretty up probe output
+84 6d2cf39497670a0246c9b7bb1cc6ef77629e08f7 server: properly configure port without argument
+85 9d4b1cf7c142c3c34bd6302c5da7bb498189eac2 client: don't clear client->addr after it's been set
+86 a7de0a1163e63cb6fa0a6bad773c415d06d154ac server: ensure to set proper port
+87 cca84643cc10cd72b0b453ff92ccb8643ba51493 Pass arch/os in probe
+88 c524ef72414f227ae4fcbfc95b832b3e6a95ae51 client: fix mem leak
+89 602d6ff969ae45cd7388d1f4b89032e71f503af6 Poll server idle loop any time the main status thread sleeps
+90 aaa876f92337c564fa8a5bac0802915562f7e863 Fio 1.99.2
+91 5cf6be78129e41703270325edf3346dba7d0036a server: increase default max pdu length to 1024
+92 25c67f829687c91966f5efabdc71c71034e791b2 client: remove leftover debug printf()
+93 89cf1480594858ad4e02499834c04fe48ff0a89d Split version into separate include fio
+94 9bae26e8a220ab28b59d6710c6f7aa6e28b86171 Remember to clear client cookie
+95 4e5b8fb8e2d989789e18b31f9aed969c8fa43cdb server: fix bad interpretation of local socket binding
+96 bebe639808147d587bbe776566d390b9ff98773f Unify client/server argument
+97 194d05ce3cefc597094cf246853b151e14e5db07 server: fix += -> + typo
+98 9ce9542605594426e8b582e067e2269b004874cd Update TODO
+99 b94cba47cfdf96e72ec894080b3a7bf645a86e9c Remember to close sockets on error
+100 87aa8f1901e26bc377f3035a485d35c417d0255a Add support for client/server connection over unix domain sockets
+101 0fd666bf0d5fc373f28b1b43d1df817f8ec89605 net: support for unix domain sockets
+102 3c5f57e36712decffa103c8a655b9a693c6d3d13 client: add hashes for fd/name lookups
+103 dadf66c5240716a61f3861c29bebf97f29b1ea96 Add jhash (Jenkins hash) and use that for file names
+104 7874f8b74cf9da4c142b0574d0ba67a7c9c6db20 Correctly handle multiple clients for various command line arguments
+105 085399db78898fa12d8a469f2db6e5ad1dfe0794 Only print usage() on error
+106 178cde9ff403da53428c5962b8600e47b4580d80 Fio 1.99.1
+107 19c65179fad3e0a32a450401ba7d312169627fdd server: quit on !block and backend exit
+108 e951bdc47d094d43d6f41de95c6af191b8346459 server: require poll before fio_net_recv_cmd()
+109 2b7d9d5bba54ea0252f36d851c90fa4679aa0392 client: improve handling of multiple clients
+110 28d3ab07f7c68afe9ad3b07bb9c288f3e94957da client: disconnect on read failure
+111 e6d1c6687bf7dcd738657bcac70982c1e790329e server: send quit if we don't add a job
+112 c2c9458515bda1f77e25f95122ef6ec8d8cc3ec7 client: ensure that cmd line arguments are always run
+113 28d7c363e2f82d09cf7f6aa772d255712aff5c5c parser: always use the fio logging instead of stderr/stdout
+114 7a4b824059d9ce4b5151e904219c9b5e757ffd3b client: check and error out on exceeding number of command line args to pass
+115 3eb07285cf40789d5be5288581f78c8f7c83224d Escape minus signs in manpage to fix lintian warning:
+116 5efce23f88563bc08f64e122297fcfbea32fdd4f Escape minus signs in manpage to fix lintian warning:
+117 5f03ff75ff84cd473ae7060415d5f85039f07ab7 Fix for hosed end-of-run log numbers
+118 c8eeb9df1f52f28567a5937e141decc6a26ec30b Add support for write_iops_log
+119 8111092fd5dfc2fbdfc9b5b30094b74de982bddb Move endian support out of server.h
+120 0ad5edcc5866713b891636c3aec69dbf99dd1432 Endian sanity check
+121 9a7e10b9ea0548c8446b45b554fab92db25a0cc6 client: prefix server text messages with <hostname>
+122 1f39e5556fc0418ac6d1bd8531a91c94836a6350 Fix warnings about unused fwrite() return value
+123 b1d1b239d2a3299a4d7b7b3de185923c655d0a48 Fio 1.99
+124 483530b85845e761071324deff31f39b0b044e9a Remove float conversion from TODO
+125 d386ed1d0be7c99a4b63f43d9dc1a3f27907abf1 Fio 1.59
+126 61f78f3ada575804c6d4ba0936cf64c17728eaba Add IEEE 754 test case
+127 d10fba4a16206d672c902012a55df2691bfa6801 Re-enable -O2 optimization
+128 0cda2d50cb64ccae46dc39ab779ed79c4c96bfcc t/stest: add log.o smaller helper
+129 d65e11c6483f6664ac93da58dd8d46508f651e53 Print usage if no arguments are given
+130 d5e3a0c6f5376e0d76143edb2c1622efd77f995f Merge branch 'master' into client-server
+131 8c029376bbe6d8a6bcb01c3ef7d545720aca3868 Don't overwrite -t timeout setting in fill_def_thread()
+132 802ad4a83e92a30b5fdccf117d59fbb69068c054 Change network transmitted doubles to fio_fp64_t IEEE 754 type
+133 90f326d04602d0df35ca32f251dd6cc353d26a25 Add IEEE 754 pack and unpack helpers
+134 1ab4dea477b51355419fabf80de03759e19d1556 Remove endianness TODO, should be done now
+135 d05c4a03365f1b677c05840865e67ffaf2c5b05b AIX fixes
+136 a9df7070ea889f7ad439a605cb1ac412f75f511e Assume AIX is big endian
+137 5ba13ea6968cf2773f10d34376afe28ef81aeee5 Add fio_socklen_t
+138 734f38cb03e03390cddfd2d31cdbbd3f3d7f9e7f log: don't use vsyslog
+139 fd60bf3beb70b15e7fba31bbaea79e53638ccfe9 server: portability fixups
+140 901ebe18bdca90032e2fe107a1410385da80d18b Finalize (?) byte swap/endian stuff
+141 5037b845e0936730b5540955be64d9279ac8af9d server: log locally if connection isn't up yet
+142 9677bec37d1b9d2949116cdc3d691a4d3e534cbe Generic endianness typo
+143 f7df58cf30f380a4ea70cdb48b55f64b22d48a15 Update TODO
+144 6b976bfcda733ad9a05ce28526f670a51096a771 server: cast sockaddr_in for accept()
+145 bb447a27c8cbab03a54fa6ceec1a244aabec57d2 server: log where connection is coming from
+146 6eb2479194603184f393057ea10326643edc7169 server: fix sk typo and add endian type to probe
+147 9e22ecb0271038f61e00e448d8839f0c1bf6017e Need signal.h for sigaction()
+148 232f9b73353e0322fe135d3029beecedaed7a17b More endianness for platforms
+149 ff2451922f21826c2047208c2c3963843b1ffdcc Wider endianness support
+150 6e675fcb0886d989b327bdb6a0a8717f345221cb HPUX endianness
+151 ecd6cc1011c1acf4443a24b91ac8266ac754af46 log: needs stdarg include for va_list
+152 610a730c79c90298d41cb3138041e83ba9cdb1d2 Move endianness check to OS parts
+153 39e8e01691c9d5765795417ee49a40d5ae08cb8b server: more debug dumping
+154 9ef56d461ae5c4e9a77dd8ea3025658271c79387 Fix bad indexing of options
+155 60efd14e3b5b5a2adb9f7c9ecfb9bfba38f76ce9 server: add a few more debug logging statements
+156 17dd17648d337479104cbdbe177214ddb69a18ce client: improve handling of non-newline text strings
+157 9abea48bee7340fdf0aee00fa734a3071d47ed86 server: improve exit handling
+158 5c2857f9f5cb350c9441be3f3e1cd7c9dc18b1c5 client: improve poll() loop
+159 b406d5eb84335b09cae8befdffd5e03086985e9d server: send return quit when asked to leave
+160 81179eec4a84ff25c190a8a6a685b0b3b4dd2a37 server: initial support for command line passing
+161 c59971e18924f44c5e2b234c5208c67c573aaad7 Style fixup
+162 0b8f30a5691b9e600a06ded035996e79c2100d77 server: fix for non zero appended strings
+163 06b0be6efb3da5131bc8386251d017f0abafbdac parser: use logging infrastructure
+164 70e0c3166fdb8048b1e7f84be2371fc60af04f87 server: idle loop support
+165 2e03b4b2a072b79946b0ee651dff38273868473a client: probe command support
+166 c28e8e8c68f7e908085f4585299e6e4d74d01837 server: error handling and probe command
+167 cdf54d85054858d9e3fc4d7ee8ea5c6a418f1b43 client: handle connection failure
+168 317b3c8b1bd5cdb1f2bd02c94d536fa853321bc6 server: silence mem debug warning
+169 ca12aa636d488d43ab79c474618d1a0fddf4b78c server: remove some debug statements
+170 5fc58b057d6fe9e5dd7f192b609b0b0af7e297ef poll: break on EINTR without complaining
+171 93eee04aef9ed39070ce2e69bd1f661a95b1d50a server: fix typos in conversion
+172 cc0df00ad5076d4adbc439899f24d9b0db26075d server: attempt to handle client ctrl-c
+173 1d1f45aec4bd2c1168ed5539174a821555db6f65 server: send network copy of run_str[]
+174 cf451d1ede3bbbd2fed3619eb43def054d5b5a5a server: add ETA as a specific command
+175 b75a394fd0e9455ab71912d4462aaae7e6e4366b Abstract out calculation of ETA from display of ETA
+176 50677a6d2eb29fdc251accfc52f9d787684d6f60 Add TODO list
+177 817f06bbc52aea4011ab975d8fa3e3f1065c6065 server: package defrag fix
+178 ddcc0b69aa4ed04c8681f447a1a6274bb8837a14 Add type checking to 16/32/64 endianness converters
+179 a450e4924ad4ae4a05015e55cb54c78fb0c5015f client: fixup quit
+180 a64e88dad0c0e4a510ae8ab54cde1a20b99c59d1 server: transmit status as structures, not text
+181 f6bb5b88614073878cbbd2666a1553481720faee Allocate thread_stat name arrays statically
+182 c8aaba193fd910f89486ba4caab0c023306fffae Move getrusage() out of thread_stat
+183 f0505a1457d848e25e59f0d4373a066c2cef5de0 Move stat_io_bytes/time to thread_data
+184 9d9eb2e7872c99154094f7750d4c978f075b0144 server: unify shm setup
+185 d7959186aa6f8ca6ee5bdcd773d77280fc806617 server: endianness bug and exit command
+186 c7d5c941db51482ba196ef888fdd44f285363946 client: don't setup shared mem area for just the frontend
+187 7b9f733afb91a5c92f44bb6e68860f17ba14f585 server: start conversion of data structures to network friendly types
+188 e46d809110bd4ad2980ca64931b683673444454b server: initial support for daemonizing
+189 ea3c936ea2553dba0cc789a4ef197bc78261c841 server: make struct group_run_stats network transfer friendly
+190 05895c12004fb843eded34aac2332ece2f410b27 Style fixup
+191 c77a99e74e88a8ea1a8c0904aef3f7c81e07273f server: malloc/free fix
+192 ac9b9101f1ef57965d6ffd51f143274a1eb665ef Fixup some bad file naming
+193 46c48f1f9b8ce94132c13638e4c83c13e1d392da server/client: add FD_NET debug clues
+194 eb7976ef27c1d9f69885b0c8db3020303999c9af Add FD_NET debugging value
+195 82a4be1bcef4228233e61b0b034ad6eb78a7558c client: re-setup poll fd array in case a client disappears
+196 337d75a81c40aef6d693fc0d18e78b0c2444a1be server: exit gracefully on ctrl-c
+197 a37f69b72a74cbde6151458b890aab8d093f0c9f client: continue support for multiple connections
+198 b66570dce15587a37a64685f8ab72c3018771b2b client: initial support for multiple connections
+199 794d69ca97738736844ee6a6da37f1ef686578cb server: ensure payload larger than max is broken into pieces
+200 437377e14010f4443bd0fd1b40c4e75885520d7d server: quit client when job run is complete
+201 49d14c0f6ff863508e0aadff3599d040f45626dd client: fix error in logging output
+202 bdab4441a476b8597001026445707daa1109aec2 server: serial is a 64-bit field
+203 fcee5ff6f30d0f05582a378a310ed1f68491766f server: switch to 16-bit crc
+204 e3567067a65eb29c721abe899ef431f768375fab Reinstate double logging if f_err != stderr
+205 3095ffa9747a679e4f655388c782e4b201047fd3 crc16: use void * as the argument
+206 82fa6b21d98da1341a54f415e43940213b39f18b server: debug fixes
+207 4d8f87806db144552baea60d9b59e9becffe5925 Pass more arguments to fio_init_net_cmd()
+208 a781480e959e4cad32f27915bdb5dab948aa1c6e Use length guarded sprintf functions
+209 142575e6579462656a6d0f7c50ec8c35b8a08802 Server logging cleanup/functionality
+210 37db14feece08eb6e43de87c404180650ed5aa6f Start of functional client
+211 132159a5a062cabfe963b3d57e82a80741bf5506 Add start of client, start of real protocol
+212 690e09aeff6111f0654899840280196cf8c96224 Properly log errors in server
+213 afcf77584a39461d81ff8b5c3c86fb7583172020 Close listen socket when done
+214 009b1be41b32bf7e32b441c6a22e3ae628ec9b89 Use poll() for connect loop
+215 5c341e9a5734742ae1137388345d4f47efdd4f05 Hide things not appropriate behind is_backend
+216 50d16976ac0cd44c1f5aba9217148ff05e141436 Start of client/server
+217 a9bac3f9d414d27a1cd2a32f33df70abbc341021 Include http:// git url location
+218 fba76ee8650e1d3d3a897055f6ba3b88b8e437ce Scramble corruption fix
+219 e97c14423a5688d7adfb342c16363c263cb741f9 Fix aiocb compile warnings on HPUX
+220 3c703d13b1323869de7e51b9c5c7feb9d9c8211d Silence build warning on HPUX
+221 fad82f76eaa03e2f486315537e9d83809d155d58 Scramble fix
+222 fd68418e1f248e85809312d6fa789eaf57b54dc0 Add option for controlling buffer scrambling
+223 23f394d5d70902c6f1d71ac03fa1d70e13c9c0b9 Scramble on a 512b boundary
+224 de78976982fe7f57ccadd15a19dae167f0ce62ab Scramble default write buffer contents slightly
+225 723cd80afc9fdb3ca816067eb1e4790052ff6d07 Fio 1.58
+226 e09231c214906b4ff8cbc3dc202c39755fbf6afd Fix sum_stat() bug in group_reporting
+227 836bad52fff2a882e857a52ba94ac0eae6222587 Fix inconsistencies in with man page <param>=<value>
+228 85549ba02ac57942632c3d1903efa4aa3c72af6a Improve wording on terse Total IO (KB) field
+229 78d351576a09fa3400fee1411b3d59840c5038bb Merge branch 'master' of ssh://router/data/git/fio
+230 f57a9c59e366aa2f0621aa260bfd5ef5aeb61643 Add terse version output format command line parameter
+231 067430bba6df79aa4e263e94ace684d738c75074 Fix disk utilization for delayed jobs
+232 b8fefc2b27591449b75e946da781342f616fae14 Style fixup
+233 ba4ddd690a04f39abada885f1b4ea3b228e790a8 Better parser fix
+234 6925dd356191bc40e8a1ebc8fd92a40b476658c3 Revert "Fix parser bug with ranges"
+235 f20485ad77872d6c5084dead547420386a6ecd5e Fix parser bug with ranges
+236 e3b3f81eca16ed5db01e81ff6ae697f5c8f9f6cf Use r/R/w/W instead of m/M for mixed workloads with 100% reads or writes
+237 1c964ce59ba23b1ab515a8f0b6506329c1c3d3e1 Only clear string pointer in parser for sub-value options
+238 3545a109a2cfe5ab22969ef453dc049db47f0b68 Ensure that buffer contents are random across jobs as well
+239 ce952ab65a46f728ffada9613bb50ace7aeaa7c8 Fix parser using uninitialized memory
+240 a66da7a2354aac16757c75a824ad7cbba678535c Add support for backwards holes
+241 e2979754b554d6a48cffa98f41fb59bc045922ac Remove duplicate code in parser
+242 58052f3717975199f9c1b2aef75894ba2c527f40 Fix FIO_OPT_STR_STORE without posval
+243 c44b1ff54402c589e8f07436ec56efb4f8b1ac23 Add sub-option support (sort-of) and convert libaio_userspace_reap
+244 675012f04dbd821cc5d22ec56930094b9c8a99e5 Adding userspace_libaio_reap option
+245 78c1eda5486f586ca73e9cbe7e40b93fccdbd218 Fix bad latency reporting for rated IO jobs
+246 5f739e0e2912b809635fac635a8c1140155577e6 Fix compile on environment of SuperH
+247 d7f5d470dfb9aba383bbf06ea53010c08a4f9b0d Add 'null' perf test
+248 d3cc4ebf58ec05037c3b0dd7c83c075a56f1dc62 Make SH port work for packagers that don't differentiate between SH4 and SH4A
+249 059b080217b86dbf9f3574c4661a1b2300522c79 Add possibility to make sequential IO "holed"
+250 3427207d9d638a6c4bd4ca8e9b3634733fd2c780 Improve Makefile for t/ test code
+251 fbc2792b20276f7fa14c44f7b235ca448b383b50 Add simple stest smalloc tester
+252 716050f2a0b858835d7836ad74e8b680973e08e8 Fixup bad style in plat code
+253 0a7d7f9e450f823b4ca25c23516050c339778b13 stats: fix io_u_plat out-of-bound accesses (round 2)
+254 271067a6e278dafd62649257fe99ce536acfe7bb Fix bug in smalloc size calculation
+255 eb52fa3f9b91181dd87335998b94864ab9c14d6c RDMA engine: Change wording of HOWTO section
+256 0a0b49007cbce8d16c9214e7ed47a2b7cc0cc7ed Fix off-by-one in io_u_plat[] array sizing
+257 833491908a1afd67d27ce79257de3a4d80143d9f stats: Add a function to report completion latency percentiles
+258 744492c94c22fbe805f6da31b19549374511f50e man page typo
+259 0408c206697a60255383a4412391e8375f290f11 Update softrandommap in HOWTO
+260 a8868a5bb81a9c0d9814f14cea53e509dbcad2ce Merge branch 'master' of ssh://router/data/git/fio
+261 e081d03e2d41ead2d17478dae58cc8a8625f9135 Fix a typo in fio.1
+262 e07f72d341ded8cfa539abf377322ab1b7473960 RDMA I/O engine: Fix compiler warnings
+263 85286c5cf23ce9fcb207ec9fffb775ead2b7218b RDMA engine: rewrite header comment block and man page section
+264 76cc522425be0e13f06c49bfc3f5b7ac7032a777 RDMA engine spelling fix: change FIO_RDMA_MAX_IO_DPETH into FIO_RDMA_MAX_IO_DEPTH
+265 4d1577b1be7c6cf6972e96d3d87ffaf367560b17 fio_generate_plots with setable resolution
+266 d392365ee61ecf469963ca0dffe06d604332d7d2 Add 'wait_for_previous' as an alias for the 'stonewall' option
+267 b6cf38f0aed8b12db1c8fd520c09e5a74066ebc9 RDMA update
+268 21b8aee865f0d3960687ce6ba7385e5977f45061 RDMA IO engine
+269 b939683e7b997653a35bd7d55f733fc96030b246 Add proper include to silence build warning on NetBSD/FreeBSD
+270 4361762833dee0f5c2840e348efaaf5967a2ab78 Add version number to --help output
+271 cdcac5cf0e9262105e676874d11c4639a80574eb stats: Fix computation of summed standard deviation
+272 31d23f47d5ee53f74fbf20e17e83c7cb42e39878 Fix bsrange read,write value option pairs
+273 ab2cabdb2c67d8b90c94c1a95f7a2286a0f818b9 Fix --timeout as global parameter
+274 0b7fdba72ade6f642cc0bf86023a42a408544599 Libaio engine support for iodepth_batch_complete=0
+275 1f84f1d9f85fe17c83eba504e4fb9b09a082e517 Respect iodepth_batch_complete=0 in main loop
+276 25c8b9d76ce2995c1144149df3b047d457c5613a Addes Trace file format description
+277 35649e58042da4beefefc2678c09e4625ec2155e Added description for iops output
+278 f67bbe85d8e1274163bb28bd870371ca0d8d0d95 Merge branch 'master' of ssh://brick.kernel.dk/data/git/fio
+279 862745bf1f85ded2109a72e75a0070eb84900612 Fix Solaris compile
+280 74ba1808c32e978229eefa7cf28c08bcb73b5b5d Make string-set options behave more like bool options
+281 173dbaa47e3a477db65aa9fb1932a33d87436994 Fio 1.57
+282 1332757ccc1ba0d96980dc202760977c4605235e Windows affinity fix for thread based jobs
+283 ccc02050c1a371385897aa964988dbab68597545 Fix infinite loop on platforms with severely limited aio resources
+284 b42ffd195f4f4263cef197a0c3d22e6937c7580f Make raw disk size detection work on OSX
+285 3dee087cdd41c2d1e4f01cd66680a849609cfafd Fix compile warning on OSX
+286 6aa2781630cf6f502d5e9177d9bd3432c1b5b964 Fix killing of threads that haven't started
+287 0f7ac781d5355aefe95e84cde5a80026ca7c501e Add CPU affinity support to Windows
+288 48b35be009138ddca8d341f7767a1364400b6c06 Fix AIX Makefile
+289 09fa5bc41c7fc270bc3aba5a51759473f2078967 Fix AIX compile
+290 5a6c45408ac211be10d06a3a8f14cfb77f1753d4 Fio 1.56
+291 b9afd959477dbaee2d331b63b0a252bd8aaf6206 gettid() for NetBSD
+292 e8d588e4d31f9d1e93b14499d23760d1d3d2db6b Add gettid() for FreeBSD/OSX/Solaris
+293 47f767c113be7448eb8aa9d4a9f9aa8f760ef642 Add gettid() for proper thread affinity on Linux
+294 804bb9a18bb747c8c7c481c9d8dca86a29837ecd Fix compile on older systems that don't have fallocate() on Linux
+295 7bb591020669b7266c57108f2a68b48a03ae72ee Allow percentage setting for size=
+296 893b37c668638714f8240a1dcf8548836fe51233 HP-UX: add fdatasync()
+297 baa6677be0054fa1dab3000881098f7e943bfc5d HP-UX: has aio_fsync() and fallocate()
+298 0ec15d6ca9fee3c2b0f19b3520f5b77fb2378d51 HP-UX disk query size
+299 5c909c91a2f58848b485523920e2278f8d63ecd4 Remove old debug printf()
+300 8c9ca2e6fe5a400fcba3a7dd45a33effea8298e0 Fill in os_phys_mem() stub for HP-UX
+301 8eb016d3727522d580d4dd463aefef58b7ecdb00 Fix bug in $mb_memory keyword
+302 c3d3178b0e14dc1612b397f115d7853200b62146 Take __weak out of the compiler namespace
+303 9918be5a9bfe2819cccdb9f975f2b9d4d36f3f70 posixaio: fix for HP-UX
+304 b5ffb752790d4c88a18e27aaf970b065b3e4a56c HP-UX typo
+305 ce600ac9ee2f419123269c203140d93ce5fcdd39 Add note saying that HP-UX should work
+306 d48a9799a3d3cbe3c41658d6e41d6791b33e926c A few HP-UX fixes
+307 6525896154b56e1a62b8faa0e2759af6a34465e8 Make processes work on HP-UX
+308 4e79098f9351624e93532b6a6965ac8b1cc3cce3 Improve Windows windowsaio engine performance
+309 0aacc50c2fa41e44512ce8eacfd3d679cb016d86 Fix integer overflow in calculating large IOPS on 32-bit platforms
+310 76cd9378b90dddf2cedc9a5d49f317aaad485b90 Get rid of warning on platforms for casting char -> int
+311 564e49f329dd526842a29f4086fff727bc4d0ba0 Add block device size detection for HP-UX
+312 c00a22894b82ff53b42c1e741a7b4828199a1388 Initial HP-UX port
+313 dce8b847f2c149f0f857918e3250b9dafeb5c713 Fix bad start_delay type
+314 be18a94f51296cce03d51501858e5f704c5e1950 Set affinity before doing buffer and io_u allocs
+315 def1d8e3019d8757b8214691013880ebb414d396 Rewrite posixaio back off comment to be closer to actual English
+316 afa16407813ee36e75aaa665613c469500ed07c6 Ensure that we honor aio_read/write() returning EAGAIN
+317 f0153948d20b30978b815d4ceef7e059d3d2779a Fix ramp time random screwup
+318 687c6a230dfeae89454ed430ee49ed5813e146ad Fix ramp time bug
+319 4b0c257cd785cf7af4a4722f41bd45174283f69d Merge branch 'master' of ssh://brick.kernel.dk/data/git/fio
+320 fca7035863bd570270376a0c06776e5549ff813e Add --max-jobs/-j command line option
+321 f097728b6be6c52f0d01db6a8f70ae4543daf782 Fix for terminating threads in ramp time
+322 8d5844e9df308cc06d86a83d6bf28a29db46b6a9 Make smalloc use anonymous memory mmaps
+323 5982a925647f5d376bd7c2aca27e49b4cfe4a2c1 patch from debian fio package to fix syntax errors in manpage.
+324 c95f9dafbb38218fda0fd2e4ba86895717a4c31a man page: fix incorrect description for disable_clat option
+325 a596f047e2b3d447ccca76bd075f05473a1f8d1c Add ability to invoke fallocate() FALLOC_FL_KEEP_SIZE.
+326 d06093e70ee89e8440431b78846fa3815a9cb89d Fix fill_device with queue depth higher than 1
+327 bd93e34b86e8f7c0fb6b2cf15866431a4dc81067 Fixup wrong enum used for __check_min_rate()
+328 f84622e9c5f4eba6802bcfc6432493ea8c44d740 Fix Makefile depend issue
+329 27a779bf592d1ebe825e199ff0940aa25ccaf05b Fio 1.55
+330 13d998f1d84f34d22d2fa1006e2592afd36bb7e3 Merge branch 'master' of ssh://brick.kernel.dk/data/git/fio
+331 3f0ca9b914e6d0db8c5c457713c277ce458cbc02 Silence gcc 4.6 warnings
+332 799441286648bdced4f42d3040f37fd2e35eaf1d Fix overlap io_u into outside regions
+333 76a3179ec3b849e4d4b0324ab3f517beec816bdf splice: use ->o.memalign to indicate we want aligned buffers
+334 90c0590dd99a84a554cf2d6cad76775928d4249e Fio 1.54
+335 6625155407de739e1e857419b7b4fb62f6c6bb2e Fix crash on specifying bad IO engine on the command line
+336 67897036632676ce1bfdb45992df078df87c1a27 windowsaio: fix race condition between IOCP and queue functions
+337 08d2a19c76b310f68ad2ecab17dff2a2a4c1adf8 Cast l_opts string names to char *
+338 faa53ee2522edac464f54b2cbde0f856ed903ca2 Revert "Constify l_opts strings"
+339 b20b6be43e835cf84a87821d268751642ab64de5 Ensure we quit on SIGTERM
+340 e7d841768b8b6d5e081134e6e2f04f43ac870348 Constify l_opts strings
+341 1294c3ec7a02d20a98b105c1c41b23358afc67e4 Fix signed int/long truncation on 32-bit architectures
+342 f2e714707b27f5918a4020e3090d2b346094379c Fio 1.53
+343 e42b01eba09c9d2f5e943b67eaf66c8a443c230f Revert "parser: get rid of useless is_time variable"
+344 deaa1af25d75d6989d15966b4579bc158df856f0 Exit with error on signal
+345 84dd18865235caa675424c62a4624618ff961d78 sscanf fixup
+346 1a958f09ff7b34e91556532cf47ad1c04974369c windowsaio: skip uncompleted requests
+347 ea4500d8d709ed4aa9587f35b2edc55b5b2c7695 Windows fixes
+348 ac18ea38de2a23018f9f953c3028d519df3a1177 Convert left-over manual ->runstate setting to td_set_runstate()
+349 b841ac86d4eb1659189171b7abebd986c7945f51 Bump max job count to 2048
+350 b6f6abc689b3c05306bb1613a3d43f24fa4417d8 Switch mutex to using anonymous mmap
+351 449767ed6db2e0cb36f880d52573b069864286d0 Fio 1.52
+352 513ba3f7d4eef309d2307cf9787d7d980a29164d Add space between -m and 755 for install
+353 33c142be80a031dfd9ad4f8237b73f4741648fa1 Remove solaris posix_memalign() helper
+354 91aea6ec78170ffeb64a2a374ba69bce4986b86f Add simple aligned alloc helper
+355 7e8ad197a8d219e2fc181c881143f11891e7d0d5 os-mac.h: implement fio_set_odirect()
+356 c64646f09c291e22bf10584bd842003a7980eb78 os-mac.h: implement blockdev_size()
+357 4c07ad86c6cc6e158c70a5c625f60144db03f20d Switch all random generators to be decided by use_os_rand
+358 d1cea5214a367659a1b10e0886c5f2e21e24e18f Switch the latter part of the offset generation to __rand() too
+359 2615cc4b28e7d0e436a625dff92e6a71ccc6c49b Switch to using our internal Tausworthe based random generator for offsets
+360 55ed9636e82b8dee419b5a76c07098bff4d980b6 Fix parser bug dealing with range options and postfix
+361 b590a7330e0970a5c5cc58ba40542b217af76023 Get rid of mixed rw and verify warning
+362 1a1137d9ba2603e295aaac579777ab0d3524faa6 parser: get rid of useless is_time variable
+363 0f805c00a7073293f4cceb041a6af0b9f388e6f8 Fix unsigned integer overflow in IO buffer allocator
+364 01155a985b13bd98f8fc8f3e49f84091dc6e1080 Fio 1.51
+365 e52947d15cf0d7d31c30ccdc43450a10081976da Fix linking of fio executable
+366 ad0a273593b93f61e72fbdf1910fcf8cdcac738c Add support for giving multiple --section options
+367 5b9a7f2232151d4bb80295be743a6f435f054662 Windows: add missing files needed for msi build
+368 d015e398e49f1c8d425906b8c1a3861ecc4d851a Reinstate unified Makefile
+369 7af89a1f37f2134502f94c8961a79d96c5d6bacb Fio 1.50.2
+370 0ce8b119b65849e537cab628a176a0ec4238aab0 Fix end-of-job slowdown for random IO with a random map
+371 0a560893bb20b06bf6c15dd9213cf383cfbcf28f Kill flist_sort from Makefiles
+372 0e655dd09a89a0d05e2d3dc5c978283277939e08 Revert "Unify makefiles"
+373 3f77f72359e90175d86d549e82c9b2a3488df6dc solaris: OpenSolaris already has the madvise advice defined
+374 e18941aab394d4a68df10379fec7184b52f95b3f Fio 1.50.1
+375 937222f5440430c5fed765f642f3c8f2e9969379 Merge branch 'master' of ssh://brick.kernel.dk/data/git/fio
+376 08987f0e7f255968ed4780ba3a8ed0cb1bb63904 solaris: char dev size fixes
+377 3342a4c721f398faf43c5e358b414d2d454ba0d8 Fio 1.50
+378 ca740f4e2bdab2a94a8b6ddecba6dde605fbc866 Move version logging
+379 6035e7d6d1ed462176402615da37d4f987588c16 Remove flist_sort(), it's no longer used
+380 7d130d8d2a5638ca91dc81ec085acef4d3c3ad08 Unify makefiles
+381 913ea0db12596b735a030a1836bd913497b7120a mmap: catch invalid msync() errors early
+382 7c973896f9e97f7b551bf4881fc0338b748f308b Ensure that we exit with non-zero status on IO engine load failure
+383 b8d42b234f70ce2927e9ef1279aff42d62779cfd Fio 1.50-rc4
+384 74586c1efe37b4eac189cd8dd1eb00e96babce3f Add fill_fs alias for fill_device
+385 4f12432eee5bbd821a7baebd940c6890aafa703a Expand on fill_device option since it apparently causes confusion
+386 2b13e716c0921356c0930522718e00b8df34293a Get rid of shadow declarations
+387 58483fa41bb08def4dbd3c4c9624116b643c7599 Define OS preferred IO engine
+388 3be8007107a6e4bad3f1b7ea9ea80b51a2dddfc4 Fix merge error hiding mmap ioengine under Windows build
+389 034ca7e4b63ff63dee43770c20d0860903705cf3 Remove version number from Windows MSI file
+390 1cfd036feef81efe7f3fc56b51d7642c9476dd53 Re-tab some parts of README
+391 53adf64fba2457b922d5afeee500dcbad5ce963c Add instructions for building and running the Windows version of fio to README
+392 ff21745102e2410df4b950ca2ff774ad5ea717d1 Remember to initialize return value in fixup_options()
+393 996936f995c47f4744a49e05419e7d4c0364c64e Multiple jobs and verify will not fail if do_verify=0
+394 4c6107ff4db87f50545bad515543f5024bb39e4a Ensure that short command line options work
+395 a6294434450db2728f1253ec6b6d2f57ef864b94 Correct check to o->numjobs > 1 for verify warning
+396 a9523c6f4a43e4bbf942ee49068fe4f052c6991d Add --warnings-fatal/-w option
+397 e84b371e121ee224e02a90d01bf9074b759a409f Clean io_u->buf_filled_len in io_u_fill_buffer()
+398 92bf48d530ab09bae4058df711c4723c73da51b9 Streamline pattern/meta verifies instead of special casing them
+399 964f5b9b267e3c87035309b9838c357613bfa209 Fio 1.50-rc3
+400 c7e6ae4eb46c4e294df85ee4f7dc4c71d458daad Cleanup some verify bits
+401 e61f1ec89de8eb5bb0f8b1e6a79594f0bff2a259 Print error if max number of jobs is exceeded
+402 69204d6e8830464bc98fcc28ca91412d6d360775 Eta/disk thread uses more than the minimum stack
+403 efda12bde9d13663e5cfe4ddf677bae54075fd92 Comment out ->buf_filled_len in pattern fill
+404 9a793c2f91a47df348237f1a9b778253ca87ec2e Fix race in exit of eta/util thread
+405 cfbcd0dc2fcbf0f9bfe92ff8f4ab17f21e46d21e Make sure that pattern verifies also dump contents
+406 7985701bfc7b7a6bde0bf601380aab4cf09d85df Change disk util / eta method from signal to thread
+407 79402a12eecf371238f2326c9e8850eedd269b7f We need libgen.h for basename()
+408 6f260b317f4cec3027f79b8b329dd3f98c3906ac Correct basename usage for verify dump
+409 2f2e98e639986bdc7aa422d73cc523cb32b725c6 Fio 1.50-rc2
+410 bce964a1195571680359495eafa4733bf7744746 Don't double print version when invoked with --version
+411 b463e9363b826d5ba4f16e0115a26f24b77078f4 Add verify_dump option to control whether to dump bad/good blocks or not
+412 4aae38a645f3315ca2f8cc57a7ec4110ba7d8319 Ensure that random_seed is also added to dummy io_buf for dumping
+413 c50ca7bd6d5b84e24e9ddcdb1765fb4070804503 Pretty up the good/bad block verify dumping
+414 7d9fb455aadc0c0363489591775496f27f4a560a When verify fails, dump the good/bad blocks to files
+415 3f46e64fbd2c76cc89ef8ddfc9189bac285ef638 Update Windows version
+416 7ed4d7abf0d7720d532d9680ebf69745d9270a5e Merge branch 'winfio'
+417 63a582671fe6db03f0a0be81843f2b72bbc8ab33 Merge branch 'master' of ssh://router/data/git/fio
+418 c581b165dbaffc349c495c7b8ed452a41acb9319 Fio 1.50-rc1
+419 d9a7ba88af39b1047c9f8c077280932cd12cb58e Merge branch 'winfio'
+420 8bad3c5b15c221cbd141a357d8ba81ca4cc45cac Remove left-over files
+421 c2019d39d690acae7eae9d6a105d2db5a1d9c632 Windows updates
+422 dfc6e7513c82d83491e90b8583fb52e301053d1b setgid first, setuid second
+423 5b42a488b1e3be03ecec9305affbbabaa2f2134e Document that write_iolog is unsafe for concurrent jobs
+424 9b8365618309572d8fd2579c8ea3132db89f843f Various fixes/updates
+425 b921e2e2ff27d9aebc616e77afc4699c036682fe Close iolog file if reading version string fails
+426 e4db9fec06d77523472e9fad6de5170a77d715c0 Fio Windows update
+427 e2e58886427019b525d2a234c5404a38ec0c7ebf OS headers need fio_file definition now
+428 ecc314ba7c5f02b7e90ac1dfbce1a74cd4e6d6fe FIO Windows update
+429 03e20d687566753b90383571e5e152c5142bdffd First snapshot of FIO for Windows
+430 2d7760d1dbbc742a0699b959ffcd8742b9db9e2c Include fio version in normal output
+431 c94bbe591635b7b35f15d035d27f392174c5e2f2 Use -pthread instead of -lpthread on FreeBSD
+432 59e733f272bbbe32f2aaa4f068d99e7f71fce337 Get rid of other-OS headers in .depend
+433 ebdadcb93e19054d594746de4e7b659b09446d8a Fio 1.44.3
+434 0f2152c19ed12fc2280c3d475973112f18e48cd5 FreeBSD build broken due to missing -lrt
+435 cda99fa0fcca41fc0d54ecaa2fd600162a8de5d3 fix ramp_in
+436 ee72ca09d4657f6a805c113d9bc43428f4b28a89 Sync HOWTO iodepth option with man page
+437 8489dae4360f2b00d89a6e9603c6167314b1974d fio.1: Add ioengines heads up to the iodepth section
+438 47f6bdecbb82f00c698263e0e96b33977c1adb64 Merge branch 'master' of ssh://brick.kernel.dk/data/git/fio
+439 d85b1add6f6dc9d186478345a3552a835ac3166b Add additional references to binary packages
+440 d7c8be035a17054b165343c40dc8773f103f1fc7 nrfiles vs nr_files mixups
+441 d3624ff9d699e1c56b745083d5e8c4a3e009f934 Makefile.solaris: install man pages
+442 78e51c7279a93d3f6200d58a72a813c3ba852c2e solaris: log error for failure to enable direct IO
+443 a5b01f1ba8d45e9b16079d2759a96ad9cad08e16 Call path below SIGALRM isn't safe
+444 45ddf6761c54e55d5a31a6fbed546291254324a4 Fio 1.44.2
+445 ca7e0ddb08fece35c95e9056ca877e0806f1e6ef binject: ensure we get aligned memory
+446 f0f346d8604d594506c0dc1a3310a27de127c2ed Update for proper binject ioctls
+447 f42195a3ff2e186bc67968088b7cceae61ccb8f3 Update HOWTO as well for verify_backlog
+448 092f707fea37a4cce592460f15e8aae4609a75e6 Update verify_backlog documentation
+449 dc6d4dbbdd3a12e7df2bc0a713faebeae9d0dca2 Fio 1.44.1
+450 f57d6f943806727b70d3d15230dcac09b22fab1a Merge branch 'master' of ssh://brick.kernel.dk/data/git/fio
+451 2f68124f26e54233db41b462a257dabc48e5c32b A few fixes for 32-bit compiles
+452 5e0baa7f423995c4f75070d6a2ee56619e195a36 Fix segfault when passing in size < block_size
+453 b67a1114b5cea9ef12d14f8821a0d8142998395f Merge branch 'master' of ssh://brick.kernel.dk/data/git/fio
+454 c0e75abff75f2fd11107c9da7c34f9265b6303e1 Fix compile warning on platforms with posix_fallocate
+455 ebb9b8ab7f2bad787bbcfc03351d1ab90bc9c15b Kill -arch from OSX Makefile
+456 ce4b5050396e81c0d9cf3fe1eaf583de9284df07 binject: ctl cleanups
+457 83c107b767e4850f018dbbad075dc50998de6d7c binject: fix missing includes for stat(2)
+458 1ef2b6be973eded12827990ae1a9eb28b7b20be7 Initial support for explicit write barriers
+459 9e700a738f816bebb22333de97414b534c79c267 Add missing file.h f->file_data change
+460 d01c404b8971df6b86a7274177ddfb8d887061c8 binject updates
+461 0e238572c4e63b0675fd9cbbf168d19ad8d60464 binject: setup and teardown mappings internally
+462 d175907a7bd0b78cdd18bf47882428368a448057 Fio 1.44
+463 6fe1c1dc473a43a19a0b03a067ff6c1d3fee6bd5 Fix compile on RHEL4/SLES10
+464 cdd5411e02b05f5c9fd305a0f07f58e3abef4d5e Fix bad setting of td->o.ddir_seq_nr in add_job()
+465 a3edaf76b30880c3bf4455c30614ce88cdbbe071 Use log_err() in the io engines
+466 4a435dacda1f394a3c8caef904e26a4f99454568 binject: correctly retrieve block size of device
+467 15bc8b7ce155e42f044f3fe7a4286c67e811ae3b Fio 1.44-rc1
+468 c6404a44d139fb494202f9d968f7affe8c3d986f Don't add the file offset twice for trim
+469 0508320e7b175baf336b1f559e13810e69eecb10 Kill leftover debug printf() and re-format a long line
+470 bb0675581dc0a2e8133a6cbfa609b976b97d54ba Fix io_u depth array size
+471 562c2d2f25ae829c812a58c10bc1a03ab6f6f52b Add some comments around the terse output
+472 05463816cb6944649ac152283a9d02629ff91c0d num2str fixes
+473 1ec3d69b0ed8cc7a3eba0192685034d5442989e4 Implement a better num2str()
+474 bd4d7e1ecd2388b89254148209ac2b172def8ebf Merge branch 'master' of ssh://router.home.kernel.dk/data/git/fio
+475 92a3d86ed1b2040c618b296e4d2ce503352792bc Revert "Improvements for num2str()"
+476 ef5249d5e5f0bb5f0adfb182b1dbc988aee976de Improvements for num2str()
+477 ae3fb6fbaf7dd68291f5de8e8aaac0d28e24c9ee Add missing option type
+478 c8dcfd7edcdafc5108ed3d39db6093ae7d209040 Merge branch 'master' of ssh://router.home.kernel.dk/data/git/fio
+479 3410599a0abd52a6997e5561ebfa839ef1774b8c binject: use WRITE, not WRITEZERO
+480 4b3b73f843c283b341ad16cd1eb4e7a12978de8e Merge branch 'master' of ssh://router.home.kernel.dk/data/git/fio
+481 79a43187163eb99eaabaa496cb8b5e3a164f3e09 Add binject IO engine
+482 1c04bf783c681219455f33f097155fc61f714999 Align memory buffers for RAW io engines
+483 6277622954f3ee0a2dee81cace77ac466b69e8a6 Fixup bad format of replay_no_stall option
+484 d708ac5e21c97a92c9c7b6b7593d9f2b0d7c9d3f Fix assert
+485 a917a8b3dfeefdd7007ba2f46f21fc145574309d Trim/discard fixes
+486 477a6d45a3c7c6e9f538cadba78468b677829e17 Fix libaio prep
+487 1d7f28e1ba1c7ca20bdc1d48b7fa04f7f1673093 Remove debug TRIM #error
+488 0d29de831183dfd049c97a03008d425ce21e2fa4 Add verify trim support
+489 d1c46c049cfba2028abc45246e2609bcee52d0f3 Add support for redirection replay of blktrace traces to another device
+490 684de9c46d82b72280fbe9b3e77bbb86ba36878c Fio 1.43.2
+491 2039ab1d2676015372f17b8ed4ac6bffb10da967 Fix bug with probing block size
+492 2084d7b2369254e2026315caea702089198b754b Fio 1.43.1
+493 ff58fcede39d16a2c642897cbe5a7f28b2da1950 Add support for replaying blktrace trim/discard
+494 825f818eab0cef7683b8ef359642a45ddef8ea8e Add missing types to io_u_log_error()
+495 14e7b605367dcf2d2ac1e3276465ed749d31503e Add missing types to log_io_u()
+496 0b80f9c02533d920b03bd9a7203f512b55757690 Fix access of freed memory
+497 9446dbd6765dfa85600c3b4f79540908f37ad8ad Bad style
+498 aabbe9b1f5f303d0916b4484f42fd6a0707478a8 Fio 1.43
+499 87e7a9723a6732619b1682388cbc11b277a918f8 Mark "read_iolog" as a parent for "replay_no_stall"
+500 64bbb86598ada3fa401c61aab5ef6c37bec6d6f3 Add option to skip delays when replaying traces
+501 49ffb4a2e1ac3026d77d9e1c03edc2753fcec41b Fix blktrace replay
+502 c2509cd7fa44c043099ad58bcb3b3f789a5a014b Fio 1.43-rc1
+503 09a324028d68c485a8c4b33257b262123c27394f Fixup misuse of get_cpu_clock()
+504 282cc1676587eb155e331b31400d344821b0b850 Add comment on why fallocate is disabled on AIX
+505 04924a11f4a36728c7dae5aec8e512fc4df961f4 Update OS support line
+506 8e239cae8aae89f07a885ffcc985600ce9c65d5d Cleanup MSG_DONTWAIT
+507 2995607f86b7cfc918b3c140f481c5809fc3306c Bad indentation
+508 20d61dff3c371c6cbf18ec5373e9c5f56c28732a AIX fixups
+509 eb078db384e336c1f2338adfdf8f6594660964d6 Add comment as to where getopt_long.c came from
+510 bf2e821a55d8aa3de1cda7288a0e22883110fdc6 Add support for AIX
+511 f5886fef7eb0c44ec854d00a70acc0dfc4975efa Not all platforms have MSG_DONTWAIT
+512 85bc833bed3fa58c177df65f1d6cf40af85cb10b Fix bad casting of unsigned long long to unsigned long
+513 5f39d8f797fcf01bd94b89ef7ed2bdb76deb2601 Add get_cpu_clock() for powerpc
+514 304a47c7d94f407cc72a87025679a67f02288447 Reduce thread stack size
+515 2da7df1d7d002d11161374ac4f0144521f7be0f0 Reduce stack consumption in blktrace load
+516 a1a8da169dceda90faa323db0892926605e0dc8e Fix leak when finding aliases in the log rbtree
+517 1d1c187b36fd4ee28d72d04660b37a7c3edd64e6 Fix bad deref of memory in parser
+518 38dad62d5154ffaad445bd0231b271b9a46a5190 Add rw_sequencer option
+519 5736c10dccc4124d99178b94e6759386420e5251 Rename ddir_nr -> ddir_seq_nr
+520 a5f3027cb0495dfe217b2626d248fcc054e7e878 Initial commit for TRIM/DISCARD support
+521 366badd3f5c92433b1972ac85e2b4ef46b441011 Have cscope look in subdirs too
+522 f86aaa742f058e03fff76a22a32354486262b392 Fio 1.42
+523 10e8a7b30ce2917df9f839d42596c7e3af9a904f No need to use specific flag for io_u fill length
+524 808def7036ddfaf6f0ec2f5ecce031fd46ce40ef Really fix broken option length check
+525 9522850758ecad087891710b391b4e77f6bff839 Turn io_u filled variable into a flag
+526 cbe8d7561cf6d81d741d87eb7940db2a111d2144 Reuse filled pattern
+527 0dd2d11ea010566fd2bc2661af58a0eefe49f750 Fio 1.41.6
+528 093729f73bc4be4095adc1743ad25bdeac0d3633 Only flag sync_file_range() support for newer Linux versions
+529 525c2bfabdb7e0093a8775a09ad3e772d962760e Update documentation on new terse format and add version number
+530 a5737c9363912baaa21af978358fb9f42e756beb Fix startdelay option with s/m/h/d postfix
+531 e0ab5f977075ec2f8ad42378c95eb800a611f0ef crc32c-intel: replace SIGILL approach with cpuid
+532 10accd7cf68af21ef4831528626a75ba7a06ce81 fix posix_fallocate() return value usage
+533 3a8600b4ae9027d02aca7eb1990e5cda4e9f423a gracefully handle full /tmp file system
+534 18a56e5e5b942060a57b70114c1963bda777ce3f Fio 1.41.5
+535 743ed83a203800ba3a7d89fc76f3424d693db06c Merge branch 'master' of ssh://router/data/git/fio
+536 4cf1abc34ff1cc8aaa2e02e3aaf919681b717c91 Revert "fix 1000 vs kb_base confusion in show_run_stats."
+537 d66672686baf3834f5135804f89c8e3f4aed0f79 Documentation update
+538 c9c20f05373375d029f63225aea86fe6e3829e96 Fio 1.41.4
+539 4ccdccd149d82c94ec6ccdb4118d9e27479b8516 Add chardev size getting
+540 02af09886db695e5ea2b7fd2a632733955f3c03f Add total latency log
+541 2fa55e93d8895e0645df3e50baae82d15d9beea4 Fix FreeBSD warning
+542 aa5e69b26d16ae4c1680d05b25149f3198036714 Add real blockdev_size() for FreeBSD
+543 68b0316f581c3c881d7dbf7c9dafef4a10100a66 Make fill_device detect bdev sizes too
+544 996093bbc416d2d6da56e85c311418b1c958a0b1 Fix man page documentation for verify_pattern
+545 57fc29faae372cb474b5f2ef921638ab28bb9dc0 Allow use of KiB etc to give explicit base 10 multiplies
+546 1f53e9d84573b1f9b9a23ad3ac4ef3d312d59c78 fix 1000 vs kb_base confusion in show_run_stats.
+547 6ff42e9fca58cc6e1ab05810abaf113d77c104d1 posixaio: return any ready event in ->getevents()
+548 907249cffbdfa26de688c127abb5483154a4eae6 Add off64_t to FreeBSD
+549 1727951019202ef3229167c07813598d485b5b06 Fio 1.41.3
+550 637ef8d9f7645135cf4829894d1e3983cd7a042e Speedup verify random fills by 10-15x
+551 0539d7581388289367f77f2b800d0581ee34fb4c Documentation update
+552 5d7c5d348d66794fd5e8aa3090f582358e6c5017 Auto-detect missing hw support for crc32c and fallback to software
+553 fb47e9a5953a2da02016fb26434b8ca04e5bda90 Missing new line
+554 904dc32cfb31f63a2a50e42af583f7e61ccf4968 Cleanup up SIGILL for crc32c-intel
+555 6f87418f8ccdb98cffeeff64ef0b8eef50b0a016 Add documentation for verify_backlog and verify_backlog_batch
+556 4dc85063e621ecca0a0303e79487be90bcbff304 Fio 1.41.2
+557 b8d541d5705ef74307277d541ca9153ab8844096 Fix disk util for slaves
+558 90b97ac3bc4368b79300207c796bcfbb828d07b9 Do diskutil check earlier
+559 4cc829d1c86e1c7eab9e24ddec600bde1a541651 Fio 1.41.1
+560 968b605460eb4912bdb0b7bc9ace79694865386f Fix a bug with multiple files in the same io_piece rbtree
+561 c604fb8eea323d8dbf948f238f61f12dadf821af Fio 1.41
+562 f3e6cb95fecf867ec46e3dfd59ef1a1db1b6ad2a Verify fatal fixups
+563 c9b440312ff63c2b4c8548530f24c2eb5820b6a3 Error reporting fixups for meta/pattern verifies
+564 32c17adf7f75da1f0957d4691633fea60259910f Include file name in offset failure
+565 bfacf389e9edb1b63ca0b9c6cb2aea8b06d53ace Unified verify failure error reporting
+566 7b4cb1320928bdea2360cf36fc45c83700052d43 parser: match on length of argument, not potential value
+567 936216f8cd8ae2261282453d82a2a8232bb4db45 First step in unified crc error logging
+568 0030b185376881d550eec690640ce62cac954549 Fio 1.40
+569 2f1b8e8b2efff5cf6887fc465f711391ab5b1825 Revert "Only apply verify interval to meta verifier, which uses it"
+570 b6bf4995922789978a43954c53d501b159d15b0e Fix bad int truncate in verify
+571 da3758bfa36ee05e25e73f33760f17750bd0687c Ensure we never overlap with existing blocks
+572 efcc4586d3c8974118fd66d53a09ffd739d77d11 Only apply verify interval to meta verifier, which uses it
+573 34644af59bd9232cc2948baf4f94b6534cb0a120 md5: fix bug in hash size
+574 f8a75c992b8f7166c423f9282b660640c1d6c397 Default verify backlog batch to verify backlog setting if not given
+575 9e144189c6e000df8a797312e43a4913f3b83c9a Add some support for a verify backlog
+576 2faf9ec84cc329304bd0dcbf928184e11e550108 fix a weird check of the return value of aio_cancel.
+577 aa58d2520204f5ae12291fae0289a90fb03dc587 Update email addresses
+578 d74ac843d82345862070400cb5fe408524c613f3 include libgen.h for basename
+579 3098b11a5f6a75153babb63a487b80fa4c2103a1 Fio 1.39
+580 40cfddb4b847d727f5d575b19540c608a3d779e6 remove unnecessary bash-ism
+581 983a69d71e6f9c0c8f590f24d492f9efba19232b Merge branch 'master' of ssh://router/data/git/fio
+582 4f49b8a762f20279095e5c27c51a6afc629b835f Fix undeclared mkdir() on Fedora 13
+583 0db32545ef94c5ab643b113d686526338dee3242 Fio 1.39-rc1
+584 7a4b80a14c6ac6d47d486b1f5d1f166fa7065ee3 Fix problem with --section matching
+585 c50bdd8f4299e1faa8facf13229bf33400fc78d7 Add missing os/os-netbsd.h file
+586 40705539ff54518d498999095da038841e7d1bd5 Include latest Makefile changes in Makefile.NetBSD
+587 ea3e51c36e09f9363c983de2ae123f983ee3f25c Fix blkparse typo
+588 2e3bd4c21cc239fbda992a4ede89ebb85f550920 Improve ETA for fill_device based job files
+589 7452440e1efb40680fdc951eebc7499a95a62f86 fio netbsd support
+590 045396879167669c3809474422bc20866c81f6d0 Fix typo in flist_sort.c
+591 d29cd59a489ab6ad8121bff784e2a6bc3423c4c8 Add flist sorting
+592 4f5d1526bed98cde56829f9e5e040c6601c03236 add link to new list archives
+593 656ebab7feb0c0b05aaa6bac9aa7d108c8cb9bbf Fix spelling error
+594 17af15d46a9bfa3109321ecddfd4a649e36ffac9 Make sure that alias names are also valid on the command line
+595 d091d099aa867596745f2fa0d58631a14a746520 Make the 'closest option' print a bit better
+596 7de870993035f855e1d1299a2b5c2c90b792c238 Add an option "cgroup_nodelete" to not delete cgroups after job completion
+597 61eb313e28c0f0ba8eb144c5b5f331b6b74c4fc8 sfree(NULL) is ok
+598 d77431b5975096bfd9aafb431c0aa656c9ae8fa8 Only use true random generator for initial seed
+599 79c94bd37280c76a4e8e01ea008ba1853f7bef9c Add documentation for the random number generator
+600 27ea68a59f0b17abead399311e24933897ab3da0 "Expand" random number from 32-bit to 64-bit when necessary
+601 d54a144d8ce8531659f730f99eb7d6873c9d159c Remember to prime the random generator
+602 7e744013dca36be3840c45d13f4ae09947282bea Merge branch 'master' of ssh://brick.kernel.dk/data/git/fio
+603 1fbbf72e16c27a6fda636db3891a41cd37dc6666 First step at speeding up io_u rand refill
+604 91da686ce2136e70c0ba734ad5698684582ab1b0 Keep the global command line bw/lat logs separate from per job logs
+605 3d73e5a9549d30324d1c5e31eb644077380c0b95 Fix typo in bandwidth log command line option
+606 fdba6ac393728b3f743013a6517a987fda79bd1a Remove default setting of clocksource
+607 ab4800473091e0c3bd43d9e96ed0fa406d231186 Add IA64 support for CPU clock
+608 4780fa263c038646ab803b63f23f486b2b7b1140 Merge branch 'master' of ssh://router/data/git/fio
+609 c223da83e253b0057bb029bf4fbb55a05844215c Add support for specific clock sources
+610 03f0a3c55c495bf9ef0668d2b6b047eb499e5e3f Fio 1.38
+611 eef16f316456526b0a52fdfce2b70c12d7ad1b5b Make ARMv7 build and work
+612 331539ace6487a031f40281eacf41e4de008ad23 OSX should use off_t for off64_t
+613 3ae0637148904b5c68cb95e749460e37e3502a9c Only define str_sfr_cb() if FIO_HAVE_SYNC_FILE_RANGE is set
+614 2d5c40e77a4ee9103de9a43f016d77858366e1a2 __dprint() fixup
+615 d048ba60fc1e207ac3204ef3306a32fac77293fa Add log_valist()
+616 8e8af3c17e0d73b6efd959d1edb246a9bade2cbe Update other OS makefiles
+617 bf84eacbfc91a952eb5b781ad2955109c862d41e Make the dprint() processing out-of-line
+618 1dec3e0787755c412b326619d63a24c58e7f4a6b Optimize __get_io_u() for better code foot print
+619 7c639b1495d2776afbf66f91accff1e6000aa8f0 Fix bad sign on td_verror()
+620 440a5981b37580b3c0f5109bc7f6b5a412ab67fc Don't call getpid() in dprint() unless we are going to use it
+621 9bbf57cc80d915d8cc87240276334ddd5aaac547 Use 'o' consistently in fixup_options()
+622 d990588ef84dacb107971143c239565e149d6f73 Set verify_interval to minimum blocksize if not given
+623 f3e11d0575df5b93cd09f8658964e1fb5d38a774 Catch error on ->commit and ->get_events
+624 008618a8df7268a4f17ceef73f796af25252b2b9 Verify log message
+625 7758d4f0b0f87d53826e1a6a6302bdc16667ed2d Fix bad type usage in parse.c for external options
+626 285d451f5c3e034463ea49a5ba99e8e0eb1b83a2 Check for syscall definitions, before declaring __weak helper
+627 a54cf03496c0e181974a63c2b60b2dc522e4b8a9 Add __weak sync_file_range()
+628 ae2ddba4e74f06b5ec986d1c3387cd14e69f8146 Fix broken FIO_OPT_STR option
+629 b62bdf2c3e8877c276796d1ed7909df194fc846c Fix parser bug capping multi value options at 2
+630 f011531e61ae750cdf82074e0dea1379b07fa239 Update libaio/posixaio/splice for sync updates
+631 cb849a795d2bfd99efdd66f5a3e475c9fb3edd86 Assign io_u->error directly in do_io_u_sync()
+632 0a28ecda80a78c9d70ae38ced58f3a2fa9c9529d Abstract out generic sync helper
+633 e76b1da43606f86fc23c8acb63114cba0d80a1c7 Add documentation for 'sync_file_range'
+634 3843deb322eb7b54d2d19d7b1ce19c5dc44d57ff Make sure we handle multiple arguments to sync_file_range
+635 5f6ddf1e568d5014925a98da316d92f9e6e03eb4 Allow OR'able option values
+636 44f29692cfba246981bb3c1b894333a6d2209f51 Initial suppor for sync_file_range()
+637 e6d2e7ec8134c94e764e10b124ff9379877ec158 Remove debug printf()
+638 58c55ba02aca24ed30beb343fcb1dc3df4667389 Add profile td init/exit with stored data
+639 7eb36574da703ebdfac414d7428712320f552a96 Make profile io op overrides a dedicated structure
+640 a0741cbb98a0399d26e90cb05604bbfb20a45bc6 Fix parse strlen() bug
+641 15dc1934435dc84d66547c4fc92d936224d7238f Allow profiles to override internal io_u functions
+642 f5b6bb85364fcb8b2ac8d922ca65afd9dfabc9bb Allow the adding of 'posval' for dynamic options like 'profile'
+643 a3073f4a296bba2cbd026603fe284341c370bfb0 Allow holes in the option posval (possible values)
+644 e58eb86d6ce20f7a550dfd28b6c789db5adab95b Add profile description
+645 07b3232de97ac32a873f0b5d17c8f49c18ed3ae7 Cleanup profile support
+646 9f81736c7531e002038621577d5ffea571649bd7 Make sure profile options get added to long_options[]
+647 2363d8df7c0c6fe0613dc8e7ae2fa6f098cbc0d8 More progress on per-profile options support
+648 e2de69dac799a1eecac1b52085f908729591ef5a Add initial support for profile specific options
+649 02c6aad501477833c7e017eec0bb14f8e6957b68 Add parser support for out-of-td option storage
+650 79d16311c8d0c7188d73df77838fb1b4b6ff58db Add support for loadable profiles
+651 64d9d938dfae4b5dcdc0c6222d2ad11870617426 Merge branch 'master' of ssh://router/data/git/fio
+652 9f988e2ebb3bff7087cc9681a54bd7f0d0e42140 Add support for registrering external options
+653 fc2a6f2266bc616f6444fb580053f9ea26e6e563 Quote profile name
+654 38789b58775ee5e00f4669f01b3c9da31a7345e3 Add check for OPT_LEN_MAX being too small
+655 c06c78c04c415bcb33350e8e56b924b75b4e93aa Increase OPT_LEN_MAX
+656 4ceb30d4b44957e252a75f7ee4170f36109934c3 Use log_info() more consistently
+657 bc77f56f79f6ae155e9eb26263ed686ef28b47ec Fix bug in sha256 verify
+658 d3e829b399a44b6d6ce9596a05f7a4bff5025573 Fio 1.37
+659 85a863194fe44f815fe8d88cfc3dde6b22009c06 PA-RISC support
+660 e72fa4d40565e7a213698d8696b81f80e4670982 Fix FreeBSD support
+661 e449797e5071605a1fcd9094e40cecca4a647619 Merge branch 'master' of ssh://brick.kernel.dk/data/git/fio
+662 b30d395ec288508f9c787af11d0f52e9df26e39f get_file_type() should use stat(), not lstat()
+663 e943b8785fa19ab5536d91242f1063ae809cdf2b Track last file offset
+664 7bc8c2cf02fbd538ca388618ff2f4618787a86e0 Add specific knob for controlling fallocate() usage
+665 98061ac36a26e216635cba6cf348f36360bd206e Merge branch 'master' of ssh://brick.kernel.dk/data/git/fio
+666 975462a6cbfe5c97ba6d7207978467748611b5ab Allow 'b' postfix for integer values
+667 e0c4a4691b78163e8dfca9221147b2b076819cf3 Fix barrier for sh4a
+668 c4d8710f7cd2d449f452082786c9e59186aa388b Fix sh4 typo
+669 29721c9ce4f85775ff77dcb04bd26a7f10272e47 sh4 support
+670 fa77073a574c3b322529fe11c4af16eed1667079 Add generic arch include header
+671 b71b80d679ddd48d5fd87e3df9f28dab678f9727 OSX should include sha1
+672 c36d16f5a0b9e3d505c9933bbbdccdb519ca4faf Make fdatasync OS optional
+673 a14ca44ada0708be91ed7741a32176bef4801cc4 os.h should include headers it needs by itself
+674 d09913c248f04ab33a7e7bbfb2227e9db8b9f4a2 Include juggling
+675 d0983d0124fff305d0945098fe7b4b9c44657fd8 Add Solaris helper object
+676 f8ed6d895233a874ce4e119f24d759445dff254d Make weak posix_memalign() private to Solaris
+677 535313705d69dc16f27ca38acf2f9bf7205e410d Add generic random helpers
+678 3b2e1464ae58caf42c74ab4bdeaa5eae7c38a23f Fix some issues with the OSX port
+679 2afd826bf6cd19900aee70ae14ede92d91b6f4c0 Support for Mac OS 10.6.2
+680 bf2e190b8daeb4717726d469fd0ced9f4771000a Fio 1.36
+681 ba3e4e0ca697f83c97a250d85a74506ace69de2c Fix rate option with iodepth > 1
+682 d2a1ed1a110d9c6f76a4a11974652c0bb9307b68 Fio 1.36-rc2
+683 e0b0d89201bd301f47fbbfcf86545b7e77b16ef3 Add support for specifying UID/GID
+684 82830b03d854b8e018241b90c2d9fd83752a3236 Fix compilation for non-linux
+685 6adb38a1a1cbe95f7131815416c8bb31683c3f47 Autodetect cgroup blkio mount point
+686 ed81ee199ec8f3cdfcdc78ff067a0397c3b02f5f Fix an inverted cgroup exit check
+687 8eb76f78b96cfc1b1ab7b5f629e90c39ca7375fc Fio 1.36-rc1
+688 8a4d0ff0b2d8192ef58e69b7f2a3c976f3bebd5c cgroup cleanups
+689 dae5341c3059273242598de2bc27cc9f18c627c1 Move cgroup list to proper shared storage
+690 3858bf9eb509136b800cda1a08247e9c0ff167b9 cgroup cleanups/fixes
+691 39f22027248f658ade599e89c2fe6afae02ac9d7 Better support for setting up and removing private cgroups
+692 ddf16fe4da558a2778bf1ba06c965080d318cb24 CGROUP fixes
+693 a696fa2a9c2e21a1c88813235d6fc39d267f6155 Add support for blkio cgroups on Linux
+694 d481e00608dc118e646b6fee9c9292c1ab35448f Move back to realtime clock
+695 c5c8bd5c9b265df2c7feb386b5c1fba0a5a34eec Add helpers include file
+696 f166280e4cb2b3939a66359117798e46caf49591 Fix compile error due to missing ENOMEM on some platforms
+697 f9e256ba1f5f57a61fd6bc9e6ed6cc2f996c0838 Merge branch 'master' of ssh://router/data/git/fio
+698 d4c5b195ac12322c943f0fda18e84f067272cc8e Add weak helpers to other makefiles
+699 7d289b2a318b3412ffbc33b0e3e4061bba922b90 Fix posix_memalign() return value in case of error
+700 ed80ddf66943dc2654a92eb77b57c3d68613e9d6 Add posix_* weak helpers
+701 11f97f307bbba7c320b0dab0a55ef6795b72e3d6 Re-include fallback BITS_PER_LONG fallback
+702 3f5bf577570e77231a245c3a90b4002244d1382e Correct size of tiobench profile
+703 9ac8a797da61a59c9fa1b59f8574246555403d19 Add support for simple profile benchmarks
+704 7a958bd5974368e97058ab17ea94611e4d723da0 Only do math on known keywords
+705 892a6ffc5363ad7f1750df9f3ec98624016660cd Support simple math on reserved keyword expressions
+706 b7a3e6616829c16ba11ff2d5f7c17a598e40dfeb Log bad verify header location
+707 a8617add8d5ba01e08203bea84edf23ccebc4e85 Fio 1.35
+708 6a96276c901992b21c3ad93f95ab0a081c7d6bb1 Don't pass more than the queued IO depth in to getevents()
+709 2ecc1b57721e3cb72bbf558bc169c97037fe3d0a Fix race on io_u->flags
+710 daaa166fb4d4869882885094d8b8ad44f6d159ce Move BITS_PER_LONG define to arch
+711 b4707ed7905cc4f1839f799cc1fe8d4b37a1fcef Wait for async threads before freeing/killing IO buffers
+712 457bf399b5391f9a11d9ca0a619aeccac1962ce6 Fixup iolog replay and add 'wait' command
+713 0c41214ff4e6f31f8df64aac37be7853aada6f1f Fix race condition when using asynch verify
+714 0e92f873a3d542d2b237d68fd9391c92a85fa0b8 Support > 4 byte verify write patterns
+715 b2c754d12177c6ef6f9ddfaa8d52663debdb0c1f Fio 1.34.2
+716 df9cf928c7d93e1097c7e205893a72f828ecc9f6 Fix bug in bssplit parsing
+717 9c965f3a2ec2e188606946c2f096a0ec2cc07a5f Merge branch 'master' of ssh://brick.kernel.dk/data/git/fio
+718 666bf1234912c3790ff1e6204596891c6ef7180c Fix problem with mutexes and MONOTONIC clock
+719 69a852f567ab20358fe21b7815626c27a4214b42 Fix wrong clock source in mutex
+720 b767c7f8e3fd8efff51debe39149c65028cf963d Fio 1.34.1
+721 e99ca81de760ab146dbba4105a8691c25cb1dec6 Really fix dm/md slave disk utilization
+722 631c95e0ef133f5a1b014deea4f9cebcb1cd4446 Revert "Fix disk utilization for md/dm slaves"
+723 4744ed623e910289bed0f358ad939e74470d0e64 Merge branch 'master' of ssh://brick.kernel.dk/data/git/fio
+724 f03f8e473b7c8a5c4ed2de0b99717cf75521bf69 Fix disk utilization for md/dm slaves
+725 792d551747e83601121afce033a66f357c9fc439 Add generic bdev_size function
+726 783500ad13ededece6c8912af1c937f990880e1f Fix compile error on IA64
+727 2e266ba6f1235c9201c95026714f8b1e3b99f344 Add a bit of huge page documentation
+728 da7d79b07a41d0b3505feecda2561811217ea8e7 Add hint on being root for EPERM and shmhuge error
+729 d488d68cf86468c0f1dc3075d9953ce2aab67808 Fio 1.34
+730 a1242a20ac186dccdf8a72e37b9c331e0b4f8a5e Make sure shmhuge allocations are huge page size aligned
+731 0b9d69ecb14045cf3b2622ae922756b9889b25e6 Silence the style/whitespace police
+732 2db4ecca2d502c6d26386b5eb918a7957d98afb7 Cleanup diskutil.c
+733 d31592c81579e2baae0f88fa0463d967bf452699 Merge branch 'master' of ssh://brick.kernel.dk/data/git/fio
+734 b06de82e3b075874733dd233571499c1c1ca453c Bug fix: handles disk device used multiple times
+735 0717248204729f11d657dc26d2a78a8a40ce0609 Fio 1.33.1
+736 d9fcf07ee7a3eb506ee332e35ceabe909d10a719 Fix typo in write_barrier() on Alpha
+737 0d5b625cd2f800c64948311cf0f51259d8a83533 Fio 1.33
+738 b892dc0884495df8aa56f8eda31ffece497eed3c Document the verify behaviour wrt read and write workloads
+739 715d2b3e02834232154604b91de1f9db53572a77 Don't assume read IO are always verifies if verify is enabled
+740 c28b912f77c3dafbdcdcf4def2c8c1f9c127100c MIPS support
+741 755c31896364ad2887c07e0383ce639d1f5b52ab Don't start new groups for numjobs=
+742 c6e13ea5028b958494d1450d5a4242226d554ab2 fio.1: fix hyphen-used-as-minus-sign
+743 23d2461974c334d77eb7a06a2dbd1f37aeee85d4 Merge branch 'master' of ssh://brick.kernel.dk/data/git/fio
+744 7c353ceb3257b132f4c98326046b42201e070731 Add Linus' optimized sha1 hash for checksum
+745 74929ac27bcbaa26a08a9abcda70b5ebba94166e Add support for reserved keywords
+746 a1c58075279454a91ec43366846b93e8dcf9753c Add strong madvise() hint for cache pruning
+747 56075b96f307f8276f9d032ac8404622b94a456c Remove old FIXME comment
+748 617a2013384ae474177a8a9c151468e3d3fd8944 FreeBSD: use generic bdev size retrieval
+749 515d18304324c2e11f40742c394c90799913fa67 solaris: implement blockdev size getting
+750 983b770d547c11d8b0a4ef9e1ac75ffce1d4e46d solarisaio: fix aio errno assignment
+751 8e827d35068326950a6781d93aeef33b66d3438b Allow ':' in filenames
+752 f2b7ce1c8f2d5ada9b0f789b48b94dc234195fa8 Solaris cpu affinity fix
+753 644eec5656e695ab215733108c634c056e1f8e3d Fio 1.32
+754 5e012980ff5f8396a3e3ebc432e1dd32cebedaa1 smalloc: enlarge pool size
+755 c5d3d7901f7b8225d31486894ff7778b0ac3d582 Fix problem with bw log not working for writes
+756 5338f35ddd52203048e2f6262b7254dddc2d8d52 Merge branch 'master' of ssh://router/data/git/fio
+757 e92d3d714acfe180413f63a5e5327de594aad0ef Verify pattern & header meta data
+758 d6978a3242daad9cb7b0710b724f19225d1ed7e2 A few more kb_base fixups
+759 a639f0bbd278365a2fa15031afd29a24dc917437 Make kb_base apply to parser k/m/g etc values
+760 b09da8fa5be85634a3e8331d6e5ce07cd427a5a2 Add tera/peta suffixes
+761 86375e3446fdeb6c4dd1406cc0e4c456af954a2c Merge branch 'master' of ssh://brick.kernel.dk/data/git/fio
+762 90fef2d162fba55ad684c2c80b3b9739b8d16e72 Add kb_base option to specify the base unit of a kilobyte
+763 b22989b9f9349b3c1d1c41846ab27ff0914bd6de Get rid of KiB vs KB distinction
+764 d447a8c25a735519089626b3047da646597a7c6f parser: dump valid option format for ->verify() fail
+765 10033c3e01523082fc3a45879888ba229f634d1e Fio 1.31
+766 01a1caa5de2199b7679b7becf0e8c63e0ecfc373 Fix broken completion latency numbers
+767 122426daab0fbd2fce244ac018d737a8f302f974 smalloc: just round alloc_size to int aligned for post redzone pointer
+768 cf98708da292cb9e77bb6aff4eda7652103f4f77 Make smalloc redzone pointer properly aligned
+769 e40823b10920f679d84f3f2222e319c168b1e7da Print error on thread init failure
+770 c85c324ca4c55e482f4233c14c64ce5f88b35be3 Async verify HOWTO/man update
+771 b36e298b5bdfc31ffc9a4c14e94a9c5c748888b0 Code indentation fix
+772 d561f2ab37ef5729882ef3c6e6ed8ee49414955f Make async IO verify offload handle errors properly
+773 e53ab27c7425241d64e8d64ad77850a776c01375 Improve async verify offload efficiency
+774 e8462bd8250cf3ff2d41f17e1a4d4cefc70b6b37 Add support for async IO verification offload
+775 8f933caebc879fa06bb8d2d25802dd6f27da8071 mmap engine: remove code duplication
+776 ed47cbf7063df84343cd79fdc64eb7bbf7d6df2a mmap engine: allow full mmaps for 64-bit machines
+777 3d87c7a89fe27e2c593ab690a56911375aff99b5 Fio 1.30
+778 cb21168269d746d80d82f28ed4db65c2750a8fd7 Add warning about potentially missing O_DIRECT support or bad alignment
+779 8b5f73134cfaab8e3f72bea4166e57c59c635b69 Don't limit direct IO to 512b aligned
+780 fc966bef0afd0b6801509a9038951dce46f2ecc4 Fix O_DIRECT memory alignment
+781 aea691c6c2828dff0ee50d7418091d1cb6a1f2a0 Fio 1.29
+782 e0ae4dfde29797aa33141100205cea3b2dc8f034 Merge branch 'master' of ssh://router/data/git/fio
+783 8a4f8a24a23a1f95ce28338d697c9b552e7e06b4 Fix issue with fill_device=1 and continue_on_error
+784 656b1393d43f9f22738404582ea14dec956aea83 Add code to detect a task that exited prior to up'ing the startup mutex
+785 9c0d224129b0c59698e4c77e7fed00dc8cbb50e1 Don't allow pre_read on IO engines that cannot seek
+786 c103f2440db0ceab0eb6c0d6669be285766fb495 Fio 1.29-rc1
+787 276ca4f7db8d0102ca2412d85910b5a30258462b Fix compile error
+788 29d43ff9b1f342fe6658b17f0e349afcb6b76014 Move gtod_cpu affinity check to verify callback
+789 896cac2a44de3725a6d615914e239cab4f382e1c Move rw= write && read_only check to ->verify callback
+790 d529ee1932bc85598900a3ef62f01293af87fbd8 Add support for the iomem_align option
+791 70a4c0c8417bba7c2e1e9a384b9acf226f5b9782 Add verify hook to options
+792 3980127d55c6b1773274bc854aae4589aa3f785a Only show maxval in --cmdhelp if it is given
+793 829a602cdc0a1a1264b51310ba4df694f47e57f8 Cleanup IO buffer memory allocation
+794 ff455a04f4e77d5a41532cda61b6fb82a37c2658 mmap engine: fix for large files on 32-bit archs
+795 f6db4fa5a64501a3df72c2c4394d4c8d9fd9d991 sg engine: IO should be done sync of O_SYNC and O_DIRECT
+796 5f9099ea8adf423d0db01274ef0d7e65629c0e1c Add support for fdatasync()
+797 77710811111850d125bee164dec80215b79e6c3d Merge branch 'master' of ssh://router/data/git/fio
+798 dcb4830de5a347dc929148d0e6cb7c4da9eb3a56 Alter the order of checking time exceeded vs getting an io_u
+799 fd4442b8c33de3bad7d4d31df75e3109900ac70e Default print pretty up
+800 c1f75438a5888d96b3aa4f6a0cac50c4d4047f14 Cmd help type fix
+801 1ec99eea970609e63f49982f0d052a23ac18848d Fix typo on continue_on_error patch
+802 f2bba1820a567ac00b09916239ac8feb125cead2 Add a 'continue_on_error' option to fio
+803 9896178e0969cacb521e004e59c580eab63f35f3 Fio 1.28
+804 b23b6a2f66637e326c5825bf438059ecc62008d4 Yet another rate fixup
+805 40e1a6f09be0d487ce08e68e2bf9b0a01d771c8a Improve rate limiting
+806 4580885d413c7bca742dc2a373b9afcd5f48d7f8 Get rid of (now) unused rate_throttle()
+807 e69d6e30c8b82082cb440e926037bc1a91710856 Fio 1.27.4
+808 54c00a8e27c0b6842fa73016d74087a9fabc925d Remove a reference check
+809 2be3eec330360e6735fb4e7d70907e11eaa346f8 File close fixes
+810 39d9ef6a390466ccf58b8579ed2da508456594d0 Merge branch 'master' of ssh://router/data/git/fio
+811 3ce9dcaf8e766557cb718d21f51e8f691bef9afb More documentation updates
+812 c35dd7a6ce7bed8a5345c69e7b5499c71908d21c Documentation update
+813 f6c4c074cc21283f5180f85ee06502544386058a Fio 1.27.3
+814 29a90ddbe14d438463617e4629f7a9138854d466 Fix slat numbers
+815 d982d8736925d1206d7f344a50bcc2fdd91e367b Fix bad min rate check
+816 e01b22b8fe3f20376fe8fdc6f2c28cc3682d698e parser: get rid of FIO_OPT_STR_VAL_INT
+817 835d9b9ed0e5c2591b8a3eacbd5f4ab6bdab466c Use __e for errno
+818 8fe9eff3795f1e2a57391370adc6304f55c50b23 Fio 1.27.2
+819 22a57ba81de2c3f458797e9158da760c9e0ea435 Fix problem with too many opened files
+820 2cc529306ff529100449f9002978b271facb8380 Bad indent
+821 ec76f15a4ae995c06db6c6dda6a6fa41b189f613 Fix fd leak in cache line checking
+822 cf2dd8d64f1211a24341a296c56a671593bce7a4 Missed int to pointer conversion check for ->ratemin
+823 1621031e8a7cbb91afad124da405fc4eabda764f Merge branch 'master' of ssh://router/data/git/fio
+824 581e71417760e0aa86eac0acd704253ff0eeea4f Add support for limiting only rate in only one direction
+825 7c8f1a5ce2ecde0ef8372e983895855ac838c76c Fix bug in parser with postfix and truncated direction values
+826 890abcad90e450484f89733d1bc1ad8a30016311 Fio 1.27.1
+827 0d1cd207e409a36313784cb9596990c819775f77 Fix fill_device with read/randread
+828 29c8e868723e1b539d402d1accac97f872f355ea Move td_* ddir defines
+829 e9f484791ffd436f39bae0b601e6fc97942c1814 Add pre_read to man page
+830 e9f98a793c10943814851e6840fc475d31cea0d1 Fio 1.27
+831 d1bd7213c61dabc5e7ae967614e38923123a1f1a Improve throughput ETA display
+832 adb02ba8e05ccbb1c1985791d0ee52828bcbf6aa Add iops rate to ETA display
+833 0a4957c60fb35db0973c15c4c2adbd3bac854ccd Fix bug with rwmix and multiple loops over the same set
+834 c592b9fe12d4739d99d5bece517e304804876df6 More fio.h cleanups
+835 7c9b1bce094d58c374b086bbb780c08265623ea4 Split off diskutil include
+836 590aebda258e146edd73382121be9c84643d8f1b Move file service type defines to file.h
+837 5995a6a46a4c697a6c68c02da3c7c46c0cdea23f Add iolog defines
+838 2b4f4abec640f36ccdff39de00e74b2234e27116 Move IO engine flags
+839 dcefb588d556828af570221b2dc276a6376c8557 Add ioengine.h header
+840 4cd02b3f7f4eda0ec263f04422ab6424b7693605 Move more file stuff to file.h
+841 4f5af7b2370a6d3e64bc5128905c1aa8b0dc51b0 Cleanup verify headers
+842 d6aed795f2e3e403828abf60874dd2d6e8342a1b Clean up file flags
+843 5e0074c2bfa46deddbad3b524c253a63dba05e63 Fix problem with fill_device and read workloads
+844 34f1c044d361d04a576c3e7ed387fe064f9db5c6 Make pre_read imply invalidate=0
+845 468306a1afe83d94692da391d2c18982a1cd41a6 mmap engine: don't invalidate cache on segment remap
+846 4e9401cdc69751ab4739df08140a2bbadee7da77 mmap engine: remove 'mmap too large' check for 32-bit
+847 ac89311241264280574c81e6400c9a0c59615082 mmap engine: allow large files on 32-bit archs
+848 482900c94face8e1891a181148b2f8a01e905aa5 Fio man page still refers to old mailing list
+849 58726a1006aa33303e41951faac1ceca2bf09ec5 Fix problem with fadvise() and fill_device option
+850 17127517a3ccff19993e36ec3f7bc15044898f2c Merge branch 'master' of ssh://router/data/git/fio
+851 c97bd0fa0f68d924f4e6f3c480f380c4ca20b872 Increase accuracy of disk utility percentage
+852 3bfb53dd20223015916e9ade388a5f9d49b87172 Remove io_u->endpos
+853 398e8c4ddb1e4c05159cf86b6367156bdfd2b084 Make sure that exec_prerun/postrun work for shell commands
+854 55c39e2764f4b2ab2f66ab495126b821c568c032 Fix old printf() in pre_read()
+855 55093ac92265a5132a67d2207aff7e0459086c22 Fio 1.26.4
+856 b0f65863844b4de92d10fefaabde80ea5bc3e5cc pre_read fixes
+857 3b5ccd399357b971ccabe08743d1efdffbbb9b3f Fio 1.26.3
+858 ccd4f41bbee00837601693dd58589320cb3fa497 Add fio_generate_plots.1 man page from debian package
+859 639ce0f3dc2f193e86206756c0b8af8f129f6eae man page fix to make lintian happy
+860 afad68f778a764cbe57d4a5d54cbea32444aaa45 Add pre_read option
+861 8de43fd22302237a2b35515ff869fde514dfc76d Add appropriate warning in mmap engine for large maps failing
+862 87c27b45f8d50720d7a9f12abc7e83d0a7463021 Clear f on error get_next_file_rr()
+863 9fd189697dbf9fb7878093be5e41f25b7f932c2d Return EILSEQ on verify errors instead of EIO
+864 306ddc9752eef70c3fbb111af63d197a3a6d447f Include transfer size in the clat/slat measurements
+865 d2bbb8d9878ed3bb58714fd6c5766553962bab09 Fix garbling of clat/slat logs if a shared log file is used
+866 3c704d7b028ed2701ad89e211413b218591cefed Merge branch 'master' of ssh://router/data/git/fio
+867 3776041ebbd9b19ebaf90b9951a1dbc085fa9325 fio howto typo fixes
+868 26eca2db3ef6e92ff1022099cb89fc8ce88ee15d fio docs corrections
+869 62b38926a8f02a03534813fc80e73e5e169bf03e net engine: fix compilation warnings on Solaris
+870 f215152acf86818e3b200bdaf7684be3a0b2fa06 Fio 1.26.2
+871 0fe2187702d5d65e2b0f47e23824f41572eb4446 Merge branch 'master' of ssh://brick.kernel.dk/data/git/fio
+872 fc6bd43c62196441607e6c36ec66bd0e16f9e4ef 'V' is a running state, not an idle state. Correct HOWTO.
+873 eb7ccf38bf2e9208b593d021c50e9ad2ec0781ea Align io units to processor cache line size
+874 1ca957384a2050e426f8f6ef8a3e493d7ceeb9ce Fix name of the slat log file
+875 c311cd2a9e3ca77f4d2cb2f6dd8bd08185e8c0f6 Don't populate random data for verify reads
+876 97c62e0fd052854d9a8fb68cd4d0ed56bf59bc25 Fio 1.26.1
+877 f0d524b045ceef3454cbc66dbfe8ea51db298a62 Filename must be parsed after directory option
+878 c83cdd3e45f4b34841adf275dbe001f44c7c614b Update bssplit documentation in fio.1
+879 a1ea676e7a0ffc73fa5384ddb189ced9edd4b0bf fio: Include support for ARM
+880 770028e8bdd559ee2c81cbc6bd3ef20571ed82b8 Fio 1.26
+881 de141540ef6fd41e2103e3fd877490212f14826a Add sample job for doing a quick SSD performance analysis
+882 899c29f26080585dadab9ba35cd7ed01b26fb19b Fix issue with random offset being off if io_size != real_file_size
+883 eccffc9938ac8edff0270903d8a5754bb1ae6b53 Remove debug printf()
+884 720e84ad8292ab7b3a8e264fb00db71d796600d1 Add support for different weights for reads and writes with bssplit
+885 77787c82d755cc8ab8fda82531dd648cfd127d8d Allow IO logging even for diskless engines
+886 cd98801fbed25dcc49f58cf1451af22f0455a6e6 splice engine: fix vmsplice() problem with block sizes larger than a pipe
+887 d0a278f3640546d63b4fcecc01074cad0b7f77b3 Fio 1.25.2
+888 8879fd15550a5edac3f4fdab6f98badb18dea18c Fix throughput reporting
+889 4b341fca0dab0caa41d000e8db36f1530c26616f Fix crash with multiple files
+890 6be0696b2b4c992c207fc226263e2726940fff75 Fio 1.25.1
+891 9a153e6efa862c547abfc745fed2c27fce8daf20 Merge branch 'master' of ssh://brick.kernel.dk/data/git/fio
+892 99a47c6905731e53dd4d8f7ea6501f36d9329e7b Use td_io_get_file_size() instead of calling ->get_file_size()
+893 0d5703377d1c6b38f644dc06b9b45bcfcea52ed6 Fio 1.25
+894 5bfc35d7abe2582dc54127ca1d6e03792c9d62f5 Reseed random generator for loop/time based runs
+895 eaf9b417e77b835886c3bb89ca0630dcec6d469f File reset should clear random map as well
+896 cea0b7c046290bbcc57ef7dcee18f90d08e9d72a Merge branch 'master' of ssh://router/data/git/fio
+897 de9937d1df38ef8ab837ef0fbf2831820d0775f4 aio: fixed a signedness issue that could cause abort on strace
+898 901bb99400fde83a6f8ef816757b525796776d8e Add some missing options to the man page
+899 43602667a0b5fabccb4ea26c2c4b277843e36202 Man page typo on zero_buffers
+900 2b7a01d01ea19f6e4090c7a8280bc6bf983e781f Add blockalign/ba option
+901 903dc3f6f7a44b17f09152a4fd9a2e2d767cc2cc Fix integer store bug in parser
+902 6b7f68516d785163bf76565c1635012f66b9f51f Add some missing options to the man page
+903 f7fa2653589f9ecf0d3d106286f17620bcf32de0 Get rid of int vs siint difference
+904 ef67a8a352c5cf6a1a179ad726371ccca43d839f Update HOWTO with 0x base for siint
+905 b347f9daece7d65a6e596cd3bd0ef3602e40b059 Allow 0x (or 0X) prefix for any int value to indicate hex base
+906 853ee7fc686293cd45fbb177c75114ed2489144d Fix failure to strip end of line with comment
+907 9d7dfdaef1ed5f6227fd31117d310ac15ae63152 Merge branch 'master' of ssh://brick.kernel.dk/data/git/fio
+908 931823caa6ae382c7c5ff6e02726c4297a4c0ad7 Update smalloc section in README
+909 b36beb6e98d0785558a05b796dc216ecd4c49c62 Use strict matching for --section command line option
+910 df9c26b10275a631e83e7cc92d5f7384998b2c49 Avoid opening files until they are used
+911 4e6ea2f1e9b7da6d7d1057670fcc19f063e46fd4 Need to clear ->files_size when ->files is cleared
+912 b5696bfc783ea3a762a73fa62d8b1a8d1fa67840 More file setting bug fixes
+913 8bb7679e73d3086a01b9d21a650b0d7a859412b6 Botch edit in files setup
+914 dd87b2c94a30c3309574962cc7cb4bce68a73ceb Missing fio.h update
+915 fc99bc0d82371cc704395a7718e78abd0e0d2709 Realloc td->files to full size immediately
+916 814452bd47e0f2bb4825b8042b664f32de0aff8d Add create_on_open option
+917 4bb997ce64df39b65c8d86c3b4a0504e6ab6eb48 Fix file open leak
+918 87b10676354d10be02864ad615e1e9fe5a2376ab Fix bug with openfiles
+919 683023e8e29e99f9d5cbd255b8595917cd7ce4fc Fix bug in file selection
+920 a086c25771b195d04651d293f299f0a63f7d2a23 Add 'sequential' file_service_type
+921 8347239af0a361e160293100bfc053f88bbbf737 Allow 'norandommap' with verify
+922 112b52d9033015ce46506fd05c67c6a537024c59 Fio 1.24
+923 7ab077ab119fd28b6ccf5705ea8453e414f574c1 Check for a valid block device size
+924 664fb3bde9ed3b61d0520b6b4f3d0ba9599834b0 net engine: notify receiver of UDP link close
+925 e235d5f883d7640d6ca2255cbdc43762b1fe6959 Fix broken rate check
+926 d5b388a560783a61af7b424757bc6dead2309c28 net engine: termination fixes
+927 35651820abe54473964cc1832fdfe23d7af3209a net engine: don't pass in flags
+928 371d456c48b73c8a424e4c807c511fc891a38e7d net engine: use poll() always for sending/receiving
+929 e77c010d2c5bcd98c72797db9146b7a556444bc5 Add comment on UDP on examples/netio
+930 d65db441ef2125374e98848cd36c7ba86e8afa12 Missing text in iodepth_batch* help entries
+931 15d182aa276b2ef60aec0b8b3c55b6a0806ca7ed libaio engine: get rid of non-async behaviour with buffered IO
+932 3f8fc5ad7d36fa171559e7b94b0fd211ba2a4561 net engine: accept both upper and lowercase tcp/udp.
+933 414c2a3e741bb7dd7147ce6843f529c7773cea38 net engine: add UDP support
+934 217bc04bf276d3d99c616ae69b88ba5b04a36151 Add platform section to README
+935 690dec6e4ec7297a477b809fa24ee23dc02348c9 OS includes need errno.h
+936 2e3e31e36b3565dcc5e36ba3842e7b207799601f smalloc: get rid of MP_SAFE define and lock checks
+937 f42c153d303be537f2963b633013a0ae1ef4de65 Some more pthread_* call mishandled errors
+938 29adda3ce304f16036cafee6c099aa08444a7db1 Add --debug=mutex
+939 3c2d93ede7d03b3a6923edb55c7737fe014794cb Make sure os mutex define is visible in mutex.c
+940 f356d01d0cf8fec2ee58f66a9b5c00c93defbc47 Only use process shared mutexes on support platforms
+941 4fa6d0f862ad56382199fbb68c05da484d3f7e20 Fixup handling of pthread_mutex*() error returns
+942 85daf2c1102ed4fdf1477cfd372046efbe08046e Add fio_cpuset_exit() empty handler for platforms that don't support affinity
+943 a6cee43d4e9f2163bca89bf25c8d529128ebc905 Include crc32c and crc32c-intel checksums in FreeBSD/Solaris
+944 39555d0365036f12531f876e6b589a0bce4e5147 Solaris pset fixes
+945 4a3c7b90413beb215dae12a26701ccbefa4bc847 Solaris compilation fix
+946 d2ce18b5dfdc1736a99b4e2d731119cc4880e197 CPU set creation and destruction can fail on some platforms
+947 6f7024e49e41fafcb838acbebf0c31fbcf35132f Support for CPU binding in Solaris
+948 4e78e405a12b31291aa88fffc1da2cf43b782ef5 Add a cpuset exit function
+949 6d459ee7e90393af490a64709aec206d8a585ebd Prepare for support for CPU binding on other platforms
+950 6dd6f2cd9fd0a59054c9d003c758d810fd5a8f4a __usec_sleep() really just spins, rename it
+951 f484470bf1df771bed64dc9f85b516ad4b7634bb Long line style fix + comment
+952 b03daafb17ee6e26f66d4bc2234a031b17d085bd Don't allow higher CPU counts than what the system has
+953 19608d6ceb982409ba036f646c7c57671d2df779 Make sure that the given CPU range is within the bounds of the OS
+954 be4ecfdf6c8daa75c4df8ac875c9a87da80d81a0 Add gtod_cpu option for pinning gettimeofday() to a single CPU
+955 43c129b4ff85a7f7f7e0929f9dd73e756e37a2e3 Properly strip end-of-option blanks
+956 62a7273db5a50c12b84157ea0c81b8669fd95367 Allow ranges of CPUs in cpus_allowed option
+957 dbad30b097de39d355b3952a3bb6db9ccf9dd77f Fix bogus 'may be used uninitialized' warning from older gcc versions
+958 b0ea08ce4ed567d3dff372f0866d5c3fbf1f8c39 Add comment on cpumask not working with a CPU count > 32
+959 b8a6582e89999f88c574b905b89743762d8080df smalloc: pool->file is only used in add_pool(), so make it local
+960 443bb114d963a99082eef916025268a5a107092b smalloc: unlink pool file in add_pool()
+961 46e9e96a2052cdf0a385887b15215ee12349c53e Use frame pointer
+962 c12f6dabdb82e63e1020f1e61c366ca552cc9ac8 Make log writing append
+963 e3cedca76d9fc104eb4f6f869606fb5bf4c0d59c Add support for giving bw/clat/slat log prefixes
+964 8cdabc1df71ec546d47ba4eb1190b8c7b6e62f9a Fix bug in parser that causes a crash with a bad option
+965 860a8a6724f6660ee0e1232c3a980f0e1ef567ec Fio 1.23
+966 5f8f9726e7466419db8b8e9c2205430ad1d33aad Handle ctrl-c properly with threads
+967 182ec6ee4e4d79fc5a705cd2e2811fa003add040 Fix leaks with using get_opt_postfix()
+968 993bf48b48f2d9724afa3698a15070e77bc5d1c0 Add gtod_reduce option
+969 3e4889209b86409283d1e87bb6b5c9980495c2c6 Fix backwards clock on tsc source with Linux
+970 12d9d841526ad75a67bb43a90edeefd05f85f11e Issue time fixup for guasi/libaio
+971 9520ebb9f4dd88d086e313ae97e37ebb6d4f240b Add options for disabling slat/clat/bw measurements
+972 62977e09a378a713b31d64c63e15adcf9f6f9d9d Kill io_u timeout handling
+973 d0c153284c1e6505e711c71e6412e6fef02853b8 Only memcpy last issue time when using iolog replay
+974 c3383b96a3d8dddd719a8d4d2888485edf9b3812 Fio 1.22
+975 0d7e3c94c35332535fc2c723d9a0682c3a4aafad Fio 1.22-rc3
+976 02444ad1868ee94c7c38810cc775784e6a9a5dbe Warning fixes
+977 3c54bc46ceb4db794f039d3c6cf870bebb95fafc Document environment variable expansion
+978 88b5a391bc2f9eb85066219e453682a746730ead Add environment-variable substitution to config options
+979 2e8552b07140abd723bf30e9a13613b639eb6b83 Update README for new mailing list info
+980 5e28df3cb6fb0c6bda2d8f98084734462be7ae46 Fix missing initialization of merge/io counts
+981 043b74b9ddba4cc7ecb876ca41b7daa7d1ec5da3 Aggregate slave device stats into the stats for master.
+982 6742301361b7eeded19656ac18a09fde33122b74 Add support to display slave device stats for software RAIDs.
+983 6820cb3b32d771decbf76bf58c526e7ae1b2f31d HOWTO: add comment on terse and --minimal
+984 59fd3f22752ed32f659254f59c218362090922ff Fio 1.22-rc2
+985 419484b934222e589f0b718e9494b045df176167 Don't compile crc32c-intel on non-x86 platforms
+986 b29ee5b3dee417016164198fb240344ef666de2b Update ramp_time
+987 e417fd6643cb9451441065d5767099062d51205d Update options
+988 44f0c3fce15b546cb75bca008f15b3fd33c30a68 Fio 1.22-rc1
+989 721938ae7fae0f6d470a7e32e177ea5dce480229 Add ramp_time option
+990 9c5a3854b03356e8dfe929477bf1ea67afcb8ad3 eta: fix bugs withe fill_device and exitall_on_terminate
+991 8954110682922232b8bccfe2b7e734d04ce71b96 filehash: check for NULL ->file_name in hash lookup
+992 b9fbcf2104ab79127825e0c23ba0a147ec076087 filehash: Filehash should be removed after the file is closed
+993 a7ba8c5f4c0f9fe117d529c1ad6686b2070bae51 filesetup: When terse_output is set, The 'laying out' message should not be displayed.
+994 d1271dc19c335c39298e16b825f84fdd8650132e smalloc: Remove read/write lock race condition which will result in segmentation fault
+995 2b52511f3f595e0932e7f9c55bed243e8fe0f4f8 Allow fio headers to be included by a C++ build
+996 de79c9158eae1459970e0df6efc6a2b09d920f15 Add SIGILL signal handler
+997 af497e6a1d61df088ce1a40f4fd2f38066e694b0 Remember to add crc32c_intel option check
+998 3845591fadea480177223e28c9d1c03642d34f0e Add intel hardware assisted crc32c support
+999 c48c0be79173897824d8f439c39374f2588931dc Detect and complain on smalloc failures
+1000 6885768609eafda8648bf50b05115d784cb04fb9 smalloc: default to 128 pools instead of 4
+1001 bc3456fa06cc7777c4764da8c7b1c0fd0a3c3772 Prevent filetype disappearing
+1002 f3f552b9920cc45c5b1f9c679f36b8ddb13927d0 Add uninitialized_var() to silence bogus compiler warnings
+1003 9c02f6eface8c71980b65db2999753a9567d3662 eta overflow fix
+1004 3b02d57453fc574331020c3d842a27c67846a4b7 Revert "Add spinlocks"
+1005 ff2e2231f320690ef0a3f71f0ba87b50c5f16003 Revert "Add spinlock wrapper helpers"
+1006 6548f47f241013c7f6e1bb4b8a341f7d7a78764f Revert "smalloc: convert to spinlocks"
+1007 b950781e189961b934c5a26372ae4ec5fd384799 Revert "Convert file hash lock to spinlocks"
+1008 61a179a8fa701a2f5e9cd92b78ccc98f96b9f1d4 Revert "Remove unused define"
+1009 edf2c6cf5adc82ee43c81e033cf2215eb9ffdb16 Remove unused define
+1010 0ec7b3c9a0926e6377bd145206bb9f6a70be610d Convert file hash lock to spinlocks
+1011 3f1959101ed6a935ff3e2aec0fe7f5828f23fbcb smalloc: convert to spinlocks
+1012 8b4a7c860d004ea8dffc11f6232124b574fe6cd7 Add spinlock wrapper helpers
+1013 69ebbd397e80b23ec4281c99e9f7242a089cc771 Add spinlocks
+1014 bd2626f02a51ff50664616cd7c6c4daa479a84af fio.1: Correct terse (--minimal) output - page faults
+1015 1025d13dc9b230ac798eda37c7f3bb4471951a00 Merge branch 'master' of ssh://git.kernel.dk/data/git/fio
+1016 bac39e0e8807a1d52863ad8304e67221df2bc63b Add crc32c checksum
+1017 13ddcb169f28e87e493f49887c7b06050d008c9c crc32 is uint32_t, not unsigned long
+1018 f3059de171cf9afd8b4968a681dcd1738f82bc6f Improve bsrange buflen generations
+1019 091708da23c98d1d8769ede36dd30768ccb85086 Don't include headers in depend target
+1020 b7c6302da8b30f221310dd6c917136229ee5e688 Clear num_opts early
+1021 5b6f5c6609c530943310754028d2628d984b6595 Older Linux versions do not have O_NOATIME
+1022 2577594dd6e2857d9efbf6bd81cd7ef507dbcd64 Remember to free **opts as well
+1023 3b8b7135602a4d3a7132fee10da9c1203ab643ad Add option priorities
+1024 0aa417a9515f9dc17523c1870f6409370e94ca19 splice: if splicing fails with EINVAL, it's most likely missing fs support
+1025 1cb05ed57fd364669a10e5eda4df790fbd49fa57 Fio 1.21
+1026 ac0be2acff3864979e5e260d332d25ca90e22417 Linux sysfs change broke fio disk lookup
+1027 cac58fd5cbb9876891e4dced72871c6c352cf6b0 ETA fix
+1028 c17d468ae9fb8d2858324409940275ce5a4a0848 Fio 1.21-rc8
+1029 bf9a3edbd689463201312298434908980ff48fc3 HOWTO spelling
+1030 f66ab3c819a8bd9eba6e8285d12443e0427e9561 Help entry typos
+1031 4950421a7e379ba0ca642390ae4ae7b68e92a42f Add iodepth_batch_complete control
+1032 0721d11e4d9807e40385e06b419824e9a875525c Don't print 100% done, when we don't have a time estimate yet
+1033 a55820db03f7364d2414d4173e86e576a6f5b973 MAP_ANON requires fd == -1
+1034 dc873b6f4a536c332b72cce268d5a7ccd356a891 Add OS agnostic RAND_MAX
+1035 da28353c3fb45a8a6ee00d1133efd483c0ae684c Compile warning for non-signal driven solaris asynch io
+1036 f022ddb71f93b5d9e32261491284b9881fceaf0c Solaris: support for proper random functions
+1037 e116f2b90f110334e77741227ad4e4600302c718 Add directio support to Solaris
+1038 d5707a3565e958af566247e2c0acf09e031d8921 We need to grab and mark the file open before jumping to an error path
+1039 18bc5025fdce7f1f319b4aebe1c9d7f479088e73 Kill useless undef's
+1040 9a9c63f1608c6f63b10cd5575dee868c2d269c87 Add missing splice syscall numbers for alpha and s390
+1041 44c47feb9edc7854bf3cfa2e3d843e90fc969b3a Add write barriers
+1042 d0b18cfc4849cfbf4944d17e810b25d61920daed Fio 1.21-rc7
+1043 6162f5249479e4be69bcd0c0bf09d1c09ea99523 Missing time store in rwmix switch
+1044 5f42100411888488beb3e17637dea57994f58153 Base FreeBSD Makefile on Linux, but insist on gmake usage
+1045 6492b1e5f25c68b3c164376c0f7b94874b491c80 Makefile update
+1046 8e55e8c8bcb1a0068609df61047b7a1c3bba10f9 Remove comment wrt sigaction() usage, it's deprecated
+1047 556e831d2b6e788fd48f724047d22ebb29676d42 solarisaio: support signal driven async IO
+1048 0f09e829c3e1aa24d16059ab6665098fedf17c05 solarisaio: aiowait() can return (void *) -1 for error
+1049 eef323596c6c9d39456aba10954bb47c21982d96 Move fls.h in with the other lib helpers
+1050 78e7b3e7765a984742cf809c963499b92eca9c8a Include solarisaio in README
+1051 5cf56c03299826716a86886cd5d337d649068efb solarisaio: IO depth constrained by MAXASYNCHIO
+1052 6a42d8880794620af7b9d026be10671d14166f7e Fio 1.21-rc6
+1053 0ae38eba4156d116ac76fda961fa88f400a8622c Missed fls() -> __fls() conversion
+1054 0f0bc04d714571fd2b0e0bae293f085453131b33 Fio 1.21-rc5
+1055 ba47b7db6fa37ab8076e5d0d2d4f2f5db8506cba FreeBSD Makefile update
+1056 42124d37bd92d865b0c27751c520f671c2a91101 mutex: only regard less-than-zero return as error
+1057 7292056a38857ded6f7a64f11d14d642772c31bd net engine: missing includes
+1058 207cb0f05e689a50ffb960830f52169a1342aba7 posixaio: not all platforms have aio_fsync()
+1059 bc733f3b3ae7d397a591e3616503cfb36d56166b posixaio: need fcntl.h
+1060 fffca02dfd1b700903ba23b67fab7b59bf460ec2 Guard posix_fallocate() behind OS define
+1061 3c48c2c1c702047f8a92fa21fdd1471781b9dab4 Rename fls() to __fls()
+1062 41d9f0fd3143a469f990fede9f6a9d14a4cd1fcd Not all platforms have ENODATA
+1063 01743ee1718e7ec4b16ae3e53c8f64900c6052cc Rename list_* function and file to flist_ to avoid conflict with FreeBSD
+1064 417f006858ec66f0b410c83c2e13da54662048e0 Add Solaris native aio engine
+1065 659424767f62f46c429eb66bf46b3e836e3bc0ad Don't make posix_fallocate() set td->verror
+1066 07bfc19e548ad5515c37a471a97398a727d46a1c Fio 1.21-rc4
+1067 8b113b4f2975f9edf4542d2e0f6d876dd89d1b8c Do at least one block if randommap fails us
+1068 c9dd34b291ad747804040cb2bb60127e6afcc3fa Inc block in mark_random_map()
+1069 b3268b928ec7596a1d294a46a2771c3da789e7d3 smalloc: use optimized ffz()
+1070 0917444531866c9facb0f731eff5e4e28c7c65d3 Be sure to use internal __ffs, not glibc variant
+1071 3e3357b1a54ca27c4b1f5e9564eee73f510e164f Speedup mark_random_map()
+1072 21df44a26e04ef3fe8b4240073cc06f7d144f337 x86-64: enable arch ffz again
+1073 6164890e4db96c073274990edca12706e9c41659 x86-64: ffz need only search the first 32-bits
+1074 6839616ff2ac013c8b0fbeb2a97f6cf20976b9f3 Fix off-by-one in generic ffz
+1075 064c636d364fab601a908e040d3aa5eaf2775694 Add missing lib/ffz.h file
+1076 8f7e39dd35a40d088a31f33f12402a1eaf31b2c4 Readd the arch ffz functions
+1077 de605666880852ba9d1a0469723126b09782c520 ffz() takes ints, so change the file_map to being int based
+1078 697a606cc0af1c39ac18998c344a522199accb36 Add sparc and sparc64 support
+1079 ccb0fa24f0ff37f9270754ea5a1b66de9fd7053e Seperate status timer setup from disk util timer
+1080 739097e6e145afb98057846c419c60c2cc2dd9c0 Fixup posix_fallocate() usage
+1081 af8771b9b91eb2cd23a40aaa729bad4f78acb928 errno is not negative
+1082 72c234e50c49eb631dd84d8e5d110fa2bd73b303 strsep got lost in Makefile.solaris
+1083 fb9ee07258a56347a5dcfb17a7de31d10f3cd166 Cleanup lib/strsep.c
+1084 73af677de4a8cfc3e647887c68b1838d625c4de7 Remove icc reference in Linux Makefile
+1085 69b98d4c9945bed6b3446a9e73bfaf8e557cf033 Fix build with FIO_INC_DEBUG not included
+1086 b52ae0af85c640e6e4ebd412a731e9d5f97a6cc8 More fixes to FreeBSD and Solaris Makefile
+1087 00fb3c8dcbb940338fea9f6cab689b4924266305 Move the lib/ stuff around a bit
+1088 465221b0121f5cf70585d7338c6448ac4b251257 Add dprint() to io_u requeue
+1089 2992b059b8f54ac91e723a8bde629b4d8fed513e close_ioengine() clears ->data after calling engine cleanup
+1090 e51cf72c29e92619534ed84a59047e62eaa05a5a vsync: Fix issue with double issue of io_u
+1091 5921e80c5dfc9f96d2f21da6ae58f2b5d3a0b373 Make it work on opensolaris
+1092 d0c70934dde93a8ee260a84c1bf69ff24484d486 Fix bad references to 'sgio'
+1093 443662efa60d9082bc820641e7d1d31dd58d3ae1 net engine: improve host/port parsing
+1094 a732c9f3333ae96822295fb4b50d39d38fe04243 Fio 1.21-rc3
+1095 a5fb461fdff86c442daeebbd28e07984be9f3807 Fix bug in put_file() and __file_invalidate_cache()
+1096 e4dad9c614d7f6842b0efefbae3ca0fa540cad0a Fix refill buffers overwriting verify data
+1097 951417ad5aae0ff21493a1dff8b6d7ac63566403 Merge branch 'master' of ssh://router/data/git/fio
+1098 04c540d9504fa81608952d6e2ce6b47066d2566c Fixup distribution of reads and writes in a mixed workload
+1099 cb499fc4216eb4266c70ae238608f67def1758fe Fixup rwmixread/write options
+1100 8ad45fc1f41d29f9fc28a67c2fc11d48f5c17c7f Fio 1.21-rc2
+1101 89da54e865169abcf0a99c6e7ee12ec2c8ddd8b9 smalloc: final cleanups
+1102 dcb69098630845b53ebb8034014d44b409e16f9e smalloc: fix map overflow
+1103 1601cc905c8b42d8b1735e0767ac753df8805ad9 smalloc: fix off-by-one in ptr_valid()
+1104 076b17cea9c9d6c86b926a166ef58f02334c9bdc smalloc: kill another debug printf()
+1105 808e9ea8dd3dc3d631a7982fa0c4b01547cb811a smalloc: fix compile error
+1106 179446e0122d04ddbeb3d353ff68350490b0841c smalloc: cleanup and remove debug printf()
+1107 01e2b6510c3d26f1c415910cdad069bcfe7155bf Fio 1.21-rc1
+1108 1f37f63654d36bb4d07180a4b622beb79ba2c3e3 smalloc: turn on the thread safe flag
+1109 ec996e9c8f3baacababec55b3be746e035099c14 smalloc: change to a bitmap allocator
+1110 6c28f0bb768f30673a7c15d9ab493ed2dfe4d5e3 Fix out-of-band deref of (potentially) gone threads structure
+1111 fcef0b35e58d0d676b1560d563b518212f84e78b Remove early directory check
+1112 55f6491de3d5f734a1cbe3e7deed87a382d6c863 smalloc: add pre and post redzone checks to pointers
+1113 cbf69f0dbd61bce2438e7052b0e124735b27a2d4 Non-linux Makefile updates
+1114 fc4398fdf45b76c3aa11e14e78fc41a1fb42eb7e Silence warning on older gcc (bogus)
+1115 d9dd70f7e3d64ea764f182f152626d895841277c Work-around too large block count
+1116 5e1d306e4f9a6337d07cc2d536d77c53e083226f Add job number specific dumping and fix atexit() error
+1117 868eb3cc388f4f34a68a633a1cf8b036c4dcc47a smalloc: debug
+1118 c5dda9e387101dba4a654f6304553509d73dc298 smalloc: increase alloc size
+1119 838bc709279964bdcc64070d4eb2777a0f79bcbb Add logging for queue submit and complet counts
+1120 41ccd84597867a36289392e59634d9fd7dc4c397 If verify is enabled, automatically enable refill_buffers
+1121 5973cafb37fbf24c3ca2cdf86a3d03f1b00d6d2b Add option for refilling IO buffers on each submit
+1122 60f2c658b923afdd491d556e15a655584b9db306 Silence put_file() complaint
+1123 009bd847b5aeaca78e76de3a7066fe7d507a735f Fix bad interaction with file open/close and queuing
+1124 d8005759746a2cb5c8269201911b1997aa714e80 Improve iodepth logging
+1125 67778e88b56f599cc43afbf471eecf179d3c98b1 Fix off-by-one in last_block()
+1126 393ca7e973d8e23c8c90890915b08f7dac3e77c0 Fix crash with iolog
+1127 391ba6ac169ad7deaf3bb3840046581f45d755e1 Merge branch 'master' of ssh://git.kernel.dk/data/git/fio
+1128 3bec7ae05cbec8823943a9aca79871c99709ed5f Allow marking of queue depth for more than 1 io_u at the time
+1129 748b23a36509240af1debf5f7f3ca8ef153548ea Put the logs in the current directory
+1130 98eeabf3e54aea64363a231123aacd5b0730e051 Fio 1.20
+1131 aec2de209564a6951e6c91d653fc99a75508607d Kill unused parameters
+1132 136f6b79180f6bd3f3e9ec8a97b9636a1bb71e15 smalloc: remove pool resize support
+1133 8e5732e558509fc0f4ccdeb1e4d01ad038aead06 smalloc: cleanups and allow sfree(NULL)
+1134 c08e194db676bd9dcd0f43bacf2051c7c91a62df smalloc: remember to account for sizeof block header
+1135 adf57099338307b3a4a129475a12aad31e35ade3 smalloc: when adding a new pool, make it big enough to hold the failing alloc
+1136 5036fc1ecd69989198d576d87624964a529610c7 Update 'overwrite' option documentation
+1137 3e1d74fa9b8e9c4c1e452374a39ecad4000112d3 Fio 1.20-rc4
+1138 6de43c1b6bb1027b551927f92385867d46c18b30 README: add hint on missing libaio-devel package
+1139 75de55acafe8663389449517621da67347354d62 libaio: Add hint on libaio engine init failing
+1140 15ca150e8dbfd68aa5beb479fcb3f07447417a04 Mark rwmixcycle option as deprecated in the option parser
+1141 613442dc8e6699efac7d10a36c2dae875094d06c Remove rwmixcycle HOWTO entry
+1142 e4928662a8a1674debae803d5ec4dcbdce7a3ddc Base the rwmix switch algorithm on io issues
+1143 bc8389191e2fda370890bb34928a8b5b6433f199 Need to prefix directory= setting before checking dir part of filename=
+1144 d3eeeabce4131ca3f688f856a449aef3fb994124 Improve eta calculation and display for complex jobs
+1145 84f83179602f4a27e7a63beb84d05983c415f2ff Improve naming in fio gnuplot graphs
+1146 47d85e2bd4763204a983c7bf4833c0d466dc36ca Merge branch 'master' of ssh://git.kernel.dk/data/git/fio
+1147 3baddf2450d811be658fb47ef883ee84478dc352 If a file is extended, drop extended length in cache
+1148 2b386d2569c9078ca9790c4e6d318ec3835b8739 Add softrandommap and --alloc-size options
+1149 303032ae4e13c7ac10b8198c40df98d95a4524a6 Allow randommap allocation to fail
+1150 85f467031d14d98940f56941016faa481a628c0f smalloc: increase initial pool size from 64k to 1m
+1151 bd199f2b98eeb9101795e40fdef5889c630178c1 Fix badly merged dprint()
+1152 0a308f0fef1ec430ba844111f4dd4a9bcfd7bbfb Merge branch 'master' of ssh://router/data/git/fio
+1153 ffdfabd48d0edfba9cb53cfd27a2f12ad887c211 Make sure that file is created for FIO_NOEXTEND engines
+1154 921c766ffda25c6ac23e34a616595da3ed3f27e8 Check directory if filename= option includes dir name
+1155 6f88bcb0e9a232cf950791edc448edc06bff855f Only decrement pending in reap_threads() if the reaped job was pending
+1156 565cc35f1c9bfd16465c69997c7ba7a6ab0809a0 posixaio: Missing memset()
+1157 3c77037e67c4a4af29e12f760db2541bad6c5898 posixaio: speedup by using aio_suspend() instead of manual waiting
+1158 f718273e7180208fc0cf5c88b99f32b371d6d75f Extend ipo file action capabilities
+1159 f4705a73fda9a84a12a26bcd6bc2ab4f012ace71 Use pthread_detach() instead of calling pthread_join() later
+1160 a6edd6383bfa6f85f24080b43722c8af6d80106c Silence gcc warning
+1161 f6a72c738dc58be7718aac2c57fb43f193ae056f Fio 1.20-rc3
+1162 691c8fb014da9dd82e999a90b5511423f4eee188 blktrace improvements and fixups
+1163 173081581f94dc4f9f203eb7a7922fc843bfafde Only set O_RDWR for open() when readonly isn't set
+1164 ed4aa70764eb13c4bb36cd1b0647c26859f7bbd0 Tweak handling of write traces with --readonly
+1165 5b3023b818d5127504b4889f8f718c3cef62700b blktrace bits accidentally got committed
+1166 cd991b9e36b18903f1564a4bfafdc83a9f165219 Fix bad sscan() -> scanf() conversion
+1167 4aae5155980cd5e1cfc8303cd30653e1238f4856 Fio 1.20-rc2
+1168 5ec10eaad3b09875b91e19a20bbdfa06f2117562 Style fixups
+1169 e8670ef8b26039573fbf835b4b95ba45a1039d83 Always make job use open() instead of dup(), even for shared files
+1170 eda41004e84015059bb5ab8a688d3012e8a519a2 File setup open can fail in multiple functions, not just open()
+1171 98e1ac4e1a2c7386a1064277f7e67c4736fb6e65 Be more careful about catching fsync() errors
+1172 cc3fc85511c47de463497f40b29c32a1bd67f81d Update to verify state setting
+1173 58f9f0495ae8de5bc221e4afaa543132bc149bc4 for_each_file() fix
+1174 9efef3c4bd6a032a2a9f7a9aab1c29436525d781 Multiple file handling fixes
+1175 d8fab1b6c09f7a90100065ec75ba1d1b09c4c3fa Indicate 'V' verify state always
+1176 8ca7ead9f714d01fc4b421c7f405c7ce44204aab Fio 1.20-rc1
+1177 4d4e80f2b4260f2c8b37a8612ce655502a799f7a Revamp file locking
+1178 5f1348c709d91ffa54bde1a6a1beb53ecda613b7 filehash.c: remove debug hash dump
+1179 e1dab66814403f2c11797c95144b0e6bfe010e02 sem.c: cleanup
+1180 06fecb4e2679b9783940721f78ea7201451ca55c Makefile updates
+1181 0b2d6a7a2bf9f49502b9c1161f376fff53727089 Makefile updates
+1182 9c5b52907227f8f50dc472d11601869f75b8d663 Add rw mutex init helper
+1183 65864cf7c951a79c02b1d1f358f0eb5d25a9aff5 Use read-writer locks in smalloc
+1184 64d4d313ef4f537408d28fac863cf2a2b0f00175 Add read-write mutexes
+1185 28cfeb6851703cf12b54b3a06bf3ff611198933e Remove debug printf() in net engine
+1186 29c1349f1840c3f60434c9da602074bc8fde4afe Add the file sharing bits
+1187 4906e0b57f2b8cbad02ef2428522281cf6038bdd Hook up the file hashing
+1188 392a374205d9e90fe4b4b6419fefa493f0a5ccc2 Missed fio.h update for filehash, oops
+1189 380065aa652b87093d6bbd240e70db30bd6f193d Add file hashing helpers
+1190 2e5cdb118aeb26cb469a50f746b632676306f698 Remember to init and exit the smalloc allocator
+1191 c69e887518fb9bd775b5ff60334331b51f2d0103 Jobs must always open their own files
+1192 94a08ec621fef3dff02f8d254a079652fe28698c Add list_del_init() to list.h
+1193 78d99e6a2695d3a7936c5dd02f996f13a30309b1 Remember to free the file structure as well
+1194 f17c43928c202e557f2f325272c60d9050ee528e Allocate file structure from shared process pool
+1195 0c5b4087e96cdcfad2d524cc400e54e787ad65c4 Add a semaphore implementation
+1196 d24c33a479fcd68debad128da057814495f65e20 Add a really simple allocator, backed with mmap'ed memory
+1197 b0fe421a6a0487ff71f6f903908f666d9ca1b327 Missed update of dup_files() for dynamically allocated files
+1198 b2bd2bd96a09540b3add0ec74db2cdb1c145ca33 Add file locking hooks
+1199 f85ac25a7d5c9d5ba4d5c73363a6a2a461a9b013 Remove the file->last_completed_pos variable
+1200 126d65c6fc97d6acdc568aa5a969c012018daf15 Make file structures dynamically allocated
+1201 4c3ecec4160909d7eba4acf1a07a8a0cd36a6365 Enable quiet build mode, enable by default
+1202 6977bcd0e4ee3faa7ffd8f208e4031bdf906ed88 Update close file handler to return potential error
+1203 24ffd2c2bca53f4de85ab6defd52a812be1f2429 Add close_files() that closes all files
+1204 de8dd119d7d869dd9c90c6d62bf4bededd10642e Only initialize random map if we are actually going to use it
+1205 f63f7f3bbc49c72ee06f351bf3a7312df32f9e3c Fix potential crash in terminate_threads()
+1206 6ac7a3310ff8c21bb563939c8accec8c0d609109 When retrieving a requeued IO, don't setup data pointers again
+1207 af4bab56db4f87410c491c356954bbb65171f94d Fix bad inlining in mutex.h
+1208 323d9113db91a8fb2efe93b9916c22f74ff9af3f Fix recursive dump of options
+1209 cdd18ad87ed9a3639b76c41cfc9682ad7cce652e Confusion between mutex and semaphore naming
+1210 a3d741fa3bc3120d5b62a56826a97524daa32803 Add --debug=parse for option parsing debug
+1211 c0a5d35ec77fae5cfe382d35ab18915ed6766504 fio.1: add section option and remove spurious command text
+1212 982016d689dc7fedbb09646ba0df7e72a781b164 extend_file need continue when the file exists
+1213 f3de88a7a8806016ebb27af3f4be1fced172122e Move syslet/indirect bits into the OS specific directory
+1214 6ae1f57f2cb8661b97b770372eeb3694f6d5a744 Remove dead FIO_FILE_EXISTS flag
+1215 8ce9cd3dfab6a802272378e02695e87ebe40a973 prune_io_piece_log() also needs to take list into account
+1216 9b23c9fb768ef052c7fe7cd825a714976a089e08 Remove dead FIO_FILE_NOSORT flag
+1217 357f618e3905a33fcc47f1f72a4657c5fc68c7d7 fix hugepage-size type mismatch
+1218 a1dedc1f6347a33fd1265348db86a9258cadefd2 account for delayed jobs when reaping threads
+1219 509df2bc49284a93efd6b890bdf5e3c4ea2aba4a Fio 1.19
+1220 c09823ab5c841791025c564ecfc9ada0f850770b Don't always print usage info
+1221 811a0d06b302bc84b6097d5c2e1d6725420ee73f Mention new --debug=random option in README
+1222 84422acde41c9cf462245de115d425cf5a82124c More random fixes
+1223 c299e0375a660e2a5fca966233417a7034073175 Fix TO_MAP_BLOCK() taking offset into account twice
+1224 ad830ed7386eff264bdb5189675d6dfa672bd16b Add FIO_SIGQUIT engine option
+1225 7d6a8904cc2973a857f4bb50f85e7c75375c553d Cleanup parse_cmd_line()
+1226 01f06b63ba67d3bc7fa11766d9f13d229c4cec5c Add --section command line option
+1227 536582bf89bb97eb3636e41470f303877a738810 Exit on bad command line options
+1228 062c6022d41233523669188e876e913abd6c4e2e Add/correct missing command line options in help text
+1229 19e82577011d067567ea58d53f5beb6c0e24409e Fio 1.18.1
+1230 51b6996ea57913166a7cd5d777d1c1647a65731b Fix typo in mark_random_map()
+1231 b9c5b64452f483162cf9841cbdd44db6b72fd67c Fix random location generation with offset != 0
+1232 36ecec830e25ce8f707632c464e366b21a0b0f4d fio: HOWTO update
+1233 79713149b1d30ad4dab560621c86b24a1dcaf348 Verify doesn't really work on mixed read/write workloads, so warn
+1234 c475da759dbd06648277060d72dced84bfcde348 Fix misplaced exit(0) in cpus_allowed setting
+1235 e05af9e5f9638d9c61f95a25e6157dc63510b268 fio: minor HOWTO fix
+1236 9183788da048219237e5654137665948e0e7f236 man page update
+1237 dbe1a0180a6cc94a780b4963f2de4ba8503b76aa Fio 1.18
+1238 4ba66134744885e676167dede2f5900512834a31 Fix offset retrieval problem for read and write having different bs ranges
+1239 97e8cd444561ef03dd65c6c3c37c934796a4993f parser: always set off3/4 even if we have more
+1240 cc9159c3f6f6a650cb973a636c35b41b8be34dbf sync engine: missing fsync check in vsync
+1241 1d2af02a16fc3c3561c994be4de887b926b2b774 Add vsync io engine
+1242 163f849eea2b0ce443825fa510a1cb311092a234 Improve depth marking
+1243 e4f54adb2aa0aec54f92f3e67eb7353e229bef95 Decrement io_issue count when requeuing an io_u
+1244 b271fe62101e84cd6ca2a78c92299beba251db24 Add debug trace for io_u_queue_complete()
+1245 1e3c09afa64eb5b6ce5c5cc14a7a13f3c564f197 Don't allow FIO_SYNCIO io engine flag to override queue depth
+1246 2bd3eabc6ed08bf0ede81928396ac2db096480a1 sync engine: cleanup psync/sync seperation
+1247 47bc8bc0396c4b547eb276f2e81a5f781198b114 Don't force iodepth == 1 for SYNC io engine
+1248 108fcc1142ad5d087978190dbd7dd782e9b17d1d Fix bug in fio mutex initialization
+1249 d4ac64cc1e8bb64b71a1f8ae882ee171d02fe792 Merge branch 'master' of ssh://git.kernel.dk/data/git/fio
+1250 8172fe972f3a79d42f34d7f6e259ed3f7f800316 A few debug debug log fixes
+1251 79e48f72dea1639bcbee310c354938287b6d5790 Add option for not including the tracing stuff
+1252 bd6f78b2f0b6375383948f126368804612ec0035 Add blktrace and verify debug tracing
+1253 d0656a93fbacc0cf0d6f405407b55b768affa949 CPU burn engine fix
+1254 2ba1c290d09af6d630d84a58b97b8032f73bc2ce A bunch of fixes
+1255 691394d3e3b520584207ab0651e6e0354edc4bdb Typo in 'init' debug option mask
+1256 ee56ad500f6692381e131cc37299d23fa910a24a Add --debug for enabling internal dumps on various actions
+1257 886a2b5b4cfc447bb2dcb711bddfe3999f1614e5 Stop job if it fails to do any IO for a new invocation
+1258 01680f3fe5925380c8a8783abbd30b387d9702ba Fio 1.17.3
+1259 259693e9be3abfcb4a2bb28f4a0d02fb24393912 Merge branch 'master' of ssh://router/data/git/fio
+1260 d9d91e39df9cdc02d17c7b6831e2408ed1faa432 Fix wrong accouning of zone bytes
+1261 273f8c912d981439049d9b21aa048aaeaa323c5d Random IO fixes
+1262 65bdb10a09222d8b5d213de74824be775772ea8f More file extend fixes
+1263 587af925762ff4bdf6a54965a35b2da2637f2f6e file extent fix
+1264 89e820f6833fd6ea36625aa9393f1559f2d881dd Update iodepth_batch documentation
+1265 a2e6f8ac56a9b0f519ccc6cd13e76a9b239ba37d Make iodepth_batch=1 by default
+1266 5e00c2c4b7e2d5c1e535dbe10ee4b687f9f4b72b libio: fix bug in commit hook
+1267 f51dcafee6557ecae8d4c1c62bb559d563bbcce4 surface-scan: make bs 64k again
+1268 04d04cd64f0aec11d026281afb5030f202448106 Add sample file for surface scan
+1269 e28218f3017e5eb156d3a4a6e7b33651dc022cea Revert "Remove verify_pattern option, replace with verify=pattern:x"
+1270 fc74ac1d749c977308016eb22c8658a9a5ac7989 Don't truncate files if we don't need to extend them
+1271 aa31f1f108348ba2a8749c73fa8c25f3d4630a7c Add fill_device option
+1272 8f9cc4a9928d057945becd351c858c3433934465 fio: Fix for new file creation
+1273 45378b35a047b590d0d3b6f9a7b8fea6dfa47300 Show fio help page when no arguments are given
+1274 509eab12448823a8eefbe925804b5308ee63bf5e Overflow bugs in random map
+1275 d090f6f6fa92e66bc448a9bf47b6c52c1fd9c1ba Add Intel IOMeter file access server example job file
+1276 564ca97254984165e06d5fd4b1270bac95ca55fb Add support for 'bssplit' option, fine grained block size contrl
+1277 757aff4f5cdf8bc1e0720c01564838aed968c1db '1' is minimum value for queue depth, don't allow 0
+1278 e6026f9c9e41226cbc0c526dac8ec5a5c355348a syslet: we have fls(), use it for rounding ring size up
+1279 a3cc770d09992e7823879fc167057a52ecbfddef unsigned vs signed warnings
+1280 11a65bf8cc3613530a84a621e395bb7b3c1626fc syslet: can't free the stack
+1281 1e20499263c57a7382b8130f5c2720b80e0b8653 Change io engine version
+1282 e7d2e61694c62b90a2fb84c012b4edcc1973d72c ->getevents() should take unsigned args
+1283 4a88edf731f806974124e68d66726715dbee6778 syslet: cleanup event reaping
+1284 db6defc77508f5bf217f0a6768d13426eee21119 syslet: add proper read barrier between user_tail and completion read
+1285 c6effc3eb105f74777198ef6ac0f8ea2ba512a9b syslet: error handling
+1286 05f6a172967321798f63869d330f88a1bc2c8ed9 syslet: make sure ring buffer is a power-of-2
+1287 e81f734048dae2bc14349fddae6230b959a12198 syslet: memory allocation error handling
+1288 ad532d75d7dbde6912342ad279f0afa16a716b7d Add kcompat.h
+1289 12cbb469ea5e559b241f6c31693554829e8b8400 syslet: update to -v7 as posted by Zach
+1290 056f3459149a7670257350d84b49858718e4a0e6 Fix failure in opening files with O_NOATIME
+1291 046ee3021f5a8a951c41f6604341d26e74183df7 Update HOWTO terse description
+1292 10927316a4bd0e2ceba98e62c062e352c0e312fe fix utime_since overflow
+1293 8670579ed3a063723f194e6fec8250bec4d8ea25 don't log iopiece when do_verify is off
+1294 d9956b64373522fcbe5acb5015fef6d315f252da fio.1: minor fixes
+1295 ac684785b41aaf17593b375be8d3e89b83974c1a Seperate ioprio value from setting
+1296 64d04e4ee255be69b491907cdba183e6b09e9164 Fio 1.17.2
+1297 4381960965dbaeabe5e2904f8f4b08288b9de86f Fix spurious eta output
+1298 b4c5e1acb5a7964f858e2b41c1ae07b1afc0f4ea More cpu engine fixes
+1299 5a32012f174baf33978b041cffa36453f2d92947 Merge branch 'master' of ssh://git.kernel.dk/data/git/fio
+1300 1f809d151ddc4a4c348c2e4f6007db510e3e08a2 Fixes for CPU burn engine
+1301 a31041eaf5a306b5f6ad3dd14b60da6212775037 Add pread/pwrite support to sync engine
+1302 59b9ddfc30c9ff38dfbd071eafe295d9ffdd5f25 fio: build warning fix on  gcc-3.4.6-3
+1303 3a6d267d644226983a430cf0f217c27f4c38cd45 splice: fix fallback from copy vmsplice to nothing
+1304 8b850243258107412710cd38252f0cfb8802593d splice: fix problem with current mainline kernels
+1305 ad92396cc21055cee93470dcf65e82ccde03aac5 Set O_NOATIME on open for non-regular files
+1306 53aec0a4d0e0a9b3163c5ca651b9e4636ff7e1ec fio HOWTO/man fix
+1307 67f5b27ed25e87102455e9a49eadabb00e873b0e Get rid of syslet-rw compile warnings on 32-bit
+1308 ccf8f1273301ccb286636ff169a7d47e09f47a90 Don't use seeks on stdin for job file parsing
+1309 5a729cbec53a158fa8d8dc5737749cfee20ab31b Add support for `-' file to read from stdin
+1310 1d79a6d13b2bc7c039af813e7b0d9e9853593083 Update syslet-rw to fixed size ABI structures
+1311 b4d8ddac58aa1f3ab0832a4c228863cc6d89fca8 Exec the getpid atom when testing for syslet support
+1312 6a117e0ce9fca919c0477048a9b844d1a84bb005 Initialize the new_thread_stack so syslet support testing has one
+1313 9de6bebc4cb18e0652a698c86f359fc730f322ad Trivial spelling correction
+1314 36ddbc093ed56f510645b4021cea74b2e0d1401b Update syslet system call numbers
+1315 d1429b5cdacca1b4d483df86c3576a673721fd60 General fio.1 improvements
+1316 d60e92d13e969b08dcdad940499ef081b07ac6f7 man 1 fio
+1317 e592a06b36999bbb30675a4a58d4ff16ed65e555 Add ETA output control and interactivity check
+1318 7101d9c24abec4be58a086d85d6d92ec6e6492e9 Full readonly check
+1319 4241ea8fb0606f9bd5b7ed1278d3b7825883acf6 Extend --readonly
+1320 724e4435c1374e97309b122429ad9291744966c0 Add --readonly option
+1321 81887d5dcd608492e59ed3fb2ac8fcb463223120 splice: update to new vmsplice-to-user interface
+1322 e7823a941468e807c381fac4c5f7d41329ef0c1d Add display of major and minor faults
+1323 d16d4e09352f618c266d1efe27cbb25a95df6e86 Verify handlers should return Exxx error, not just 1
+1324 a26fc7c568964658aa2b98610ebd9054e2477456 Fix splice engine compile
+1325 bb446c117849b39ece795602774c3716eef6064a splice engine: add unmapping for vmsplice-to-user
+1326 061c86982ea02651cab2239b12983dd382019f26 Add unmap hook that belongs to the IO engines
+1327 bdda7d79187a260c097de2ef3ffd90e022a3387b Type in SPLICE_F_UNMAP ifdef
+1328 0dd8377ff92f2cfb6670061782e28fd52d89a52f Fix eta for pure read workload with verify enabled
+1329 e6203e9e73039537d41810e91e3dfe6abeb919d9 Fio 1.17.1
+1330 ea966f8188915643670fd0a13d1bf37d45936da5 Fix ETA display for iolog replay
+1331 f627d8ae4dca9de8a72928a7928cf2903e81ad41 Adjust file layout printf
+1332 4764aec9fe5988281bdc114c13ac771fb16713cc Style fixup
+1333 f3f72c5e0a029a928a09a8ab0fc9ca2dbcf08ae1 blktrace: skip notify traces
+1334 d9309cb10119155c8cbf7369c807b9ae08bcd67c clat/slat display improvements
+1335 4661f3d026f11dad1b369f5cf4d1109b7e320cd5 README: correct command line description
+1336 436885758c1b859392b80c616c338f9cfe9a9dfb splice: automatically detect whether vmsplice-to-user works
+1337 b753feb720a8f0b1fbb692f915b7878e74e69ae2 Fio 1.17
+1338 d78ee463665c7eb710e5ee5070b7873bee6dc611 Allow upper-case 'X' for hexidecimal in parser
+1339 bfb41d98f63cb9fb72cb7c82618be10bc6d52c33 Remove verify_pattern option, replace with verify=pattern:x
+1340 68e1f29afafe560d96ef25267743708e883bea44 Mark do_verify and verify_fatal as booleans
+1341 a12a3b4d8903b9941705067442c2c530a94635f3 Add verify_fatal option
+1342 3f199b01fc9cc7a0f4915db266d7a28bc46e84f0 Improve verify pattern failure logging
+1343 005c565ad012940aa4688de54a49beec26c5b1ad Note parent option 'verify' for 'do_verify'
+1344 e84c73a89ef19f38e117ed4fae5eb3bd4aee8a81 [PATCH] Add do_verify option
+1345 a944e335fac62c75966b417a25ec107c40957cdb Verify the pattern we've written
+1346 dee6de74152299f2a7df07ae971a53441b971daf [PATCH] Fix memswp. Its scratch space was too small
+1347 7437ee87e4f6457168e8440f9308b4296ddb9263 [PATCH] Add verify_meta verification type
+1348 67a1000f49db76ddb18ce9420ba03059af0214b9 More option help updates
+1349 fdf287440fa8486f0e96c8597349d5d25e98fb6a Be a little more clever in finding child options
+1350 ef9aff52b10c71a4cb2b3649deaea270fa3944a0 Parent options didn't recurse properly
+1351 c83f2df1802e12f0f67beb3d33486082dba7765d Add parent option to 'verifysort'
+1352 afdf935261b23cdf08214e708133318548ddf2c4 Add parent link to options
+1353 a432da1d5f1c6a413671995895becd972c4c3633 Update non-linux Makefiles
+1354 eef6eea1b935a67f1ae26b38e06a69d4410a12aa Move checksumming files to seperate directory
+1355 546dfd9ff99eec4af5d1c6c2ca702b7cf9656334 Seperate verify_header from the checksum type
+1356 8767783245faac99a7e1c330a1d6536e579c8402 Prepare for splitting the verify_header from the checksum header
+1357 cd14cc1079771ece34fce5b30d47c7b273ee56e5 Add sha256 and sha512 checksums
+1358 61f821f16cf27d8742e09b3a137c933cd0085e9b Properly initialize md5 hash seed
+1359 86739fcc2fec07b5acd42004fea038e0c3179732 Remove .maxval from verify_pattern
+1360 90059d65bde4804e4da07401ad6902c1d956b592 Add verify_pattern option
+1361 6d16ecb6890ad4078437414b9a3b514e39a74bf1 Document parser int taking hex input
+1362 a61bdfd8846317f431c318e0fe1fb841084ca9ea Parser: make check_int() accept hex input if prefixed with 0x
+1363 a59e170d683f9ccbaa45648d7ae9a13b70e3822c Rename header_offset and header_interval options
+1364 fd00954ca87b3b083ec6987e593a16ff01913fe8 Fix bug in md5 calculation
+1365 c9b3fdf3828fe15cfdcaace7c84ad96e90e24a46 Fix md5 verify
+1366 819a968068aae65bca68ddc7805c01669707b880 Fix header_interval minimum value
+1367 d9f2caf3de3f2ba6f8ecd8a2688e1eb7715bc2aa Abstract out the data offset calculation
+1368 95646108f83a34c0486d7f3ed19e99c1d93691e6 Cleanup verify pointer casting
+1369 546a9142511875524850ac92776184fd9fb7196e [PATCH] Offset verification header by a user-specified distance
+1370 3f9f4e2631c4f5d33f125dd71db20c1773d22c91 [PATCH] Allow verification to be done at finer granularity
+1371 d11a531f38b9b612dfb3bd09c89d011dc786f81d [PATCH] Fix file_size_high
+1372 fcca4b5848bddb59a38332bf54fcdcc197aa7fae Show md5 as first verify function
+1373 17dc34dfb95f238ff8ffff67aea559e2ee5190d9 Add crc7 and crc64 to HOWTO
+1374 d77a7af3e718200bbd77d76194725ead4bdb3591 Add sample crc64 checksum
+1375 bcdedd0ac6e9413258b608ecb3511867b1a9c534 [PATCH] Fix fileoffset option
+1376 2298290eabbe1017421a6ba0f5de93d8c2b048ad [PATCH] Fix size given larger than filesize given
+1377 8c432325c3df2075a77b27eab8a87704cf7b48ee Speed up md5 hash filling/verifying by 20%
+1378 a3ff21e3875887a28a40eb246e5c8f0c01cf96cd Clean up verify_io_u()
+1379 baefa9beacca430b8e3275c07d2f46ef14654468 Speed up verify fill
+1380 1f24ea44c8d8bf40e05608b48ef342a345d75ee8 Type in crc16 verify failure
+1381 1e154bdbf14a1d352117aea057035235b66f0381 Add crc7 verify type
+1382 969f7ed32353ade93ea30542a4993b75b94e3f8a Add crc16 verify type
+1383 1dcc049824b840df1ee0ef5d019fffa4037e1bb0 [PATCH] Only verify_io_u on reads
+1384 c6c3b28a257258895eabe127d3cf784cd93bc851 Add data integrity example to netio sample job file
+1385 dc372f07b450e3b4c758d7a7fdaaca6c21843398 Missed FIO_UNIDIR io ops flags on net engine
+1386 b67740d3620aee7c753987cdcf750fa28d871fcf IO verification improvements
+1387 4c5946c6606abc87ba7e2bfc57a5030d19b6d4d5 Fix verify random bytes filling
+1388 47f0cc48db34b37d81540b31bf6adf11bb7b578d [PATCH] empty result
+1389 0c3d768a44543dd6c23337eafc726e7f88dc3076 [PATCH] non-stop thread
+1390 b6a4c7d152075209ba84ca05c32154427cbcd275 [PATCH] Random map block coverage
+1391 6a5e688425bb394946ef27134aa0f3de928c6a1f Fix problem with io_u being beyond EOF
+1392 09c6cb22aa0a0b179d428bfb6cda0dfb11367b13 [PATCH] Don't hide pthread_mutex_setpshared in os-linux.h
+1393 4d8947de2b50578a4f6290be567cb5de5bf46776 Fix headers for building with some older libs
+1394 20e354ef1243541ea196619772b83a962d7cb4df Add ->done variable to force exit when we know we are done
+1395 7172cfe8e0e918cc279eb501986f6ec78cc7aad9 Only do the root warning once per thread
+1396 4539ed73159735c20cf6c2808eea84d0cc25a608 Missing carriage return in latency print
+1397 4dced40768378754a156bb3327b10df53cf7eb8c Only warn once for blktrace log open failure
+1398 21bd2987dc5d82a18af485cd1e7841e94137fc0c One more fio_ddir fixup
+1399 53fa9b69d69b4d108cb132d7186b3f623eb22389 ddir is of type enum fio_ddir
+1400 b3f4b4f51e05b019ee9e5fddb9232975cf15ce93 Remove gotos from read_iolog_get()
+1401 429f6675446eec26652b010b0c715d8bb6bc32e1 IO log fixes
+1402 f29b25a370598d387e539c3dcae126274c6cbf4d Add version 2 of the iolog format
+1403 2135abc4f63c54e213abe0e9469eeba7a58815fc Fio 1.16.9
+1404 c3edbdba748e25eb14f3efc648ac0678995f3432 Set minimum value allowed for some options
+1405 48f5abd393cc614e1984391b28ba491ef9b26f5e Fix disk zone test case
+1406 c9f60304a5eb7c3f3d2cdcba5a5a42edf6ce97ff Mention what the [ xxx / xxx kb/s ] means in the status output
+1407 b3f378e90231ecb2082ec565bafb3f721c4f1902 Don't align memory unless using raw io
+1408 4b43f54ed7dece502350658bee10eba551aeb4a4 Default stdev to 0.0, not -1.0
+1409 d9cc7c135a927811117930ac74aa83189d3c9d19 Fio 1.16.8
+1410 d87612ac34a3cf1ac94a9ddc0cada672b6541b3c malloc memory still needs to be aligned, if we are doing direct IO
+1411 088b42076dcbadf4d61367e19e49cb0d12aaadd1 Treat option outside of job section as fatal and quit
+1412 7f7e6e59f48bbd754847c825075a9c46962e0116 Fix memory overflow bugs
+1413 f7150a9194e407f9b6a00bdf42038b0233a5ed44 Fio 1.16.7
+1414 244e170ebd309303d124c57cde7bf7a3b40d09e7 Make a note of Mandriva package availability
+1415 c39906450ba553a65545c90863addde0152a465e Fix bad alignment in buffer size allocation
+1416 c7173db634637926296ba8a9201bc8edcddbc1a3 Add clue for ENOMEM hugepage allocation
+1417 886b878aed5decd6fdc6c61d2f11aa5b960b4f1c Fix typo in shmhuge commit
+1418 d8602dd08170e11fb91dccde945bc527dbba57aa Detect and print when the OS doesn't support huge pages
+1419 6b3eccb158d1f4cebc2924fc6abf84c1bf59d002 git:// url location change
+1420 542ff8c4f03a4c38e04f48bb01524db4ec4686b5 Fio 1.16.6
+1421 a9a18a3f1b341c7025e63b47f706663cbf19836a Fix bug with FIO_IO_U_M/U_NR being transposed
+1422 72711fb74534e2caa15a1a775ff8d5e531fb8fef Guard __must_check ifdef
+1423 cd963e18de21e08ebb2ed86366f07347b4c58e3d net engine: cleanup the splice handling
+1424 64b24cd8a5ea87bccec60e0236d93071480201e7 net engine: fix listenfd/pipe fd leaks
+1425 4d94c275d2344b9231d9dc4585bd42b8e9fb7794 netsplice: use zero-copy if possible
+1426 f657a2fbbb0deaf455edc478d73b664929bcb766 netsplice: fix a few typos
+1427 9cce02e89e01984a5bf58e730fb9311dc5273554 Support for 'netsplice' engine
+1428 ffa59cea1c50ad3c6500efcb9c065ee1325f37ed guasi engine: remove STFU_GCC()
+1429 1d2e2718a98ca85f9b4234d524e6cfad8057387e Fio 1.16.5
+1430 04a0feae73ca50d05914cc3c425b2a6949523204 Adaptive io latency distrobution "histogram"
+1431 8a35c71ea954894b26cb1af52f4089a228e1e68e HOWTO: note that clat/slat can be in micro or mili seconds
+1432 a783e61aadbdd51ea69b8c62a3cbe0897b739123 io_u_mark_depth: just set index, don't fall through
+1433 ea2accc50fe911f7c24f08e62db55de4d2386b71 Cleanup msec <-> usec lat conversion
+1434 7d059f88c869f89a1456e492e0e4f11b3e2578ff libaio engine: print warning for depth > 1 and buffered IO
+1435 d85f5118c41a112c3b8a58cc6908d00294bfb78d Make completion and submission latency use appropriate time base
+1436 d2e268b09bc8ab95af81e5636608dcd93f40e4c1 Add cpus_allowed option
+1437 6b6fa9c83a4418b49f4a296b82f83bbecd8d59c4 Fio 1.16.4
+1438 a08bc17f470c3ae3abbc90f9ca77c37866ad0028 HOWTO: expand the cpumask explanation a bit
+1439 dd19ee6d101147473a02e2ed965459cfa3fbfe59 Merge branch 'master' of ssh://brick.kernel.dk/data/git/fio
+1440 e600f7f122d344358493f90e9114f9354c63fdfe Fix cpu mask setting
+1441 ba9321ea8ebf0793487a6ee6b5c899f169d4f988 Merge branch 'master' of ssh://router/data/git/fio
+1442 f24254e1d142e80dc76d1f2e316da12f6ec125ee splice engine: support for vmsplice to user space
+1443 495ee9b632c5629e79a46d1074cacf4eda965e13 splice flags are unsigned int, not unsigned long
+1444 7616cafe9c2c76451e518eafe5cc37db460c8b1e Documentation update
+1445 163be7e4813e139652c52bf333ff9ad488cd121f Fio 1.16.3
+1446 492158cf6a2e81886c43a6e696b17d7160ec5540 Tweak meaning of size option
+1447 281f9b6363ff7ca9fdcc93c600faa8c907ba3010 Fix bug with time_based run
+1448 f9c843e87dc804530780f40714d70eadadb239e4 Fio 1.16.2
+1449 c8f025f8a33e05b10fe928d5899ac4e948847eb6 Add comment in os/os-linux.h wrt glibc-2.3.2
+1450 c69aa91fa88fe1f0372afe2a56c4e79c62fc49e0 Fix build on older systems
+1451 5e62c22a669c7a8c03b7871852cf85ad6d355980 Fix build/compile for non-blktrace platforms
+1452 97af62cec418cd722fb43c6010d6430534e12353 IO verification needs to open and grab a reference to a file
+1453 16d55aae770b8b1a966d4b4a814918ce49a76ba3 Fix bug with random IO and network connections
+1454 7dbb6eba84b38be2d3d10cd4d6cc145d939c5745 Update HOWTO on cpumask setting
+1455 375b2695693f56987e23deef3ded8e5b06ef6797 Fix cpumask setting/getting on older kernels
+1456 c97d8369f04e562383f50a77a2b0e2abb102df75 mmap engine: fix open-for-size check
+1457 2bfe24bdd9ce313e5323d947952067b1475dd2cc Attempt to work-around possible time warp
+1458 43c63a78d3f902b4bf941841579834bbfabd5c62 Improve random pattern without norandommap
+1459 b12ebc65e82de1cc6174b65c79266dd0f0a4fbf3 Rename ffz() function to fio_ffz() to avoid conflicts
+1460 eeb9c2aa5439dd6615ad69324f402f774173f6e5 blktrace support: major/minor fixups
+1461 5e6c20673be9f46332f47ede0e3b657b2cc35ec4 blktrace support: support for looking up a device
+1462 3f3d36166670a447679b308559c681293eb2b857 blktrace support: discard notify messages
+1463 f12b323f5d5ca40cd966ebbcfbbfcdf0a1fc229e blktrace support: fixups/cleanups/improvements
+1464 104bc4bdf55bd79c2b3f9087601c3df4aa884b2a fifo updates
+1465 0db2679750e4cc8f38af7af135f1ba8481d6def6 Fix timeout on 64-bit BE archs
+1466 38470f85fa4acddab4339db9c8805a19bc87578e Fix fifo leak
+1467 e28875637094451a3c5ec4071f964c1a02dd8f5b blktrace support: speedup reading of data
+1468 d84f8d4931be0c7519bd9f97f9914b07578a9854 blktrace support: adjust largest io_u buffer size to match trace
+1469 a61eddecca21d19f3f4c297400d6c5d93dc29259 blktrace replay: delay support
+1470 6df8adaaadb71340b47f2c3e971297b656082ca5 blktrace fixup + documentation
+1471 a2eea81b53fc1a71b91b20d82bcadffdd4ecb6cd blktrace support now works
+1472 8c1fdf044083522504685e3009e356c70d003ef0 blktrace support update
+1473 36361ebb75a8f543aa49ff4f3ee49274261da074 iolog bug: TD_DDIR_READ should be TD_DDIR_WRITE
+1474 e7a7d70b476cbb613c031224d8bf4a5c7b7a0acf Fix typo in blktrace code
+1475 fdefd987d7ba284c7a9e101911c4b8e72fe326ad Some more bits of blktrace support
+1476 fb7b71a3c99b7ead2055439bfea421579aae2691 Initial blktrace support
+1477 3deb310183aa83bd74d6d98fbe8974af94451b85 Log error on io buffer allocation
+1478 db1cd90b90d4d5c49db90d5afeb79ea3a3b034d1 Allow termination during io_u building
+1479 019b18e81e3b129bcf1a3e1bb10d172498f3cd2f Fio 1.16.1
+1480 2dbdab7e8fb0205c471f72effab1b2ae5f19bfac Fix bug with file references
+1481 0a839f308177e95c4c45c41ee1d4fa2b8f231f24 Disk stat improvements
+1482 733ed597a79e118bc2480974a4dc4676f2edede1 More iolog fixes
+1483 fcb11708806c026566f2af58833ea919419a066d Fix read_iolog
+1484 b680c54e8736ef11387f20ebf3da2fa3141bac99 Fio 1.16
+1485 97f049c942b4fe40da0a352386c2b08aca1ab380 Fio is also available over http://
+1486 a9b7b3052b35c20e82b8fc909cd546a5fe1ff293 Fix file unlinking
+1487 3106f220e1710d7e53cb7bd0dbc7dac4584af463 Fix command line parsing bug
+1488 097b2991ace8e069dbfb0c2286d31da714247573 Fix --showcmd bug
+1489 6cefbe338b159edc9417da5840383765acbd92c7 Mask in BE ioprio class as default
+1490 7a93ab190e5fea78edb21affeb0189a9d61a2cd8 Revert "We do need to send a SIGQUIT to a process/thread, even if it is running"
+1491 90a87d4ba3acb26cb54e9b15adf9f39aea02818b Have the job set ->terminate when runtime is exceeded
+1492 cf4464ca60ce75ac241c621bc70a2500beeb782f Add time_based option
+1493 210f43b3ebb754d911b90ac18005720125c71760 Replace random constant with the symbolic name (GR prime)
+1494 b6f9676ef7077c9c6d60a9f63c3c1e3d44a625a1 IO buffer allocation cleanup
+1495 e9459e5a14b577ead39d666c051c7ce4db12bc75 Add zero_buffers option
+1496 660a1cb5fb9843ec09a04337714e78d63cd557e7 Reduntant write bit checks
+1497 ef5fffa591e583de26c6ce14f9448104d6dfbe79 We do need to send a SIGQUIT to a process/thread, even if it is running
+1498 30061b974a501c5cdfd84ab21b98d990455c84f8 Log and dump short ios
+1499 ce98fa663bb7c157b0db45791731d4795d6208a5 If writing to stdout, move stat output to stderr
+1500 8cc7afa91ddc5a0980b9d2dbfdd66e1511a0d4b1 Better checks for disk util init
+1501 d424d4dd657eaf4aeb8ffb07a550a5f64940f41a No need to check for type before doing fsync()
+1502 661598287ecc3b8987f312cf8403936552ce686a Add support for using '-' as filename for stdin/stdout
+1503 d460eb318f784876812bedfed382afb00e57c62a Fix problem with f->last_completed_pos not being correct on requeues
+1504 b5605e9ded4188ed91faae1a43ecd333a9856f62 Add check for pipe/fifo files
+1505 cbf5c1d7a2286fa1cf548c0678b3b0bf13bcda7e Warn more gently if the kernel is too old for io scheduler switching
+1506 13fbfd8d34579ea448db820eb80d12587e094c55 Fio 1.15.2
+1507 07eb79dfa0e3801875d1c2907cfdb5da7c9d2cb3 Put the ->real_file_size handling into fio
+1508 b284075ab5414220496f396dff038003e57e3047 A ->close_file() operation isn't strictly needed
+1509 f4e62a5f3640dfe2d2119bbe1e40bf57747f6564 For non-file engines, set ->real_file_size if total size is known
+1510 e48676baa53074b429460c71fb2c9e0ac7ac7d8c Fix bug with stonewall option causing segfault
+1511 40b44f4aac3fa9c00ef1573ad73bfc62f760cc2c Fix problem with treating ENOENT as an error
+1512 0798ba36674a7a244e8bc10877e322973a5ca938 GUASI API change
+1513 cca73aa73328c3cb4d78adf1e54345701eff29fd Add a '--showcmd' option for dumping a job file
+1514 4b472fa373d45fef6b33ebfc8ede745c55b20e89 Let parse_options() decide on when parsing failed
+1515 523bfadbd46b375012eb5f3898201455b057a1c4 Have strip_blank_end() also strip off any comments
+1516 e11c410cbd60400c10d92d0115880c6e5728aa4e Fix sysfs_root assignment with multiple identical devices
+1517 317b95d07d4921d2594a1be6e014c9c2d062fe75 Move os/arch/compiler headers into directories
+1518 9f8f2064bcb196c10c9d3a2b64b951d796af22b5 Seperate disk util code out of fio.c
+1519 07e5b2646f673a56c05a53c6a84bf5d0c949d290 Fix disk utilization and ioscheduler switch on raw devices
+1520 12b8a831438e8b2f701bfff930242bcafcc6a9ee Fio 1.15.1
+1521 946ff86535e86f9b1be618bd4b8ae925343f1df3 sg engine: fix old comment
+1522 15ba640a7a17e8efb1b6d73a8edf0ed18d25431b sg engine: do type check only when sd has been setup
+1523 a05bd42ddbe73c726d062829c3295e7e315ee653 sg engine: errno return value fixes
+1524 b4ba5f302c467dc10c8b89459a8cb97d2958f359 splice engine: return negative for error
+1525 bab3fd58530027a67df288783f4a70759b3c84b7 Log and return error in early file open checks
+1526 ef11d7376273302d22c7d013bb9c296ee27f4082 Save a division, if delta is non-zero.
+1527 ea443657ce85860b7a0dd2f39f2572d4a09fc885 Unlink a writeable file, if overwrite isn't set
+1528 99cbac76e5b14ea29163f6ea08c3ab807f5e5b19 Merge branch 'master' of axboe@router:/data/git/fio
+1529 6c7c7da18aa2ab744b9485482e64acd30f31da6d Warn when seeing a job option outside of a job section
+1530 d0f62ba37546928d3b35b391b7465c6bf8cfe9c5 Increase latency histogram resolution
+1531 76f58b92e927ed69f05262d67df5fe099e6bdcb0 syslet engine: fix segfault if syslets are not available
+1532 1020a139beff50faf1bb18f761b024b664a09e14 Fix loop with multiple files
+1533 0401bca6b35ee32681462713ce9bc0cc2accbbf2 Fix memory overflow with > 64 byte options
+1534 e8be2ad711db813537a1f2a6a6939c42909ba5cc Only use posix_fallocate(), if we are overwriting
+1535 cdc7f1936e07f3b51aaa96c589e43abd7fea0051 Fix parsing of job section with preceeding space
+1536 993cca043fddf1bf674ddd19f7896db87934ce0f compiler.h needs to define __must_check if not set
+1537 73e07acd0cca391585aae10cfdeb7fc1fa18e7ed Fix typo in previous compiler patch for gcc 3.x
+1538 4fee8096bff598ab565ac1d258d584d584433341 Fix __must_check compile on older compilers
+1539 4d651dad4b3ee17a9be223fc1c0489cd4e304f65 Fix bug with stripping white space at the front of an option
+1540 97cc1a8cc97b0caf5edbca0042edacf617cdad71 Fio version 1.15
+1541 36afc119b60491fb0e26249f04ed7d43172cc9a5 Fix typo in the netio example
+1542 8400d9b26a4f24f3b56cc9dad02be65791b58a83 Fix short IO handling for verifies as well
+1543 5a7c56804dafab5770797044a4f1d259fe708dfb Handle short read at the end of file
+1544 92c1d41f9cb4da2513ad261552f92511d69f6b8e Don't inherit new_group for sub-jobs
+1545 409b3417e46cc3ce7041f042bcc26c3feb46e9e9 Fix size setting on raw devices
+1546 d5ed68ea91e3f6a6b366cc2dcf2b1e7b9ce2b8d0 Fix infinite loop in get_next_file_rr()
+1547 fb0480b138f5e7e59047a238200675eaa1bdad1d Add a REPORTING-BUGS file
+1548 059e63c02b947085d28ec7c6450b51d5fb2e8d05 Better check for not doing a file twice
+1549 43063a1c8288d987eb9c14e2736b3b857836def6 Fix bug with not noticing end of file
+1550 e6e41602c9725f811160f244b8ec5ecaa4912f45 Print number of open files in eta dump
+1551 22d662132577b9950753369c94c2662c64ad7385 Don't free the string options
+1552 541d66d70b8fbe9860b31307c0760e6d5f4c78a8 Use clear_error() instead of clearing the error manually
+1553 9bf27b4530fca07088ab978aea47be79a3d48879 Auto limit open files if we get EMFILE
+1554 0ddb270c21adffa45cd9d215f29aafd8a9c5b15a 'opendir' fixes
+1555 2c187c0fcaab8a4c6d1ba67d2ad2460b5fb42109 Update fio io engine version
+1556 000b080395e45cbe0ce54e75f0e993addbdc8676 No need to return an error from get_file_sizes()
+1557 507a702f6a61fa461c2566d01dcc46380ee7dffa Only overwrite in layout if needed
+1558 413d669320995eaef092c58e67cdb7b500134551 Do the invalidate/advise hinting in td_open_file()
+1559 7bb48f84ac78cac1f90e3e04d0220d90d6a64a6b Revamp the file creation code
+1560 148cf6a95f738d6d9afd62bc63ba40b64bd647bd Cleanup generic_file_open()
+1561 7e0e25c924d51f23196b3e0ea83b79178fc46823 Don't completely fail for block device flushing failure
+1562 1d56dfee7857b91d1805d90396f36d62ad30e186 Make sure to set io size on non-files
+1563 88c46b66d60db5a498487e22b32124cb6bf8576a Trim the rbtree stuff fio doesn't use
+1564 3902866c68af7f7a31d0eed71180a396c0edf07c Remove kernel headers from rbtree.h
+1565 0725726350094b2f8ff558d6ee470e3835512063 GUASI engine: should use log_err() during runtime
+1566 160b966d83adace2629de10f85ed269ab2e587f5 Improve random verify block sorting
+1567 8de8f047bd025f12d23cfc3fc1793434c6d8ff94 Avoid using the rbtree if we don't have to
+1568 bb5d7d0b5bde867690590aaa61d77307d773107f Fix problems with rb code
+1569 44b5374f4d64a066643afbc91d7f3f03bb0b71f8 Update rbtree code
+1570 64b18e125219430fbfe69e61642dbcaa1861434e Remove redundant double casts in time functions
+1571 ed8bd849b04b336b8f666a547aafa2661b0d8c89 NULL engine: ->commit() has side effects, make sure it always works
+1572 c38e946828472daf5cd0450401a7aba06cda7f60 Include syncs in the stored io log
+1573 8fd15a9a8d64deae4c2f13b02e1df7e23ea3cafb Remove !td->o.read_io_log test that is always true
+1574 41128405394ccb8dc43080c50288a86b5faa1486 Only call into log_io_piece() when verify is set
+1575 8999fe9a2a21de218b92a9e993f756ca9700eef9 GUASI engine: free lingering requests from the buffer on cleanup
+1576 97c26cbe7f73f423ee8feceb9ec4369bfe442646 GUASI update
+1577 9cc3d1506b9f7ce0a9dba38c32c418e54ea0b573 No need to fill random bytes for VERIFY_NULL
+1578 36690c9b5b50736cec1fcd53100f01fd1181fdf4 Add 'null' verify option
+1579 fafdba3c553305dd8c6b24f8d5ba95a55dee4d48 ->ddir_nr must be 1 by default, otherwise we'll do sequential IO if no :foo postfix is appended.
+1580 4b87898e8d76aaf05baec83077a11311c1447397 Fix io piece logging to not have O(n) runtime
+1581 171e38ab2b03683a9d559ee9fffcbe052484baba Merge branch 'master' of ssh://router/data/git/fio
+1582 d23bb327374520295509bbd98912c8091b701a3e Free/alloc every FIO_OPT_STR_STORE string
+1583 cade3ef44669c5c962d7ed18ca0e361116ee44ad Make sure the ->files array is job private
+1584 fa1da8653e2177b3cc31a91e963c389f079d4172 Fix file unlinking
+1585 bd0ee748e96338ace7b22b6f0ac1f8934d3385c0 Fix bug with numjobs > 1, directory and filename given
+1586 d3eb7d7ccd126c45c67f8aacc9634e7705e98037 Print help info on huge page shmget() returning EINVAL
+1587 cb25df61fbe19065b41bee131d19335d615c676b Move the huge page size defines into arch code
+1588 ec4015da5b2abd814a23913db2aa2385a2b13495 Cleanup get_next_offset()
+1589 d2f3ac3592a5674fefa082cb439cc72355d2fed0 Add option to disable fadvise() hints
+1590 a3dc65e515943b3a292261ba95d643457863d93d Leftover debug printf()
+1591 1e3d53acf28f1b61222eec244a67fad42f9a060d Improve mixed random append option
+1592 211097b2aa664b8c157692a1e2fe656ed4a3488c Add support for mixing a random IO workload a bit
+1593 d6c6810f335af8a5117013f63903a215a2f802e5 Add few debug statements and limit thread usage.
+1594 4d06a3384c0bf34d217fa942d85dc70dfc282da9 Avoid "ts" going out of scope.
+1595 46eaa15798658d1585a0827996b2c3b336b9bdf2 Adapth guasi.c to the new FIO strctures, and free the requests.
+1596 4cf6b5d30eebf225391d6d6ccbf2f7aa3994a0ca Introduce EXTFLAGS and EXTLIBS in Makefile.
+1597 38d77caebcb6f9cb33f247a341c162c0185bf604 Improve data direction runtime logging
+1598 e47f799f567508835b60675ed659c97f78e7cc94 Improve rwmix states
+1599 e4e33258637e55550a0fac59eb3350e8bf06f8e6 Dump actual filename in failure to open
+1600 2b4ce34fac9f3031dc8606d6cd640c61a74d7df7 Catch too large memory allocations that cause size_t to wrap
+1601 66b83d9a9b86e21ccfad845897ae3040b95e83dc Update to guasi 0.5 diff
+1602 e9a1806f4ca6a7d177e65842f95dabef7c9d669c Mention GUASI in the HOWTO for the ioengine= option
+1603 b8c82a464aa31d847dad7fad924840d0e55d82b3 Expose guasi IO engine in ioengine=
+1604 609342ff4b7e5ada29d348079ec343d07fae6727 GUASI IO engine
+1605 3f344202f614ef3275e7000738d998ca85ebb9cf Fix divide-by-zero
+1606 0f3e35efd9f63ad1a504a7d09fdf12bb3ece13f9 Warn if default value is given for string option without value
+1607 b3d62a759a58bfce1822787874ea6ec8d2a0cb7f 'new_group' option
+1608 c343981b9874179009a92e4d29eae95cf341843a Clear ->file_map after free()
+1609 5bb76972f68b81fd99bb97599fe732382bb6da58 Sometimes we allocated too little memory for buffers
+1610 eeb121607c2a7f36b0fac17649cb8081d6fd853b Print clue to reduce queue depth if engine init fails
+1611 c1db2dced4750f2f506cf4df232dcc75ae05b950 libaio engine: queue init error handling
+1612 4afbf66fd5fb867217e4cc6b8259fd97ba0d0e8d Always make sure buffer sizes are aligned for allocation
+1613 ee3dcd9519760e0f8fb1488fdbb2b6d00af638df File creation fix
+1614 72fbda2ac0b5fe8e9f3920ec7b2fd69989e50a56 'dev' is 'stdev' in the print out now
+1615 5d4a35e1c90938710f8d3ef99d30bfbc23ebc4c6 Make sure mmaphuge file backed file is the size we need
+1616 f085737f15364ba194e5582b19a71eb35d4b8d11 Sort option possible value map
+1617 37c8cdfeb2a551cadb59cee6e116cd543503a453 Revert b370e46b370e46... Put longest options first
+1618 6b56baf5c8c544194e82a45999391de155cd94a3 Helpful indication to run as root
+1619 9b33b4794b621b28347e8ca8fb425b918052434c No need to use perror() after td_verror()
+1620 b370e46abdd2bfe764e28efb41c4caadc632b937 Put longest options first
+1621 ee0e0a718f069fae189be800c2a6e2f5c28ff9f0 We can't stringify something the parser doesn't handle
+1622 afe24a5a66350a3828e8965f7b189fc95b8bbf6c Improve rwmix buffered split
+1623 ac71feb12023e3fadb793cc30636af1c982ce106 If the rate setting is based on IOPS, reflect that in eta output
+1624 687270767de17dbad53c50e03e5d73d52505405c Untangle the file creation mess
+1625 15506d09caa78df3e36a6bab05cdf12092f2d507 Compile error with FIO_USE_TIMEOUT defined
+1626 2dc1bbeb58edc85f2829eed6729862c438ea2353 Move thread options into a seperate structure
+1627 d3aad8f28b9e214fccfce5e3a406dec723f57a62 Add some more options for commands
+1628 d2bb7fea83d27baaa26fe99d8d1652e3496af70a Show alias in command help
+1629 467d1b6b3ebbfcb7cc0545a882ba8a93ea66752b Style cleanup
+1630 7f9348f80b8734e0f00d7f4b14e58d2255d46ee7 Command help match also on aliases
+1631 127f686514ef8b1d9ab6ed702971b205454974e6 Move setup_rate() out of log.c
+1632 a998c869545503e733f4ff0f2bf6fc1e2dceec6c Improve rate accounting
+1633 4e991c23d2d06484f581eb5e2105bc102cb35941 Support for setting rated based on IOPS
+1634 a16211bb932067978f74606eb5d3f92e5227eee2 blockdev_invalidate_cache(): return -1 for error
+1635 205927a3cfc25baeb318e3aedf3ac29d16bf4be9 Failure to put job in add_job() failure case
+1636 214e1ecae844a32bf8f66d19132f4948d922dcee Split option handling out of init.c
+1637 e8be395bcbc7428eea88d0db0d2144b8596d3511 More file creation improvements
+1638 f4c4f4d74bf101a685f3f9839144c52c4ed29e30 Remember to account for existing files in size setup
+1639 6d86144dd10b05e8b82e9b895c35dd778e5e71ab Use log_info() throughout
+1640 43159d1843b0a3d0aed029fdaeab4671a138c4db siint range parsing HOWTO update
+1641 b486f76ad31b593caded74f42468ea9adbdc21a7 Accept '-' as siint delimter as well.
+1642 9c60ce649d3f976d196709d4399bb7c540ce97b5 Add 'filesize' option
+1643 1760e679cfb99d95e783ba1c0a936b88c8a3d706 Fix build on x86-64 distros without __NR_pread64/pwrite64
+1644 b88463549773a2ec369985866b04affcf439776d Fix build of syslet engine on x86-64
+1645 54592a37327e73362c7001714630fe5198def707 Fio 1.14a
+1646 e132cbae2cf26736af86fede134c14d41dae4a5a Fixup new and wrong file name behaviour
+1647 808a63b8d2d5f6d3a4ec83e718495f09588aef7e Merge branch 'master' of ssh://brick.kernel.dk/data/git/fio
+1648 3f344316b3200143f413c9a4a8fd6476ca5899cf posixaio engine: better handling of partial completions
+1649 b6b37d7f60e29fbccc9a03dafac04645579f80b9 Don't free ->files
+1650 9d6d019b47963fd1e79c0b045bb3197ab595dab5 Help update
+1651 7837213b66e20a8d91e7069f5823852f42c41440 Add suboption help texts
+1652 c167dedce798151c8aa8a59be45ce57a5260b1aa Left justify help output
+1653 48946b4c03a31750c76175046a9d590686d80023 Fio version 1.14
+1654 e407bec29fa8252f7809b2e9f88b95e619cd468b New/old file mix fix
+1655 da751ca9665bcdeca56d2eec5b629a0953c07662 Update io engine comments
+1656 cfc99db7b9e806e7739b360dfa005360d0fe8837 mmap engine: make sure that page unaligned syncs work
+1657 e85b2b83e39b64ba5cb73fbfddbf3902b6e84925 recurse_dir(): Move . and .. check earlier
+1658 96d32d518a0743a6c050057bc1562e4883e51c5d Better handling of file creation vs existing files
+1659 2393acbabe0f290da2d8f02c6ac0c1edf6ddb08a Fix for bs shrinkage
+1660 4981d2de251698ebbe78451bfe4615e0d09a5296 When opening a new file, check file limit not total number
+1661 e291dc123a8a6eaaa6a45b52aed947dfa80834f2 Fix double io_u free in error path
+1662 8ab538730857ce3a29c5f00fb55b967468751ec9 Print informative error when we hit the max number of files open
+1663 bbf6b5401cdc0b20c405a064356ab0abb27c52d0 Add 'opendir' option
+1664 3d7b485f9478ed5d291ec58a16a40781ae3ab4ae Check for open files on io operations
+1665 ebb1415f729c123b8a13bcbd667bf4b4cc95b4d4 Add 'fsync_on_close' option
+1666 5afa0d9b2e14194d34001a24007d96536608e651 Obscure file randommap fix
+1667 9f9214f243701626a04b4a0f9aceec03b8b40e0f nr_files conflict with filename
+1668 cbcd1062e2351b87321f91f1f266ba2c8d9c90a7 Total file size handling fix
+1669 1c17818009ced8e78e9fee47fd9aaef29e708b41 Improve handling of nr_files != open_files
+1670 7b4e4fe5e6fa26f82f9169c18ec70c08d0805ca9 Init stat for all files, not just current range
+1671 55bc7fc003004510d2bd19080668fc3fbea517d5 Make disk_util() account for all files
+1672 1549441cdfecb2c1a4a8b8d494253859d67b4344 Normal vs special files fixups
+1673 1315a68a091816d284c5f46b28e419349aa821d8 One more f->file_name typo
+1674 e3bab463d4397e3378d8c7437e31de8aaf861a4f td->filename vs f->filename typo
+1675 e13363ebdb9d676f2fcb6e8673335557e6ce8782 Strip blank end/front of filenames
+1676 7b05a215c8c39b8c878297b90eba112fe9176542 If we use jobname as file, only append job/file numer for nrfiles > 1
+1677 cae61953cd7ee0dfc0d8b736553979f10ede7cd9 Don't stack allocate file name
+1678 0ad920e7f85db1fdc26649be6bc7e584e8c7fdc9 Add file reference counting
+1679 f11bd94d50d5995a64682f74b5f0f7509bf2c550 Turn file ->open and ->unlink into flags
+1680 af52b3455ad892322aab2791282b6bd4efdfdbf3 Allow explicit setting of a number of files
+1681 6612a27b284aec20c137e3e6b267685b8a4c824c An option need not include ->posval[] entries
+1682 62d984e2c12579361ee620b0a309c540cff9b09d [PATCH] disk_util: Allow an engine to turn off disk_util specifically
+1683 656395b6dfc16faf75c802ac82b78a5fdeaf439d init.c: Fix non-regular-file booboo
+1684 7abd0e3a872b000aefb740028f777aae1fa6f77d Group reporting fixes
+1685 3c5df6fa2259c12fd6a7beb9a3521dec76d12dd2 Improve job grouping
+1686 762e595063e15559ba125fa5ac4b496ee69f4d23 Merge branch 'master' of ssh://git.kernel.dk/data/git/fio
+1687 b3605062146bce0136918763bb8eb584478ae042 Show IOPS as well as bw numbers
+1688 9f8eb807908bcef7f2ecc598c2c311308a13143d pointer -> int conversion warning
+1689 5be84f23ed3788176d557d9d80a81d4cb1901b22 One more missed s/td->filename/fn_given
+1690 01ef57cef61251bdc9941404f853a89326917e25 File name generation fix
+1691 1907dbc6c0c9e1b663156e64c64c172aaf04ae8a Add nr parameter to file_service_type
+1692 9cedf16704b71cec33138bb4cf524d3fc9ad338a Note process vs thread in output
+1693 bda4fd9e23d30cf89e17753180eab9062e8bc1e7 OOM fixes
+1694 c8bb6faf52ea8079e98df17cd2c5a029d3f33057 Quit on thread creation failure
+1695 80be24f4671164d597463e4b5c794d4cbd0a4537 If filename not given, use jobname
+1696 a7dfe862c2e3fe72b8db6a6e67302048d3731c6d Return EIO for verification failure
+1697 e2e679121ec5b16486fe190dad334107941e05a5 syslet engine: residual fix
+1698 9e9d164e7847aba2ce88bf77f9d1778d15d772e5 If residual count == full count, fail the io
+1699 cf3d609747c3e070001173b17ea95e9d6f46b15c Overwrite fix
+1700 0263882a95b9213d3afe285ae8adb5d0310d5039 File truncation and extend fixes
+1701 d7d3b49b31ad55218c8865d0185d6b5552306fbc Clear ->rate_bytes on do_io() loop
+1702 ba0fbe1029bae1de08d66a72b6d0b2505c67c438 Turn the CPU burner into a real io engine
+1703 7401c088106ba35dcfba62ec753b6b20b72ad0e2 null engine: fix queue bug with repeated commit() calls before event retrieval
+1704 65afa5f2146ee010b7129934f68e691faee54982 null engine: update to support queuing
+1705 390b1537a0b5a25ee002e6ec4b7749e7e2527777 Document 'openfiles' option
+1706 b3dc7f075b85e004f8c681ebb8566475017696f3 Fix ->file_map leak
+1707 37f56873d5f521d4fc1bc2ef6ea718a91e3570a6 Remove ->mutex after last use, not on job exit
+1708 f7c9e00eee87dc4eb24fc6e6ad68af38ba2bbe98 Shrink the semaphores a little
+1709 09629a90d5b68b220e3fb98318e2dcd019943eda Make sure each job loads a private io engine
+1710 e53bd0b3eb06e02b991d4ee05e6d0c427bbc20a0 mutex error handling
+1711 2f79d99c3abfd95d21996559e4493ea7ac356d2b Add mutex object file to other Makefile's
+1712 07739b57f09886b41323c605b0dbda7d2c12522b Add a real semaphore implemtation
+1713 de64df05bb69d38b7ecf548d9e15573b9010704a Use DDIR_WRITE symbolic value instead of a hard coded 2
+1714 197574e43bea5ac00f7b64d4731173c177041de0 A few more stat fixes and cleanups
+1715 94370ac42ddee6572c434073d3c1840a513bc8f4 Fixup reporting for !runtime data directions
+1716 a978ba684deb758465a0ccb18a008797636e8054 Get rid of reopen_files()
+1717 640e94218b780e3d7b15758c760e59f3511f0933 null engine: don't dup() stdin anymore
+1718 860a3044085c676632f9832a78133cd9847cbe62 Add ->open to struct fio_file
+1719 e6433576b85eb28d32fe099b38ea64ac006b4b74 get_next_offset() number of loops change
+1720 76579cae25b7e2cdf931f909725665ec45404f2a file_service_type=random fix
+1721 d16b88e20152be4d811ed2e0051f0b19cce1d5bf Engines should not touch nr_open_files anymore
+1722 0f14fef318f38a285a04097636a65a997596e821 openfiles fix
+1723 da86ccb633a8eac058c7f1a74d2d74a073e51b41 Fix invalidate cache typo
+1724 b5af82930ccfd7dda6a1b11794efb452eb76d8dc Revamp file open/close handling
+1725 7bdce1bde82e37c8876270853840c1d09d760b67 Move description text
+1726 6af019c992eb5fc5e502341d653977909184cc82 Terse output change
+1727 6586ee8992b30e81334d83d10480bdc4f6c8cc1a Show how many jobs are in a group
+1728 2270890cef8d98ab97f87d348d16dce6454e631f Update terse output
+1729 130fe6161f5e6d2bb98537affdc1573f676e2764 Default to using gettimeofday()
+1730 6660cc67cb72b70d1ea0ab8c465976d715fcb976 stat.c: Superflous n
+1731 2dc84ba74186eb9ef4dde0f08dc20571c62e001e Be sure to pick up any group error with group_reporting
+1732 fa28c85af43eae161f0e06f4a7a959371f79bd62 Document the 'group_reporting' option
+1733 c39cced652676a2b1dd76a98ca54f23b1f844cc5 Stat summation fixup
+1734 d59d31aff657005e63b48807230bbe42b464e537 td vs ts typo
+1735 756867bd127cfa1fb27ae2d4ba973af8cb341f13 Add group reporting
+1736 b2560f3ca4677e2908fc4111f4d04fae5df3b229 One step closer to group reporting
+1737 c1302d44dd1720bebe5308f976b59d879d994fd3 Don't kill() running threads
+1738 21ab9d1d05055893ee0b1bed35e55e87b88b422b Merge branch 'master' of ssh://brick.kernel.dk/data/git/fio
+1739 117868024939609aebd94fff5afacfd29b2f9a6f Cleanup requeue handling
+1740 a68594cb3c3435541d049b2ef694487862c21263 Include location for RH related distros.
+1741 390c40e2cc8a523d06f8dad6a1040fe9a64f3905 Forced kill is not used anymore.
+1742 d92449411c3846ae1f6f70d6ffbe113b74a9418e Gently prod children with a SIGQUIT on terminate
+1743 5451792ecc9ec3507c222da00d90a8829013ed50 Improve error logging and handling
+1744 fdf3de27417d9a673466041851266ffb5c88cab8 Fio 1.13
+1745 7ff1c14bfb97c170c9654c8db5696764779ec4c9 fio.h: Fix TD_DDIR_RANDWRITE
+1746 1e531487b1f0cc72db9c94b435cd4b19427d6177 Merge branch 'master' of ssh://brick.kernel.dk/data/git/fio
+1747 34403fb14ba48d708fdfd2934583506bb5caac05 Spelling fixes
+1748 4db4e3d7a52c4561e10af27650a6518e49ecfa7a Merge branch 'master' of ssh://router/data/git/fio
+1749 480936dd2270baa028a8ad8ab20719caa0429968 fio.h: Grow td->verror
+1750 fd1ff8ed8d2b62c07c6117dfd0e53467ca71662a posixaio engine: residual data count
+1751 37e974a5eed8aafc6fc865b57e803837eebd3509 io_u completion error propagation
+1752 f423479dad8916c758792308863dcd833a1a36c8 libaio engine: proper return value checking
+1753 b9448b92bead64e3b4162418e65354a56047221e Add example network io job file
+1754 9bec88e15aad76c16ac65048270ecac8b5956a61 Net engine: move connection setup into ->init()
+1755 b58cf3dc6945d661bd5c40c0856a99e0f9c8a9e6 Net engine: missing ->nr_open_files for clients
+1756 2fd233b7302603fb6fd9b7098994d2a155cf7a22 Convert null io engine to use ->setup()
+1757 4f45320a29179d802073b392fd7e10bf0975d6bc Net engine: need to set ->nr_open_files
+1758 0be06ea2c87ecf1751a01ed528a2d3170bdca543 Accept -foo as well as --foo for options
+1759 0e9f7fac2a501f2baeedd11446e9fe102720c27d Improve friendliness of --cmdhelp
+1760 320beefe2d0c5f05f24b4e0c1d13fcb2f1286a78 Don't require 'all' argument to --cmdhelp to dump all options
+1761 5af1c6f3b46b40ef6b7021a34fd38889226e137f Document file_service_type option
+1762 7c83c089a9b8bd742f788157ac47a5af363adb19 Fix for file_service_type=random
+1763 bdb4e2e99d4a87e5d3677cc09aa1ce92135125a9 Better management of open files
+1764 9bf2061e2b76a396936c5fe70060574a6c96b8f8 Excessive passing around of struct fio_file
+1765 138502a97c7957d9be7599d9fde94b5317e8c24b Only check FIO_DISKLESSIO in stat.c
+1766 a9defc9abb4a3013335d3aeeb132fd90900cac85 [PATCH] ioengine flags: Replace FIO_NETIO with real flags that map the behavior
+1767 9728ce37ea4348d4bdb2eefbaafee75ad651758c [PATCH] init.c: Expose f_out and f_err to loaded libraries via dlsym()
+1768 ad231bc4f41a9756871455c69d05ea91f1adf727 [PATCH] parse.c: Make FIO_OPT_STR explicitly one value
+1769 780bf1a192f494dcbacb9c1fcc75f6c440a7051e Don't do rate checks, if no ratemin has been specified.
+1770 8a7bd8773ceb3202690f2de4a9cd0e738b5a6edc Document loading external io engines
+1771 7b395ca5d5f38d50f0c9d4c11fb2b51760caf119 Prefix external io engine loading with 'external'
+1772 71dc58b8a48edee4b0a749d4723d622ffefde304 Fix parser bug
+1773 bc5b77a8c46aabea554c4a2c8cca37f27f97969a Duplicate name checks in ioengines.c
+1774 1ff2a7eb468833dd03ccc2cc27a76c5bc7055297 syslet: x86_64 support
+1775 bcd83c12481d45c8ba2b8759ffa06fd85421fd50 Style fixup
+1776 4667c19e207cc308e32278851857ec0d705fb008 Move syslet check into the arch header, where it belongs
+1777 e77fe33a06fc0aaccb5d14fe6d257b6313cbf2ef Fio version 1.12
+1778 9467b77c9ac41f09a93a8a984d21b94c1f7d515e Temporary iodepth_low work-around for syslets
+1779 a0a930efb970a688c0e21e396755210e1bdd05a9 syslet engine: submission latency numbers
+1780 eb7c8ae27bc301b77490b3586dd5ccab7c95880a Move the iodepth_batch into td_io_queue() instead
+1781 ec1aee01a92f2e390d7ca14d26eebf6453780c53 Extend option name from 16 to 20 bytes
+1782 c6441dc9e95cba2a31dec63272917fdf496c75c4 Merge branch 'master' of ssh://brick.kernel.dk/data/git/fio
+1783 cb5ab5121ac4fa62e0ca2612b359f19bfdd30f29 Add iodepth_batch setting
+1784 c084f46865e7bb0d186b4f31259b21f9d75cc07e Merge branch 'master' of ssh://git.kernel.dk/data/git/fio
+1785 c01c03958c2e1d3c231da93f2de8bf7b9b19d143 Do proper wait for pending IO on clean exit
+1786 ad2da605a62faf16887970618b434db19594e17b No need to do fadvise() on O_DIRECT/raw IO
+1787 c0a6b0d8fcf07512fad42ba16613da83ceec4475 Speedup init_disk_util() when dealing with many jobs
+1788 5b38ee84f35c7cf3a3a804e6dbe3621f8980d3bb syslet engine: smart batching
+1789 face81b280ab94ba5d975739578779157c8b54ce Move ->commit() call to td_io_getevents()
+1790 7756b0d046ef74c32df134c8b716237cc5e16bad syslet v4 support
+1791 4d2e0f49006af315ec8653008938bc51f2a0ddac Requeue io_u flags fix
+1792 9ff9de69348f3def14e9a5dde7401d5e760e3c7c First cut at doing sequences of atoms in one commit
+1793 d7762cf829fd3e44e50e5e2e9889b6449772097c Move completion handler into the io_u
+1794 10cad1aa7af1c47be6655cff0438c46843964294 Don't include engines we don't have
+1795 78217dfa392a6a39f018722e91bc179e9d5443df IO engine callback need not dump possible values
+1796 0904200b6f113233a28c4c1ddf68f216bd922b78 Rate must always calculate bytes done
+1797 c3852ae26bbe6072b2905938bb4fb0f511977cba Improve rate usec calculation
+1798 b1ec1da670aab645e32303ea5ffaa1e5ca336936 Move handling of possible values into the option parser
+1799 413dd459a7710ba421061e840dd9ac3161c70f20 Streamline thread_data data direction setting and checking
+1800 0aabe160c38efc3c42157fac2a9af08e070341c6 Add option to select how to service multiple files
+1801 5945b9b45474a9a717a3db2310822aa5064fb38b Dump io_u on timeout
+1802 9d80e114104d43103d6acc920bce69296b647a53 Correct spelling error
+1803 e1161c325f7866bae879e686d1c673ca32ab09ae Add more context to the error messages
+1804 94cd00dd6cf1cec4c593a74aabfbb79f4d80afb6 List syslet-rw as a supported option in the ioengine help dump
+1805 1df341ff45360d5d1a4f942f76862f11a0da8fa6 syslet: syscall still needs void * cast
+1806 fa01d139c558a3788154c5b0f094bfdb5325728f Don't check st_size for special files
+1807 faf5c880f6ddcd44ff896ba1cf3da38b23fe0f39 syslet: typo
+1808 3707f45bf2c99e79fdc0cd77fbb403c36c8f57eb Further improve thread handling
+1809 19a98c4140020e82652a835faa6e0eac6173fa18 Fix crash on thread exit
+1810 50070b5a3b37f013a2b0b968e1b8b34bffff8589 Thread waitpid() error check
+1811 a2f77c9f5f01186882762264100b6d30ee77a55d Improve thread reap handling
+1812 55bc972818cdec46f47633da62758e4dcdb6f3f6 Disable timeout handling for now
+1813 e9310e0557c342edb6849ba5262f338fca5c272f Include engines in dependency check
+1814 433afcb4fe81e775c15af9d39a6f4db8a53d693a io_u timeout handling
+1815 0c6e75175bcaf8d05bfa88aa8caa584fbb848b74 Track io_u state (free or in-flight)
+1816 145dad6d3e1ae4bf44dd49eea9d0c025500b97d0 No need to cast async_exec() syscall to void * anymore
+1817 e49499f8738562e014867ad693a999646d5e1bfb syslet engine: style fix and ->queue() error return value fix
+1818 bf0dc8fae8b21c666a0a927c1d473ad59101e7fd v3 syslet engine support
+1819 069c29183fb55f467ba841959ba6731f3e4f2132 Still need to put io_u on early exit
+1820 49db69aa2e89afde2c5e2a768a464302af96b6cb Correct io_u_*_complete() return checking
+1821 19abcd3d54b1a9c16a9042f07e937b2e35d9c6bc Don't overwrite error
+1822 f692a7677e025a274ad08ecfa6a3001e61b1232d Fix double io_u free on error in do_verify()
+1823 43d768074375795e8d9565ba75cfd00228cc61df 64-bit compile warnings
+1824 8abdce6686bfcaa211e7eb75a69ec07e980bd96e Change IO latency histogram to be in power-of-10
+1825 e4dd8a093ce7f13094460feead61d83c0c04f0ce Makefile: libdir is not used anymore
+1826 72cb971b019945a0eb7528384338f0410373484f More __must_check annotations
+1827 b2fdda43cf0699f60e711429c778ff1685e30062 Static error value checking
+1828 948f9b2eed7aeee6367957ea30be7a2da94d5b1b mmap IO engine cannot extend a file
+1829 6c23570dd5458d8f7c7086fb86675ce7b424d4fd Leftover debug message
+1830 e916b390684ec1ca6247f98138fa9c1682701d29 Add low water mark for queuing depth
+1831 079ad09b1ef22fa0d47c2cd2673908c5619aa41a First step for group reporting
+1832 5aeb77df5d75d1065b339c47afbd882a3c04702e Fix sync engine completion latency
+1833 e7e6cfb4f22b19de03aa5a0b031d4844dd8b1ebe Update io_u.c comments
+1834 7e77dd026d85253936aef432ba8f3e89b96b805c Improve submission latency calculation
+1835 00de55ef85f01f3c56fac5397aca92eef0c73762 Use 0 timeout for command completion peek
+1836 65db0851e8cd98c61e029e64db7038f92ad9ae02 Update documentation wrt comment
+1837 5cc2da300b3fc30e00b79b4ddb3f372df3b2fe93 fio: allow '#' comments
+1838 ad18c1ecc367c55e4d10acb05790be2c946053e2 fio: syslet.h build fix
+1839 77f392bf28b1eafbece08df6c066440a838499a1 Be safe and re-prep requeue io_u's
+1840 c1324df14320c37fbe0f08e3b9f9a9af00e23ec4 Missing clear of some IO state
+1841 6bb1c841e213b922f621d8ab50e8641e0ab10923 Clean core files on make clean
+1842 afab5e46cf0a984a87426329b3157e38d9a419a4 Fix busy looping for io_u_queued_complete()
+1843 d2d7fa53c18f1fc3fb89f3fe20df9b39986bde72 Verify requeue handling
+1844 3d7c391dbdc56f261447b2d8ab65e74a42a20c41 Retrieve next file to service in get_io_u()
+1845 755200a326a33e5e19b16dfd5e013dd98bcf1916 Add support for queuing > 1 command at the time
+1846 9978463287982c2f73f171ec9a79979939dee47a Differentiate between bool error return and real error value
+1847 97601024a53586d77a368763f08be9ee483fdc9c Cleanup end IO handling
+1848 22819ec237297fc39435ed566bee01a4225bfb39 Unify and fixup error handling
+1849 3af6ef399a9df324ffe4a8c8e03b52a42f587229 Fully parallellize io_u verification
+1850 36167d82e5f49dee91c6d2cd426068edee90e36f Change IO engine queuing
+1851 48097d5c61aa1718e6dd4b3b647ea2eb6f00fcfb [PATCH] Add thinktime_spin parameter
+1852 73170f19408559ed7e318f93b21e5cbbf13725bd [PATCH] Don't check status if ret < 0
+1853 fab6aa719b7fa80a720f716dc1660165c2f844e9 [PATCH] Catch processes/threads that unexpectedly exited
+1854 a64181472b3556b6e7b95443d94869f6b61ca7ad [PATCH] Further improve child exit reaping
+1855 e26f8f7a38365148ba1f345391da8596a8f7269e [PATCH] file descriptor is int
+1856 ec1183049478cfc03ec3cc513ae07b7ca9a48140 [PATCH] IO completion time histograms
+1857 2f073b09812255edca0f5854d36720418db88912 [PATCH] Fix random seed for numjobs > 1
+1858 5bf13a5a5f01986c5b87db26f0cadf95af133188 [PATCH] Fixup client error exit
+1859 890df538b3645d9310a3527513195773130d1d7f [PATCH] Fixup file type recognition
+1860 429ca0735f71961ffe52c5ac102b0a14ee1b2c4c [PATCH] Defer engine ops verification check
+1861 b6959b55efa7f464dbb7e7f2021dd67d297219bd [PATCH] Make fio compile on non-x86 again
+1862 7d44a745ced0cd50c31a68d680601c66db99b96b [PATCH] syslet: code cleanup
+1863 7f059a76061ea676419d91fe4c5270d817f283a1 [PATCH] syslet: fix leak of ring and ahu
+1864 2ca50be45bcacd652e2cefb6a69837e051cb297a [PATCH] syslet: async_head_user struct should be permanent
+1865 a2e1b08afa641078832d69871ae5e404db3e4fc1 [PATCH] syslet engine: use pread instead lseek+read
+1866 db64e9bc34d621647a255c918a5b7416ca0b6076 [PATCH] Let the syslet ioengine register check supportability
+1867 f3502ba2dd72d846a388c774a01c6bb833871248 [PATCH] Exabytes
+1868 d0ff85dfc86a8c62807ba0f6faa8e04cca64bcb8 [PATCH] Document syslet-rw engine
+1869 a4f4fdd7c9e46a50bc33ecef44d9f06036580ad4 [PATCH] First cut syslet async io support
+1870 340fd243a168d881dd80b45f2ffb424287db8b7e [PATCH] Make fio_assert() core dump the job
+1871 a4a81712f0bd76cbde8898c0b87faedbaa1d2da1 [PATCH] Random map needs to use ->real_file_size, not ->file_size
+1872 437c9b71527b14a8e872c03cd821179eba351474 [PATCH] Make the exit value meaningfull
+1873 e9fbdd74f6ac24d93824177a8858c028305c9900 [PATCH] Woops, left debug clear in there
+1874 0032bf9fdccc4491e779a0c581c9bcb714b012f7 [PATCH] Add fio_assert()
+1875 07e4b620ecb7f64dc75ac288928f073fb42f4441 [PATCH] Fix buflen trimming
+1876 3951414db33cb12656d218156274d619271421f9 [PATCH] Total io is the sum of READ and WRITE
+1877 bca4ed4de445a07af393ac8bfcb9dd6aad09e5df [PATCH] One more round of random map fixes
+1878 c8c51efdfb621275c23ab74b385d80702b7a30d0 [PATCH] Sign warning
+1879 0c09442b26216aed16f758712f744a2c54726cdb [PATCH] Network engine poll() paranoia
+1880 1c9e06ee5cd492b4750b11d34d41c609eabecee0 [PATCH] Document/comment fio.h
+1881 5fdd124a3b811993542825847f207587d5f4661e [PATCH] Make ctrl-c work with network io and accept loop
+1882 95bcd815e5ce55d6cdd8eb83bda5ee411f37bdc9 [PATCH] Move td_verror() into io_ops->queue() hook
+1883 6d663077379b40e1ec6e2321fe8a731087777d32 [PATCH] Allow thread/group dump regardless of error state
+1884 2eaa41cee91925db713b19ea2975dcc511648b48 [PATCH] Fix stack overflow
+1885 46fda8d0fe3332c17ef845da6de9e3241b8cb77a [PATCH] Separate bandwidth log and rate display
+1886 dbe1125e9c53b2a0b1fc2fd9c6cfd0b3fbddda8b [PATCH] Pretty up stat output
+1887 24868cabfee01b938a708337ac2087470490b665 [PATCH] Kill redundant header files
+1888 c685b5b2912bfbd3cdc8729d16a98438b1ff7593 [PATCH] More random map fixes
+1889 afdbe580a4c173cb90b079dc266229c6d4257911 [PATCH] Random map fix
+1890 675de85a183099071a56b9b2ecd196569f10236a [PATCH] Size parse should use strtoll()
+1891 f4ee22ca72da53e0e891693d16358296b703a684 [PATCH] File size fix on NULL io engines
+1892 16edf25dba269ee9e8239130e75b690440b1e120 [PATCH] Catch and print if directory= doesn't exist
+1893 311b84aeb3f8eba70191353b4b9fe0a2576f9d95 [PATCH] Make the libaio fsync fallback really work
+1894 8d714a60ae956c5758fe4b5a75aa6cc31ce7e9eb [PATCH] libaio engine: fake work-around for sync issue
+1895 e5c40aabb82b796e34f2ea7a184a3f72f5fb41e5 [PATCH] Fix libaio engine SYNC
+1896 ab5d675e9f5a805a21f51b553c49268401f19402 [PATCH] CFLAGS: -fstack-protector doesn't work on older compilers
+1897 85eb1d4492ab4ee961b2a2276192298b2009584f [PATCH] Net engine typo
+1898 dc0deca2b89bea896e8eb8133961cec68c4ba8b9 [PATCH] SG IO engine: reduce allocations and memory leaks
+1899 6ab9e267d0a48de95c86875ba93fe17203163bb0 [PATCH] SG IO engine: remember to set io_u->file in init
+1900 adee86c56189017f7e11fc3e2d5e074674333d60 [PATCH] SG io engine: better handling of multiple files
+1901 d4f12dd05cfb2e8e7a72604cd870e10f2394914e [PATCH] Network engine cleanups and comments
+1902 a37bded35c66229ea830990ab313ca531fb94d4f [PATCH] Improve dependency checking on builds
+1903 13ddcb2b0b4db9d86fb859ad93f50d89a3f9f61a [PATCH] Enable _FORTIFY_SOURCE and stack protector checking
+1904 69cfd7e07ff2fdc8ff4c94bb277e0b241d66ace0 [PATCH] We should check system() return value
+1905 97b601c1ef3520e87e26fe2eea2446076ae1eab3 [PATCH] Remove SIGSEGV handler
+1906 d8cc4733da33d408e72897a5eb8cbb199a636cc7 [PATCH] aio example should use O_DIRECT IO
+1907 4d9345ae968ca92ace3dab06c25a9b73159cb329 [PATCH] Don't create files for engines that don't need them
+1908 165faf16657c17b924a84e5601e17a516c76c135 [PATCH] Misc fixes
+1909 6bedbfafcffbc7202b5bb621ac5886aafdc0f362 [PATCH] Network engine fixes
+1910 7a6499dada619928267d26b4629b0c8623dc423a [PATCH] Network io engine updates
+1911 e2a26d2c2a75861494f6fc4046a37a71874bd59a [PATCH] Document ->queue() in the skeleton engine
+1912 cec6b55da1c282b5b91ad346c7804171fccf151e [PATCH] Support residual io counts from io engines
+1913 2fc2698113c087352c1851bf5ebfcad6adb53932 [PATCH] Support for > 1 network connection
+1914 e01547d2b8bf79c3abe14e03c72398cf8998eb1e [PATCH] Network engine updates
+1915 ed92ac0ce9ce1cc64697272d307d4fa7d18ed64c [PATCH] Simple support for networked IO
+1916 f8fe35e8c9e88dd681ea151251d75f6116a958b4 [PATCH] Rename io engines
+1917 29d610e110cf1e6326185d2c50c846813152fe21 [PATCH] Fix buffer alignment on non-4kb archs
+1918 61697c37566a211ad3fd70f46397d9b7675b0fc2 [PATCH] Add 'description' option
+1919 7d6c5283afe6fb5187d2e2a330376ad65f472537 [PATCH] Fix sg ioengine
+1920 e8b8c9f1f406862e01cdfc0852a6d2ca9b308302 [PATCH] Fix double free in sg engine error path
+1921 3404cefcb23db812b3f3a164ef773b37d53355ab [PATCH] Fix typo
+1922 ae4020f762a87c428a430ffff1c10dd2a3644e98 [PATCH] Only generate global bandwidth log if write_bw_log set
+1923 bb3884d855100fa8fa6a1d2aac79e867dfd47bf9 [PATCH] Add support for writing aggregate bandwidth log
+1924 eff6861d99c1e20ef24d5ab9eef1ac0bbfa655d3 [PATCH] Unlink write file if !overwrite and it exists
+1925 e545a6ce0f0f3e6881e997bf2af8969fc6dd7082 [PATCH] Don't make file unlink the default
+1926 5d4580774d8df3393fc4264c71caed16201821de [PATCH] The last io depth entry is actually >= 64, not > 32
+1927 71619dc28506f7b7b40905b942e992b02f0d5b96 [PATCH] Include io depth distribution statistics
+1928 7e326f3bbc7e6f23f2b4c99282f73a7948d02637 [PATCH] Remove the time init check
+1929 2cb8d960e8abedb0702e0e53fbebbbd649147646 [PATCH] Shorten 'commitrate' to 'CR'
+1930 fb44a18f1bd81b26c3d483c79f5707085bda24dc [PATCH] Fixup rate usec cycle calculation for small values
+1931 fd841467ce4a5875dba2d21da6851936b46fdb08 [PATCH] Improve rate functionality
+1932 6ce15a32b28f359b3753ef65d883ab2d824e19f2 [PATCH] Properly shutdown in case of serious errors
+1933 73c8b0823e071c6606689b3f939708a9a347d776 [PATCH] Update HOWTO
+1934 d56cbab065c01e1a177bc1b8d85a8f5d78df1548 [PATCH] Cleanup some output code
+1935 10cb47faf7283fe8c5b7da70078d96f447b5d62e Merge branch 'master' of ssh://router/data/git/fio
+1936 0c9baf913d6d251973798048d29c60507f486ee6 [PATCH] Update irange documentation
+1937 5fa0f817d41211f45c04809dfe6c324f916fbcb4 [PATCH] Help: thinktime is in microseconds
+1938 70df2f19d2a456224fee54e17066298b307c3667 [PATCH] Abort early for bad option given to --cmdhelp
+1939 380cf265b2ae035fc346718f30c3d01a18e4640f [PATCH] Really fixup disk util init
+1940 8da99b32a71f8b7edcb94d9fd42a605129ffa414 Revert "[PATCH] Move disk utilization setup to thread itself"
+1941 d52fb0c44567cf4fdc2a2c307c32672cc5a57170 [PATCH] Move disk utilization setup to thread itself
+1942 5b0a8880e2a0dafbdd12cabcb82f8fe728937e65 [PATCH] Warn if both option variable offset and callback given
+1943 4945ba127a43cad1424ebc75164b7a16a8160933 [PATCH] Pretty up option looping
+1944 6104ddb6b14be6f3d97bf0faa5b7e06dea22f5f4 [PATCH] Change output dev= to stdev=
+1945 76a43db448f9fd5e9f1397428a433466d98e0d5d [PATCH] Change O_DIRECT vs buffered setup
+1946 03b74b3ec5268e731ed7fcaef31c8c0655acd530 [PATCH] Change timeout to runtime and rearrange option entries
+1947 d9bb3b809d80cc3226d1c603e87fc90b6680320b [PATCH] Thread option didn't work
+1948 687040842bf56502d33b6c0cb5d2af6da27d080c [PATCH] Implement a better mean and standard deviation calculation
+1949 cda866caa9b9f6598e264d24a8997d24f3c2b1c7 [PATCH] strtoul() -> strtol() conversion
+1950 7e75f648444ce3ee1694792134826ee89c7a29eb Merge branch 'master' of ssh://git.kernel.dk/data/git/fio
+1951 ddf4a69b083416fa0e626f591b3b425085656531 [PATCH] Fix standard deviation calculation
+1952 db8e0165bd86c5a4e9909b846acdbd5b22d263b1 [PATCH] Be strict in checking option ranges
+1953 63f29372bc1bd69b66816c96d88b9c0bd8f3d8b9 [PATCH] Option minval should be signed
+1954 13335ddb0e304efa0fc96593dd1fd995ec6f68d7 [PATCH] Introduce bool option type
+1955 15f7918ff432d5da2b2abc84a50c685bde5e72ef [PATCH] Show allowed option values for string matching
+1956 facba0e53b7108d70f34e3eb01b54c2efd73f5f4 [PATCH] Pretty up command help output
+1957 25309a33aa949413e8c69fd879b5964758de8c38 [PATCH] Reversed order of thinktime_blocks modulo operation
+1958 6da1fa7f0a8d7e588dc0ea40a5e175edded9a8ac [PATCH] Fixup ratecycle option
+1959 ee738499877bb1ee913e839cb4a8d4edad2d52ad [PATCH] Add default option values
+1960 8d7ad8d9d737982f7967f91f00ba9a56402fc60b [PATCH] Move timeout structure where it is used
+1961 29fc6afe1bfcb97dd7f33d8e58b99b2d93237d47 [PATCH] Complain if bad option given to 'cmdhelp'
+1962 fd28ca4948aa67b76585c6c23d7f70a2cdc7a0d5 [PATCH] Add per-option help
+1963 5cd033bbb08dbdd2241a0eac09ef34a59a5d8f52 [PATCH] Fio version 1.11
+1964 ccbb91cb902f5a1931681248735551815d12c653 [PATCH] Fix busy-looping with aio engine and depth > 1
+1965 1188caf84ba7fb6c2b3955ad67f4bf087ede13fd [PATCH] Add extra disk util name check
+1966 f829527633c3ebba26edb4745172d938a8ae4bb6 [PATCH] Debug printf
+1967 8aeebd5570ac4fccbcdd48f2e6f1cf1577f3c08d [PATCH] Unlink and directory fix
+1968 745508ddfcb7b89b65d99a9dabc6b957aafb9a57 [PATCH] Non-overwrite random write fix
+1969 726f6ff06acd3a70b66c1badbc67cb833709b13c [PATCH] Make note of mailing list address
+1970 1304923a76e2e7f8c283240b3c6eb13ddd71db7a [PATCH] Make sure the fio_options[] members are always zero filled
+1971 9c1f7434526606fc8a4296190a2dea5de2651266 [PATCH] Add thinktime_blocks
+1972 ef9c5c40a9f4b0ce3be9f13cedaaf7e2a90d47a6 [PATCH] Fix deviation overflow
+1973 e6d276f2c07cc35f3d57210713e8288bb44daf97 [PATCH] Fix division by zero in deviance calculation
+1974 b1610092518cc4e6797525a2f6ca5a3d47383826 [PATCH] Split CFLAGS into OPTFLAGS + CFLAGS
+1975 60c641c7b240b2294b611a11848399dc405ee118 [PATCH] Don't create libdir
+1976 bde52831e17be20156de1d8670ca9ff582c89412 [PATCH] Don't dump optarg on unknown option
+1977 63c0669889dc4b01537dff35005e72073ac39d32 [PATCH] Version 1.10
+1978 313cb206ffc6e50c089314d322ebf1c523f37531 [PATCH] Allow mem=mmap to also use a file backing
+1979 c51074e7f095ad74114d7e0981f2e6f514b0f758 [PATCH] Warning on hugepage-size setting in HOWTO
+1980 56bb17f297c50b2832c845b0f6cdde5063748b34 [PATCH] Add hugepage-size option
+1981 5394ae5fc8dabc3a69b7c58550e21926461853ad [PATCH] Document how to setup/use huge pages
+1982 d2324417d8a06b0d0b7c331a0d004155f3a7bd48 [PATCH] Remove debug fprintfs
+1983 d0bdaf49eb3f4faa941d02274f2bd875a187e7d7 [PATCH] Support for mmap of hugetlb files as memory backing
+1984 e0a223354342cc45a916b669343718b80a20c2ea [PATCH] Fix character + O_DIRECT
+1985 0268b8ba7b2c79c669323cb1fcc0b045b84313f1 [PATCH] Fix hugetlb problems
+1986 ee88470c001012d08ae37bfc31741a935be2e7a1 [PATCH] Must use ->real_file_size
+1987 74b025b071b5bfbffa7ad7682b66b749e8d1f955 [PATCH] Support for hugetlb backed shared memory
+1988 9b031dc82192e884c1d6da9c86f047ecb9ef5c3a [PATCH] Only unlink for created files
+1989 178d11f29ffc50c46d907129ee81c3b41f48c926 [PATCH] Make unlink and overwrite the default
+1990 871c0fc7c3af41dea5879dec5308ab095cf10c82 [PATCH] Fix FreeBSD/Solaris linkage
+1991 1e97cce9f5a87a67293a05ec4533ed6968698b2e [PATCH] Fix warnings from icc
+1992 36dff96650e663e972d7f4318710d5730adaeb90 [PATCH] rusage stat
+1993 690089990d051d86b4ef2b6fd5c1972c0dd4897b [PATCH] Improve time accounting for a job
+1994 08aae9a0d5f3d24152abd7515984439bbfd3c05d [PATCH] Update ioengine help text
+1995 a94ea28b13429c38036546c36bcfd7355dc1441d [PATCH] 'null' ioengine
+1996 bdc7211e190482f0c17c109a0d90834a6611be1c [PATCH] Fix time debug compile
+1997 f5cc024a0ab9f51b1cb9fcd980b85199bdf011b0 [PATCH] Comment typo
+1998 02bcaa8c31feb93c61b701d143a7eea3efd2124d [PATCH] Time and seek optimizations
+1999 c11883f748f8f192fc6b4b0ec25add8781a8f4a8 [PATCH] Get rid of FIO_INST_PREFIX
+2000 7abf833d25ab6cc866308fe37483dfe2fde28efc [PATCH] Close files on error
+2001 21972cdef7db6b557c2d56138f8434658a9d1e49 [PATCH] Always open the files from the job itself
+2002 132ad46d22bcf12da95ad69e03c1b6f23f5e60a9 [PATCH] File close fix
+2003 4d2413c685796b016ab076337ddc5545c3f6ab5b [PATCH] fsync and stonewall fix
+2004 08e26e3579fdae51cc9aafc71a80c638563bf2cd [PATCH] Don't segfault on missing argument data
+2005 f697125ab9003d358a37186d610e09799afd190f [PATCH] nrfiles > 1 random fix
+2006 245142ff7554290cf666e3ef6b7b57512bf17d75 [PATCH] Fix signedness issue
+2007 830a78b057d23f64f96732835940f454fb307b1e [PATCH] Improve skeleton example
+2008 da51c0505c753f64ad5f65808377b8f67b445828 [PATCH] Add skeleton external io engine
+2009 5f350952eff89948bfbf1eb6ac4d3d08a9109581 [PATCH] Link in known io engines
+2010 be67e2de7961e849d5ad82e8c9206377c325b7c8 [PATCH] Version 1.9
+2011 92b586f8ec428c23a88eea838afadc00331d4bb4 [PATCH] Fix options with no parameters
+2012 98aa62d863d78aaa725c37f2588aba415f5b224c [PATCH] Remove rate_quit remnants
+2013 cb781c758e5df7ff4c6f655c1e4f9df3043a4be9 [PATCH] Missing memset and free-on-error in io engines
+2014 3c9b60c1fb144950ca51220ffa18f485672c3ba6 [PATCH] Warn on writable strings
+2015 5c1014b7aed20dcb4af602239d8f5f53d1e3160e [PATCH] Forgot to include 'M' as a unit postfix
+2016 c3054f90aa0d7f258eccbdd91c21c9fd8f81736a [PATCH] Version 1.8
+2017 f8977ee606bc51138a77f6a1b653df00faa77742 [PATCH] Print pretty bs values
+2018 787f7e95a3fb3bbe88431da53337bb9551d2357c [PATCH] Allow leading , in multi setting parameter
+2019 17abbe89b8d3a4c7a4deab00a7cc98fbd215f1ef [PATCH] Cleanup 2nd argument set parsing/setting
+2020 f90eff5a414f6e8c16a51c3a7d9b5e077ab49aac [PATCH] bs= and bsrange= takes both read and write sizes
+2021 6c21976321b14966466cdcd7a1636c303ecf43c0 [PATCH] HOWTO spelling fixes
+2022 c7b0818d2a9d1b8597256ea002d9cf9346ea97f3 Merge branch 'master' of ssh://router/data/git/fio
+2023 34cfcdafa994a0a75120e498c51eda08bde5df72 [PATCH] Make fio build again on "crippled" platforms
+2024 c06aa240c904becbafb8457ed3b828cf0d38a180 [PATCH] Kill old libaio/posixaio checks
+2025 6043c5790f9978814ec25e3ea8f4d574daf6266e [PATCH] Add in-progress io rate
+2026 fb19ce5a38404dcb14334a2c2300fd065958a28e [PATCH] Makefile update
+2027 75e6f36fae06978f29296fce76a7f00ca0df7b56 [PATCH] Fix int vs long problems in parsing some options
+2028 a00735e66f9ec42549da94eba3170e543b542904 [PATCH] Add seperate read/write block size options
+2029 c7c280ed2e4f836bd8e9e125d55d097539b70e21 [PATCH] Fix random_map
+2030 6abd53b5bb7755f1031b43eec2716cf044ccc654 [PATCH] fsx example
+2031 0bbab0e789d4d8438d63327da052d64b45f0596a [PATCH] String copy limiting fixes
+2032 b1508cf9ead36dc789a4e289f7522a070e57058c [PATCH] Improve job/cmd line parsing error logging
+2033 7c7118c7ade7b63d9107ecd5c7168391ce4aaf1a [PATCH] Add sample fsx job file
+2034 5f599d8eae80112b585aabb63b595965689ae4b8 [PATCH] Print an error when parsing a job option fails
+2035 66eeb2963730871049b7d938c685188ef63d865a [PATCH] Signedness warning
+2036 6b9cea23c22c218625b68eca63da38089b299846 [PATCH] Randomly fill output buffers
+2037 690adba373bb8c97a365c67da369e265953c4b4c [PATCH] Add 'bs_unaligned' option
+2038 bb8895e07c6d6417410545f45d34b1b7916cd90a [PATCH] Add 'norandommap' option
+2039 7c124ac153eebf48bc85f9033ae06fd7152e4216 [PATCH] Improve job file parsing
+2040 fee3bb48f748afe5cf10f8505e1efd36b87c627e [PATCH] Potential overflow and unused variable
+2041 16b462aeb47996111ee6aa516c9226708db7c248 [PATCH] Move the other parameter fixup code into fixup_options()
+2042 549577a728fc3bacbfea8978c4f514cef5b073dc [PATCH] Don't put_job() on def_thread
+2043 38d0adb0d129e2eef7bf21e85ba4758c3789cb8e [PATCH] Typo: jobname is 'val', not 'opt'
+2044 c2b1e753ca7abaca7f177cb1ca5087ca3971542b [PATCH] Add support for multiple jobs on the command line
+2045 b765a37296e6a08b6e06d9186832546a18b0d2d7 [PATCH] Fix modification of const string
+2046 b6e25da4225ca990f6997d2d60fe96a7b51d4661 [PATCH] FIO_OPT_RANGE breakage
+2047 9158d2f7d9cea04a3f0cbe0817c697c0ba6e8b48 [PATCH] Options must be integer
+2048 b46928282e0a890f49250e79b81af773a2b7108f [PATCH] Add full command line parameter support
+2049 33963c6c5f79b89ab93b570e51f68f6abb77c128 [PATCH] parse cleanups
+2050 f48b467cba78af0843c7320caf841e2bee72fb1e [PATCH cpu io threads need not have lots of stuff setup
+2051 076efc7c60c351df783960a646e7fe8fba29dc19 [PATCH] Improve io logging
+2052 dad915e36819e74c4540db19faae488ede963ee4 [PATCH] Fixup iolog config setting
+2053 e1f365035a952233463d85d659bd960ba78f012e [PATCH] Abstract option handling
+2054 eaf09db4239ccf364c251d3fa493ef1cb41009cb [PATCH] libaio sign error
+2055 cb2c86fdf03241fee32fd2e2caff43af1022403c [PATCH] Split config name parse functions into parse.c
+2056 e0da9bc2488b7f02f14c121d2abed58e6a1ca24d [PATCH] Update HOWTO
+2057 40f8298cd252157fa15d93f8eb470116a94069a0 [PATCH] Use posix_fallocate() to force file layout
+2058 71bfa161f13b6fca98ba215ebebbcb5c99003d24 [PATCH] Add HOWTO
+2059 353a7e0eb6d80d03016b2ce639f33c554e8546b7 [PATCH] ->queue() error handling
+2060 795407caa899ae9b430361ee12543aee41a8e418 [PATCH] README updates
+2061 6040dabcaaf29ecea9c68735a4d3a6ad6411f573 [PATCH] Make ->buflen == 0 on SYNC io_u's
+2062 b50b87559205b4758deba7c547ab07bf6f2e8ff8 [PATCH] Document filename= option
+2063 8e9fe637622aab409101c90d26670375a50ff4f3 [PATCH] License update
+2064 858a3d476060cfb1ea5dfbdffd94ed3108f194eb [PATCH] Move td_io_sync()
+2065 b907a5b5c708b2620685a866b3b0bcd0d2657e54 [PATCH] mmap io engine had broken sync
+2066 87dc1ab1b4df7b977f60e3d43533a896e2ee665b [PATCH] Implement file syncing as data direction
+2067 dfd7bc2c24d3a4281982eaf4f83aa1aeb09424de [PATCH] Shrink io_u a little
+2068 d55954f4857da597b2620f2417678eec47285666 [PATCH] f->fileno is not used
+2069 c21ac0fff997a382929d1a53cf32d841fc35549f [PATCH] Only unlink the same file once
+2070 56f9498d8588d42df2a41a7eb7ebcffef013a339 [PATCH] Revert some of the leak fixes
+2071 13f8e2d2e3e5ec7d8c18b70fb2a2e2a026190020 [PATCH] Add option to specify the exact file used
+2072 eecf272f1b2d55c1e49aadd7f65b9a433ba04c15 [PATCH] Plug a few more leaks
+2073 b4a6a59a939f0e6554632de311e7d1d1b7633ccf [PATCH] Be nicer about cleaning up allocated memory
+2074 8c16d840377c1e6fb79f479ee60590a2da5b52ee [PATCH] Sanity check ops on loaded io engine
+2075 df415585cd9c54472b7aa77b9eca6206ab0cbb4f [PATCH] Move related code next to each other
+2076 10ba535a5cbb95b5576e33a6f8af093a6ca3bfd7 [PATCH] Split the io_u io handling out of fio.c
+2077 2f9ade3cb72218eb260f4f5e6914218bdcaa2bcc [PATCH] Split out the memory handling from fio.c
+2078 2e7964b8f84782afe665d8ae549c2910320e247f [PATCH] disk zone example needs write_bw_log
+2079 ec94ec567cae47f91fa31a18250c2a7a0029d2ad [PATCH] Add bw/lat log as job options
+2080 0a7eb121ecb2e4279e9eb8178aa1e554dda40191 [PATCH] More size fixes
+2081 f102706350093e60617cc271b128e56c57ab3ce7 [PATCH] Fixup io size on block devices
+2082 34572e28f8cf45ba4e2601797f2aa4a114601fb2 [PATCH] Add for_each_td()
+2083 2953f5751ed8603b2f9ed89231a0dff6716ff151 [PATCH] Only the posixaio engine needs to link against -lrt
+2084 fb71fbd73027a2d6202be9b9b1480bb845ea52df [PATCH] Cleanup iolog handling
+2085 841ddd1322abbb48b2afe25712b4303dbf8cc5de [PATCH] Automatically adjust iodepth for nr_files
+2086 25205e975e6dce6079a4b94d656724011f1aabd0 [PATCH] File creation and info fixes
+2087 74939e38e5164682a57cbe2dfdced09b35cd0259 [PATCH] Total io size / eta fix
+2088 84585003d025a38b91749cb0d68f6b5653d1f1a3 [PATCH] Fix a bunch of bugs
+2089 7313b48c3196b4750f4103e8622126039e2231c6 Merge branch 'master' of ssh://router/data/git/fio
+2090 7a16dd027f83d7ff8ff0e72bb6bb12fae046fcbf [PATCH] Make io engines -W clean
+2091 0ab8db8943acc6b9ea778735563bfad2a79e8ddd [PATCH] Make fio -W clean again
+2092 e5b401d4bf67a1704f28872d3abe09eaf65cdabe [PATCH] Sync and invalidate cache prior to running verify
+2093 a9619d44b439ac9c0d292925a5b4fd1b944d1263 [PATCH] More verify code move
+2094 e29d1b70a21e29801fb35dfbc1b236b7c8514055 [PATCH] Split out the verify io parts
+2095 263e529f7d90892a610a5b26a519116fe3a675a6 [PATCH] Split status/eta code out of fio.c
+2096 45bee2836ad7d5e2d70ed72cc3341fdfa97c934b [PATCH] Cleanup the io engine methods
+2097 e732426492c17fcd3a7a47d90c00eeabf5ea65d9 [PATCH] Verify eta time fix
+2098 d9257beae0247e694c0d7c286a4088a2ebc53ccf [PATCH] mmap: fix bug introduced with the io engine split
+2099 f6cbb269c54ff40f3922818d42117f5a8026df36 [PATCH] Add support for unlinking io files
+2100 b2a151925a91f38aeb298d693687a47269ad4e94 [PATCH Various fixes
+2101 53cdc6864f7471b28cc9b40a5314ab43e5b1cb5e [PATCH] First cut at supporting > 1 file per job
+2102 aad39f4a045ea562c8e4b93db194d65d1e3570db [PATCH] engines/Makefile should use -g as well
+2103 df64119de537aba99c85d1dc80190b354589f8b9 [PATCH] Fix segfault if ioengine isn't set
+2104 ea2877a4ab0fb047a503ba0d7a0fd5393d0fb099 [PATCH] Allow io engine to do the file setup
+2105 c1d5725eaad49dbf5b3a05c27b0b3677af69f64c [PATCH] Don't hardcode ioengine path
+2106 5540fe2e6e8235a6f4d0a0a6857c80749ad7cacc [PATCH] engines/Makefile had extra LIBS line
+2107 b902ceb53977a12062c615ab529ca0c3422e3cff [PATCH] Remember to check ioops version in loaded module
+2108 d4dbaaa821b9d3dd34ca002d1976d4f924a07a47 [PATCH] Fixup failure to load io engine object logging
+2109 2866c82d598e30604d8a92723c664ee6ced90fb0 [PATCH] Separate io engines into separate loadable objects
+2110 97fbdfa1a48a6b535d420e3f53bcb62ed4eff3f1 [PATCH] Fix compile on hosts that have the splice stuff included
+2111 b990b5c06801d6d25e3fcc5415efbbe7bb23341e [PATCH] Basic support for a cpu cycle eater job
+2112 aae22ca71e8f5ac94a79f5dee161533a25852f6c [PATCH] email update
+2113 774a617767830b5023f6cad4a45609a92ec82d41 [PATCH] Correct command line parsing
+2114 40718e3ed151411d9979b9b1c06fd76e5726eae8 [PATCH] Drop "-f jobfile" from usage help
+2115 34e95e3b07f44da3bad86e8d5253f4ff71871221 [PATCH] libaio returns long, not int
+2116 30521453f2f1913657c30874dcc1c18abff7a46d [PATCH] Only print eta when we have nr_running > 0
+2117 3307d653f9cfc05b9c02e4cda91e6b45444dc1b0 [PATCH] Use lstat() instead of stat() in sysfs lookup
+2118 af959a78acda575cc7d3ffea0a8421e0574d0955 [PATCH] Fix timout variable setting
+2119 1056eaadb88722da0803f4d8a45dae9d5015f5e6 [PATCH] Fixup nice() return value and duplicate volatiles
+2120 ea421790658582e392c5bb562ff461f8f5c71844 [PATCH] Get _syscallX() functions from <linux/unistd.h>
+2121 2e77841b9bc7f99ffd1caa2c2c84af2a66731658 [PATCH] Remove redundant -f job option
+2122 0c7e37a04aa04ba22e812f8de7971fcef46b8191 [PATCH] Stonewalling wasn't properly done in some circumstances
+2123 f4866ec5515d8ee329bd904764212489efc8cba2 [PATCH fio-1.5
+2124 906c8d75eef9247c02d1f1f6771b6fa2338329fa [PATCH] Various little fixes and lots of commenting
+2125 9cc935a15e2ca54e6bdff4c18bd432dff3fbfaee [PATCH] Remove last remnants of file extending
+2126 e4f26f0245491bcb4b10606e50f075c586687f16 [PATCH] Always create full file, don't extend
+2127 a71e13bb81c7943d9524e26cbad9534519ca6e2e [PATCH] Pass full required size into create_file()
+2128 c20d25b436e7934a622974de5b20bbd5de24e3f1 [PATCH] Fix non-overwrite bug
+2129 c6ae0a5b8123ea9af2ce70319081fbd5d65c8093 [PATCH] Add option for terse parseable output
+2130 727097a1f2a12096075ccfc30785180cf505ec77 [PATCH] Don't hide submission latency numbers, even if they are 0.
+2131 1618495b30517fb10f6e47c052689dc57ff78df7 [PATCH] Check and error for graph generation if gnuplot isn't available
+2132 47623c728080867966cc692ee85308f1b6afc38d [PATCH] Update usage() text to match options
+2133 9ebc27e1352b905fe3396ce2350a7765fe9c57b8 [PATCH] Remove the old job command line options
+2134 f94819192600fe35d03ebed26a803abdc2b9864c [PATCH] Make it easier to match up filename and job number
+2135 88c6ed8085efd1403fd34072311991cb666a5b9e [PATCH] Misc: stall progress ouput during file creation, ini_file frees.
+2136 972cfd2546081c0397447ca9243ea419b1ff579a [PATCH] Add support for giving multiple job files
+2137 798091133938db311ceb6946ee86f548ed2b3aaa [PATCH] Documentation updates
+2138 3b70d7e51e0b672a8b337c57c8faf865c0b7f415 [PATCH] When logging to a file, stderr should go both to stderr and file
+2139 eb8bbf48e79a8c6afd3c84e3d64263d10ee45daa [PATCH] Enable output logging to file instead of stdout
+2140 71a751cec2d59ceb0e5521e49073eeb8741ab7f2 [PATCH] Also print pending string if some threads have yet to run
+2141 f44c1d464a5a6583cd0b6e6068257988b5e5e403 [PATCH] Improve run_str[] updates and printing
+2142 5853e5a89c5af1a05c20698091ade9b7d63bcbec [PATCH] Note when thread is fsyncing
+2143 edffcb960ce2c04716f83f75a4901723dd00e587 [PATCH] Docu update
+2144 7d4247639268fdcc1769fc57564d79791042950d [PATCH] Remember to define OS_O_DIRECT to OS type if available
+2145 2c0ecd28459b6a1b236c865defb5ef76ce8bfa02 [PATCH] Compile and works on OpenSolaris (tested on BeleniX)
+2146 e463f17941b272078e9c3d3e043f486b92c85be9 [PATCH] Let thread exit cleanup the small allocs
+2147 ddaeaa5ab1e3f1cb6f35a9f4a18ee932151a0ab8 [PATCH] 'parent' is always set in get_new_job()
+2148 4f693b9de45f8fe4a893bd4c3de7c3dc17979386 [PATCH] Warn on conflicting read/write iolog
+2149 c1ee2ca464edd8b1d4513275aeec15dadb9583af [PATCH] rwmix seed got broken with random abstraction, fixup
+2150 af8c0b4f06fa2ebb4eaeb4601b16e2ed08f2b845 [PATCH] Broken write_iolog option if iolog given
+2151 6d6f031f036f0cead85b92211751fa9613c81862 [PATCH] fio.h is missing unistd.h include
+2152 e9c047a0d8dfc32634b896e1600c6f1aa4174378 [PATCH] Cleanups and 'td' size reduction
+2153 bbfd6b00dea4daee05133c8cb991b78d091df9ae [PATCH] Easy process shared semaphores
+2154 5c4e1dbc4ec6ee963220c5f4e64a04cd6130dc81 [PATCH] Final FreeBSD compile fixups
+2155 6dfd46b99af38cc1e5f702f53c59212129fe615e [PATCH] OS abstract out the random seed and value retrieval
+2156 32cd46a085ac60f4f8b085e2d65ebfc6100bb8c5 [PATCH] Get closer to FreeBSD compile
+2157 22f78b320a8d2ffa32b5736fe754c108a8d21525 [PATCH] Guard ioscheduler= option with FIO_HAVE_IOSCHED_SWITCH
+2158 8914a9d83c67a2ead861ac997a1d4b06d02639bc [PATCH] More function moving
+2159 45410acb636e526575d62a037f81ade7916b738c [PATCH] ini parser user friendliness
+2160 072619835aa805f3335dca9d72f4d4eb1009aecd [PATCH] Bad option clarifications (dump supported types)
+2161 80b9feb08908e0493825043f807fcbea4591e09b [PATCH] Convert some options to use check_strstore() if they only dupe the arg
+2162 01452055af61d6f5de543575dba3ebb0c9e55fab [PATCH] Add name=x option to name jobs
+2163 6796209a7e3d39522b0f5599aba277809786335e [PATCH] Shorten the file names, stupid to prefix everything with fio-
+2164 592ef98a623407437c1807bc29deaa87726de5b4 [PATCH] Juggle some includes, add cscope make target
+2165 3c39a379542fd819dbc5cf6daf59380911c39141 [PATCH] Split up fio.c into log/stat/time parts
+2166 e9b2a3fa90451c8390f8690f93d55fa0f52bf9d7 [PATCH] Change logging unit from MiB to KiB
+2167 573a0b14e2a2891750b3b5b04e8b80867443826a [PATCH] Aggregate bandwidth off-by 1.024
+2168 4b5bd14ceeea40169a309c56c583ea0551cc12ed [PATCH] Cleanup allocation frees on exit
+2169 da86774e5a002acf2c8d779b805305bc193fc0a5 [PATCH] Add ioscheduler=x option to allow setting io scheduler
+2170 4e0ba8af8f0bfe0f194122661c8a659c2ac748e6 [PATCH] Add exec_prerun/exec_postrun options
+2171 ef899b6393c43abd655ad2cbc22de18b88a101f8 [PATCH] Dynamically allocate the big filename entries in td
+2172 59b0f33bbaa635788354ba5de17251facf9590aa [PATCH] Remove debug printf() in read/write_iolog setup
+2173 1053a1069b558b829d345885d307f7b5c17b06e2 [PATCH] Add link to Pascal's RPM repository
+2174 573275e7e119984e895d709f95cffc399bd39db8 [PATCH] Fio 1.4
+2175 4f97e0046deb9729371404a2919d9461939db5d7 [PATCH] Fixup merge error
+2176 a12fc0225482bd1580a332312f2a60f73a9ebc28 Merge branch 'master' of ssh://router/data/git/fio
+2177 b6f4d8804ad499adf10b4cad0657284a8a4a6287 [PATCH] Add support for specifying job nice value with nice=x
+2178 a6ccc7be771650f903ea77ace2a1af593622c0f4 [PATCH] Add support for specifying read/write mix workloads better
+2179 843a741389226f5f2d0ce8636cd57532be9b7e4d [PATCH] Add write_iolog support
+2180 200bc855d16b5316933779fa554479e477084b01 [PATCH] More 32-bit fixes (unsigned long -> unsigned long long conversions)
+2181 085227ad17c4974e334450302ef8fe1b41ba227e [PATCH] Fix random io truncate on 32-bit archs
+2182 751548451d969148529b642c05e7544726ec3b64 [PATCH] Introduce an extra runstate for monitoring thread startup
+2183 d07f439ead57caecbcf4e049d322c17be92bc99b [PATCH] Fixup stat queue file read
+2184 1ac267bb7dd678fa12bb3573c29cff5238ef9ccf [PATCH] Use /dev/urandom instead of /dev/random
+2185 fcb6ade236bd9b1d99cfc3deba24a1ca9f5fb0a6 [PATCH] Don't allow mlock of more than real_mem-128MiB
+2186 4efa970e05d33a280976402da55a93fca0cc8a19 [PATCH] Use mmap for mlocked memory
+2187 a4e167ee3ba40cb0587cf27dca2a9f8b947e568a Merge branch 'master' of ssh://router/data/git/fio
+2188 c04f7ec3ecb8ce780bde6ad3515f003e6015c62a [PATCH] Add lockmem=x option to pin memory
+2189 1bb6b2a5c9b79af8ca03e8e29ad2a2eb3e6d83e7 Merge branch 'master' of router:/data/git/fio
+2190 b6754f9d3f719627d8aae4c3e8f39212d9405f99 [PATCH] More string fixups
+2191 9d0d424761eeff6e8a88103c23d9bdf481a97d8e [PATCH] End stripping exposed suffix bug
+2192 4ae3f76333bf2382e516db0b5c202b8982b1170f [PATCH] String and thread inherit fixes
+2193 fc1a471326fb5248a74ed3a206d37884b812c853 [PATCH] Add end_fsync option
+2194 3feedc608f168479bde2f2e079cedd6852cb3b3b [PATCH] splice fixes
+2195 51852280c02ed3a3dbac4346b9dd1ec7cc7ca8ca [PATCH] fio_spliceio_event() used wrong private type
+2196 8756e4d421722eaeb089067aeaaf317d05d53a57 [PATCH] Support for splice IO engine
+2197 c9fad893e8333682d6ab67a269b0dd74f303c5bc [PATCH] Allow job file to be last argument
+2198 aea47d444b02bd7c622f82bb73151fd7136a499f [PATCH] Support for specifying exact io pattern
+2199 4785f99523f5c69635eb4bd826f25cd2e264cda7 [PATCH] Add -h help option
+2200 2f844d305f4b3cda8af0e53dc8873cfd899c5855 [PATCH] Only fsync on close if fsync= given
+2201 3d60d1ed78b663659967e04cc92e1359bd50fb3a [PATCH] Add support for read/write mixed io
+2202 8b611c349e3d6f17b4f1aa61cdb0f1ad5a4e1eb9 [PATCH] ETA fixes
+2203 f3a4ef5e991972a0e372adba766ec0ef568019ab [PATCH] cleanup sg ioctl vs read approach
+2204 eba09dd3809a1af93de79996cf9945f7b895f35f [PATCH] Allow proper sharing of files
+2205 e8e387c14948e0a038660e69ace4efa13cdfd3af [PATCH] Update version string, fix offset bug
+2206 6a0106a0ffb486d19ba8c1796b436c8ecdf64ed6 [PATCH] Fix ETA display
+2207 5f2b7b5e41487109a6aebd80cb8c2c7ce900d47e [PATCH] Silence bogus gcc 4.x warnings
+2208 b1ff34038687057f1365d31e3eb3dc2e31ecac28 [PATCH] Support for multiple queued commands with read/write SG v3 io
+2209 0af7b542b69af5ab2400a9960a5bcde82c05723f [PATCH] Add support for the read/write interface of SG v3
+2210 ba4f8923a7d7b02e69f6daee8dee5ed6e44722ce [PATCH] Woops, forgot to define FIO_HAVE_IOPRIO for Linux
+2211 64cb3e1035e2d6b32ed1390369501e4a7aec52a8 [PATCH] sysfs layout fix for md
+2212 838a3cd3b7587d3188dc0c75ec73ca068430f01b [PATCH] Fix offset/size setting problem
+2213 9104f874d726e84739d3b4008eee0f6ddfe96714 [PATCH] 32-bit fixes
+2214 9e4feae28a881e5235130f001b956a709996d7ad [PATCH] examples/disk-zone-profile added
+2215 0d98aadc08078b16506ea5b3ceb9a93d36bbe038 [PATCH] Misc minor fixes
+2216 20dc95c47087d486b5d4608fc15b1c2021761923 [PATCH] Add support for zoned io sections
+2217 5289b84775b17eaf2a05481033761f100d5a01e2 [PATCH] Include ETA for job(s) to finish
+2218 77cf8455a12a36b060b1a7085ba2de7e42b3966f [PATCH] Kill ->cur_off, always just lseek() in sync ->io_prep
+2219 f5d3e5ec43653859e744225cc585757e77e4dbdc [PATCH] Further job parsing fixes
+2220 01617be6d951cf10dd92783e61b4393404544e47 [PATCH] Fixup check_range() so it accepts any combination of suffixes
+2221 3e7ba7c56d4bea0f4df1ffd0137a352dbbe33d43 [PATCH] Bump version to 1.1 for release
+2222 2b02b546490c4f026e60fe0512f418613da535f5 [PATCH] Add reference to git/http resources
+2223 ebac4655dd3624f3296ff83be48e0cdc02852f18 Move fio to seperate repo

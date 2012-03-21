@@ -1,0 +1,631 @@
+         description: Text job description
+                type: string (opt=bla)
+             default: no default
+
+                name: Name of this job
+                type: string (opt=bla)
+             default: no default
+
+           directory: Directory to store files in
+                type: string (opt=bla)
+             default: no default
+
+            filename: File(s) to use for the workload
+                type: string (opt=bla)
+             default: no default
+
+            lockfile: Lock file when doing IO to it
+                type: string (opt=bla)
+             default: none
+        valid values: none       No file locking
+                    : exclusive  Exclusive file lock
+                    : readwrite  Read vs write lock
+
+             kb_base: How many bytes per KB for reporting (1000 or 1024)
+                type: integer value (opt=100)
+             default: 1024
+
+             opendir: Recursively add files from this directory and down
+                type: string (opt=bla)
+             default: no default
+
+                  rw: IO direction
+               alias: readwrite
+                type: string (opt=bla)
+             default: read
+        valid values: read       Sequential read
+                    : write      Sequential write
+                    : randread   Random read
+                    : randwrite  Random write
+                    : rw         Sequential read and write mix
+                    : randrw     Random read and write mix
+
+                  bs: Block size unit
+               alias: blocksize
+                type: integer value (opt=100)
+             default: 4k
+               range: min=1
+
+                  ba: IO block offset alignment
+               alias: blockalign
+                type: integer value (opt=100)
+             default: no default
+               range: min=1
+
+             bsrange: Set block size range (in more detail than bs)
+               alias: blocksize_range
+                type: string with dual range (opt=1k-4k,4k-8k)
+             default: no default
+               range: min=1
+
+             bssplit: Set a specific mix of block sizes
+                type: string (opt=bla)
+             default: no default
+
+        bs_unaligned: Don't sector align IO buffer sizes
+               alias: blocksize_unaligned
+                type: no argument (opt)
+             default: no default
+
+          randrepeat: Use repeatable random IO pattern
+                type: boolean value (opt=1)
+             default: 1
+               range: min=0, max=1
+
+         use_os_rand: Set to use OS random generator
+                type: boolean value (opt=1)
+             default: 0
+               range: min=0, max=1
+
+         norandommap: Accept potential duplicate random blocks
+                type: no argument (opt)
+             default: no default
+
+       softrandommap: Set norandommap if randommap allocation fails
+                type: boolean value (opt=1)
+             default: 0
+               range: min=0, max=1
+
+        rw_sequencer: IO offset generator modifier
+                type: string (opt=bla)
+             default: sequential
+        valid values: sequential Generate sequential offsets
+                    : identical  Generate identical offsets
+
+            ioengine: IO engine to use
+                type: string (opt=bla)
+             default: sync
+        valid values: sync       Use read/write
+                    : psync      Use pread/pwrite
+                    : vsync      Use readv/writev
+                    : libaio     Linux native asynchronous IO
+                    : posixaio   POSIX asynchronous IO
+                    : mmap       Memory mapped IO
+                    : splice     splice/vmsplice based IO
+                    : netsplice  splice/vmsplice to/from the network
+                    : sg         SCSI generic v3 IO
+                    : null       Testing engine (no data transfer)
+                    : net        Network IO
+                    : syslet-rw  syslet enabled async pread/pwrite IO
+                    : cpuio      CPU cycle burner engine
+                    : binject    binject direct inject block engine
+                    : external   Load external engine (append name)
+
+             iodepth: Number of IO buffers to keep in flight
+                type: integer value (opt=100)
+             default: 1
+               range: min=1
+
+       iodepth_batch: Number of IO buffers to submit in one go
+               alias: iodepth_batch_submit
+                type: integer value (opt=100)
+             default: 1
+               range: min=1
+
+iodepth_batch_complete: Number of IO buffers to retrieve in one go
+                type: integer value (opt=100)
+             default: 1
+
+         iodepth_low: Low water mark for queuing depth
+                type: integer value (opt=100)
+             default: no default
+
+                size: Total size of device or files
+                type: string with possible k/m/g postfix (opt=4k)
+             default: no default
+
+         fill_device: Write until an ENOSPC error occurs
+               alias: fill_fs
+                type: boolean value (opt=1)
+             default: 0
+               range: min=0, max=1
+
+            filesize: Size of individual files
+                type: string with possible k/m/g postfix (opt=4k)
+             default: no default
+               range: min=1
+
+              offset: Start IO from this offset
+               alias: fileoffset
+                type: string with possible k/m/g postfix (opt=4k)
+             default: 0
+
+             nrfiles: Split job workload between this number of files
+               alias: nr_files
+                type: integer value (opt=100)
+             default: 1
+
+   file_service_type: How to select which file to service next
+                type: string (opt=bla)
+             default: roundrobin
+        valid values: random     Choose a file at random
+                    : roundrobin Round robin select files
+                    : sequential Finish one file before moving to the next
+
+           openfiles: Number of files to keep open at the same time
+                type: integer value (opt=100)
+             default: no default
+
+           fallocate: Whether pre-allocation is performed when laying out files
+                type: string (opt=bla)
+             default: posix
+        valid values: none       Do not pre-allocate space
+                    : posix      Use posix_fallocate()
+                    : keep       Use fallocate(..., FALLOC_FL_KEEP_SIZE, ...)
+                    : 0          Alias for 'none'
+                    : 1          Alias for 'posix'
+
+        fadvise_hint: Use fadvise() to advise the kernel on IO pattern
+                type: boolean value (opt=1)
+             default: 1
+               range: min=0, max=1
+
+               fsync: Issue fsync for writes every given number of blocks
+                type: integer value (opt=100)
+             default: 0
+
+           fdatasync: Issue fdatasync for writes every given number of blocks
+                type: integer value (opt=100)
+             default: 0
+
+       write_barrier: Make every Nth write a barrier write
+                type: integer value (opt=100)
+             default: 0
+
+     sync_file_range: Use sync_file_range()
+                type: string (opt=bla)
+             default: no default
+        valid values: wait_before SYNC_FILE_RANGE_WAIT_BEFORE
+                    : write      SYNC_FILE_RANGE_WRITE
+                    : wait_after SYNC_FILE_RANGE_WAIT_AFTER
+
+              direct: Use O_DIRECT IO (negates buffered)
+                type: boolean value (opt=1)
+             default: 0
+               range: min=0, max=1
+
+            buffered: Use buffered IO (negates direct)
+                type: boolean value (opt=1)
+             default: 1
+               range: min=0, max=1
+
+                sync: Use O_SYNC for buffered writes
+                type: boolean value (opt=1)
+             default: 0
+               range: min=0, max=1
+
+           overwrite: When writing, set whether to overwrite current data
+                type: boolean value (opt=1)
+             default: 0
+               range: min=0, max=1
+
+               loops: Number of times to run the job
+                type: integer value (opt=100)
+             default: 1
+
+             numjobs: Duplicate this job this many times
+                type: integer value (opt=100)
+             default: 1
+
+          startdelay: Only start job when this period has passed
+                type: string with time postfix (opt=10s)
+             default: 0
+
+             runtime: Stop workload when this amount of time has passed
+               alias: timeout
+                type: string with time postfix (opt=10s)
+             default: 0
+
+          time_based: Keep running until runtime/timeout is met
+                type: no argument (opt)
+             default: no default
+
+           ramp_time: Ramp up time before measuring performance
+                type: string with time postfix (opt=10s)
+             default: no default
+
+         clocksource: What type of timing source to use
+                type: string (opt=bla)
+             default: no default
+        valid values: gettimeofday Use gettimeofday(2) for timing
+                    : clock_gettime Use clock_gettime(2) for timing
+                    : cpu        Use CPU private clock
+
+                 mem: Backing type for IO buffers
+               alias: iomem
+                type: string (opt=bla)
+             default: malloc
+        valid values: malloc     Use malloc(3) for IO buffers
+                    : shm        Use shared memory segments for IO buffers
+                    : shmhuge    Like shm, but use huge pages
+                    : mmap       Use mmap(2) (file or anon) for IO buffers
+                    : mmaphuge   Like mmap, but use huge pages
+
+              verify: Verify data written
+                type: string (opt=bla)
+             default: 0
+        valid values: 0          Don't do IO verification
+                    : md5        Use md5 checksums for verification
+                    : crc64      Use crc64 checksums for verification
+                    : crc32      Use crc32 checksums for verification
+                    : crc32c-intel Use hw crc32c checksums for verification
+                    : crc32c     Use crc32c checksums for verification
+                    : crc16      Use crc16 checksums for verification
+                    : crc7       Use crc7 checksums for verification
+                    : sha1       Use sha1 checksums for verification
+                    : sha256     Use sha256 checksums for verification
+                    : sha512     Use sha512 checksums for verification
+                    : meta       Use io information
+                    : null       Pretend to verify
+
+           do_verify: Run verification stage after write
+                type: boolean value (opt=1)
+             default: 1
+               range: min=0, max=1
+
+          verifysort: Sort written verify blocks for read back
+                type: boolean value (opt=1)
+             default: 1
+               range: min=0, max=1
+
+     verify_interval: Store verify buffer header every N bytes
+                type: integer value (opt=100)
+             default: no default
+               range: min=32
+
+       verify_offset: Offset verify header location by N bytes
+                type: integer value (opt=100)
+             default: 0
+
+      verify_pattern: Fill pattern for IO buffers
+                type: string (opt=bla)
+             default: no default
+
+        verify_fatal: Exit on a single verify failure, don't continue
+                type: boolean value (opt=1)
+             default: 0
+               range: min=0, max=1
+
+         verify_dump: Dump contents of good and bad blocks on failure
+                type: boolean value (opt=1)
+             default: 0
+               range: min=0, max=1
+
+        verify_async: Number of async verifier threads to use
+                type: integer value (opt=100)
+             default: 0
+
+      verify_backlog: Verify after this number of blocks are written
+                type: string with possible k/m/g postfix (opt=4k)
+             default: no default
+
+verify_backlog_batch: Verify this number of IO blocks
+                type: integer value (opt=100)
+             default: no default
+
+     trim_percentage: Number of verify blocks to discard/trim
+                type: integer value (opt=100)
+             default: 0
+               range: min=0, max=100
+
+    trim_verify_zero: Verify that trim/discarded blocks are returned as zeroes
+                type: integer value (opt=100)
+             default: 1
+
+        trim_backlog: Trim after this number of blocks are written
+                type: string with possible k/m/g postfix (opt=4k)
+             default: no default
+
+  trim_backlog_batch: Trim this number of IO blocks
+                type: integer value (opt=100)
+             default: no default
+
+         write_iolog: Store IO pattern to file
+                type: string (opt=bla)
+             default: no default
+
+          read_iolog: Playback IO pattern from file
+                type: string (opt=bla)
+             default: no default
+
+     replay_no_stall: Playback IO pattern file as fast as possible without stalls
+                type: integer value (opt=100)
+             default: 0
+
+     replay_redirect: Replay all I/O onto this device, regardless of trace device
+                type: string (opt=bla)
+             default: no default
+
+         exec_prerun: Execute this file prior to running job
+                type: string (opt=bla)
+             default: no default
+
+        exec_postrun: Execute this file after running job
+                type: string (opt=bla)
+             default: no default
+
+         ioscheduler: Use this IO scheduler on the backing device
+                type: string (opt=bla)
+             default: no default
+
+            zonesize: Give size of an IO zone
+                type: string with possible k/m/g postfix (opt=4k)
+             default: 0
+
+            zoneskip: Space between IO zones
+                type: string with possible k/m/g postfix (opt=4k)
+             default: 0
+
+             lockmem: Lock down this amount of memory
+                type: string with possible k/m/g postfix (opt=4k)
+             default: 0
+
+           rwmixread: Percentage of mixed workload that is reads
+                type: integer value (opt=100)
+             default: 50
+               range: min=0, max=100
+
+          rwmixwrite: Percentage of mixed workload that is writes
+                type: integer value (opt=100)
+             default: 50
+               range: min=0, max=100
+
+                nice: Set job CPU nice value
+                type: integer value (opt=100)
+             default: 0
+               range: min=-19, max=20
+
+                prio: Set job IO priority value
+                type: integer value (opt=100)
+             default: no default
+               range: min=0, max=7
+
+           prioclass: Set job IO priority class
+                type: integer value (opt=100)
+             default: no default
+               range: min=0, max=3
+
+           thinktime: Idle time between IO buffers (usec)
+                type: integer value (opt=100)
+             default: 0
+
+      thinktime_spin: Start think time by spinning this amount (usec)
+                type: integer value (opt=100)
+             default: 0
+
+    thinktime_blocks: IO buffer period between 'thinktime'
+                type: integer value (opt=100)
+             default: 1
+
+                rate: Set bandwidth rate
+                type: integer value (opt=100)
+             default: no default
+
+             ratemin: Job must meet this rate or it will be shutdown
+                type: integer value (opt=100)
+             default: no default
+
+           ratecycle: Window average for rate limits (msec)
+                type: integer value (opt=100)
+             default: 1000
+
+           rate_iops: Limit IO used to this number of IO operations/sec
+                type: integer value (opt=100)
+             default: no default
+
+       rate_iops_min: Job must meet this rate or it will be shut down
+                type: integer value (opt=100)
+             default: no default
+
+          invalidate: Invalidate buffer/page cache prior to running job
+                type: boolean value (opt=1)
+             default: 1
+               range: min=0, max=1
+
+    create_serialize: Serialize creating of job files
+                type: boolean value (opt=1)
+             default: 1
+               range: min=0, max=1
+
+        create_fsync: fsync file after creation
+                type: boolean value (opt=1)
+             default: 1
+               range: min=0, max=1
+
+      create_on_open: Create files when they are opened for IO
+                type: boolean value (opt=1)
+             default: 0
+               range: min=0, max=1
+
+            pre_read: Pre-read files before starting official testing
+                type: boolean value (opt=1)
+             default: 0
+               range: min=0, max=1
+
+             cpuload: Use this percentage of CPU
+                type: integer value (opt=100)
+             default: no default
+
+           cpuchunks: Length of the CPU burn cycles (usecs)
+                type: integer value (opt=100)
+             default: 50000
+
+             cpumask: CPU affinity mask
+                type: integer value (opt=100)
+             default: no default
+
+        cpus_allowed: Set CPUs allowed
+                type: string (opt=bla)
+             default: no default
+
+           end_fsync: Include fsync at the end of job
+                type: boolean value (opt=1)
+             default: 0
+               range: min=0, max=1
+
+      fsync_on_close: fsync files on close
+                type: boolean value (opt=1)
+             default: 0
+               range: min=0, max=1
+
+              unlink: Unlink created files after job has completed
+                type: boolean value (opt=1)
+             default: 0
+               range: min=0, max=1
+
+             exitall: Terminate all jobs when one exits
+                type: no argument (opt)
+             default: no default
+
+           stonewall: Insert a hard barrier between this job and previous
+               alias: wait_for_previous
+                type: no argument (opt)
+             default: no default
+
+           new_group: Mark the start of a new group (for reporting)
+                type: no argument (opt)
+             default: no default
+
+              thread: Use threads instead of forks
+                type: no argument (opt)
+             default: no default
+
+        write_bw_log: Write log of bandwidth during run
+                type: string (opt=bla)
+             default: no default
+
+       write_lat_log: Write log of latency during run
+                type: string (opt=bla)
+             default: no default
+
+      write_iops_log: Write log of IOPS during run
+                type: string (opt=bla)
+             default: no default
+
+        log_avg_msec: Average bw/iops/lat logs over this period of time
+                type: integer value (opt=100)
+             default: 0
+
+       hugepage-size: When using hugepages, specify size of each page
+                type: integer value (opt=100)
+             default: 4194304
+
+     group_reporting: Do reporting on a per-group basis
+                type: no argument (opt)
+             default: no default
+
+        zero_buffers: Init IO buffers to all zeroes
+                type: no argument (opt)
+             default: no default
+
+      refill_buffers: Refill IO buffers on every IO submit
+                type: no argument (opt)
+             default: no default
+
+    scramble_buffers: Slightly scramble buffers on every IO submit
+                type: boolean value (opt=1)
+             default: 1
+               range: min=0, max=1
+
+    clat_percentiles: Enable the reporting of completion latency percentiles
+                type: boolean value (opt=1)
+             default: 1
+               range: min=0, max=1
+
+     percentile_list: Specify a custom list of percentiles to report
+                type: list of floating point values separated by ':' (opt=5.9:7.8)
+             default: no default
+
+           disk_util: Log disk utilization statistics
+                type: boolean value (opt=1)
+             default: 1
+               range: min=0, max=1
+
+         gtod_reduce: Greatly reduce number of gettimeofday() calls
+                type: boolean value (opt=1)
+             default: 0
+               range: min=0, max=1
+
+         disable_lat: Disable latency numbers
+                type: boolean value (opt=1)
+             default: 0
+               range: min=0, max=1
+
+        disable_clat: Disable completion latency numbers
+                type: boolean value (opt=1)
+             default: 0
+               range: min=0, max=1
+
+        disable_slat: Disable submission latency numbers
+                type: boolean value (opt=1)
+             default: 0
+               range: min=0, max=1
+
+disable_bw_measurement: Disable bandwidth logging
+                type: boolean value (opt=1)
+             default: 0
+               range: min=0, max=1
+
+            gtod_cpu: Set up dedicated gettimeofday() thread on this CPU
+                type: integer value (opt=100)
+             default: no default
+
+   continue_on_error: Continue on non-fatal errors during IO
+                type: string (opt=bla)
+             default: none
+        valid values: none       Exit when an error is encountered
+                    : read       Continue on read errors only
+                    : write      Continue on write errors only
+                    : io         Continue on any IO errors
+                    : verify     Continue on verify errors only
+                    : all        Continue on all io and verify errors
+                    : 0          Alias for 'none'
+                    : 1          Alias for 'all'
+
+             profile: Select a specific builtin performance test
+                type: string (opt=bla)
+             default: no default
+        valid values: tiobench   tiotest/tiobench benchmark
+
+              cgroup: Add job to cgroup of this name
+                type: string (opt=bla)
+             default: no default
+
+       cgroup_weight: Use given weight for cgroup
+                type: integer value (opt=100)
+             default: no default
+               range: min=100, max=1000
+
+     cgroup_nodelete: Do not delete cgroups after job completion
+                type: boolean value (opt=1)
+             default: 0
+               range: min=0, max=1
+
+                 uid: Run job with this user ID
+                type: integer value (opt=100)
+             default: no default
+
+                 gid: Run job with this group ID
+                type: integer value (opt=100)
+             default: no default
+

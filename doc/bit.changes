@@ -1,0 +1,1420 @@
+diff --git a/diskutil.c b/diskutil.c
+index 3168b59..d2d3362 100644
+--- a/diskutil.c
++++ b/diskutil.c
+@@ -565,19 +565,20 @@ void print_disk_util(struct disk_util_stat *dus, struct disk_util_agg *agg,
+ 		show_agg_stats(agg, terse);
+ 
+ 	if (!terse)
+-		log_info("\n");
++		log_rept(0, "\n");
+ }
+ 
+ void show_disk_util(int terse)
+ {
+ 	struct flist_head *entry;
+ 	struct disk_util *du;
++return;
+ 
+ 	if (flist_empty(&disk_list))
+ 		return;
+ 
+ 	if (!terse)
+-		log_info("\nDisk stats (read/write):\n");
++		log_rept(0, "\nDisk stats (read/write):\n");
+ 
+ 	flist_for_each(entry, &disk_list) {
+ 		du = flist_entry(entry, struct disk_util, list);
+@@ -585,4 +586,5 @@ void show_disk_util(int terse)
+ 		aggregate_slaves_stats(du);
+ 		print_disk_util(&du->dus, &du->agg, terse);
+ 	}
++	log_rept(1, "");
+ }
+diff --git a/diskutil.h b/diskutil.h
+index 5a9b079..b8536d9 100644
+--- a/diskutil.h
++++ b/diskutil.h
+@@ -90,7 +90,8 @@ static inline void disk_util_dec(struct disk_util *du)
+ 	disk_util_mod(du, -1);
+ }
+ 
+-#define DISK_UTIL_MSEC	(250)
++//#define DISK_UTIL_MSEC	(250)
++#define DISK_UTIL_MSEC	(1600)
+ 
+ extern struct flist_head disk_list;
+diff --git a/eta.c b/eta.c
+index 6118d1a..c721df7 100644
+--- a/eta.c
++++ b/eta.c
+@@ -83,11 +83,52 @@ static void check_str_update(struct thread_data *td)
+ /*
+  * Convert seconds to a printable string.
+  */
+-static void eta_to_str(char *str, unsigned long eta_sec)
++static void sec_to_str(char *str, unsigned long sec)
+ {
+ 	unsigned int d, h, m, s;
+ 	int disp_hour = 0;
+ 
++	s = sec % 60;
++	sec /= 60;
++	m = sec % 60;
++	sec /= 60;
++	h = sec % 24;
++	sec /= 24;
++	d = sec;
++
++	if (d) {
++		disp_hour = 1;
++		str += sprintf(str, "%02ud:", d);
++	}
++
++	if (h || disp_hour)
++		str += sprintf(str, "%02uh:", h);
++
++	str += sprintf(str, "%02um:", m);
++	str += sprintf(str, "%02us", s);
++}
++static void eta_to_str(char *str, unsigned long elapsed_sec, unsigned long eta_sec)
++{
++	unsigned int d, h, m, s;
++	int disp_hour = 0;
++
++/*
++	unsigned long one_sec;
++	struct thread_data *td;
++	int i, loops = 1;
++	for_each_td(td, i) {
++		if (td->runstate == TD_RUNNING)
++		{
++			loops = td->o.loops;
++			break;
++		}
++	}
++	one_sec = (elapsed_sec + eta_sec) / loops;
++	eta_sec = eta_sec % one_sec;
++
++	str += sprintf(str, "%02u:%02u - ", td->thread_number, td->o.loops);
++*/
++
+ 	s = eta_sec % 60;
+ 	eta_sec /= 60;
+ 	m = eta_sec % 60;
+@@ -105,6 +146,25 @@ static void eta_to_str(char *str, unsigned long eta_sec)
+ 		str += sprintf(str, "%02uh:", h);
+ 
+ 	str += sprintf(str, "%02um:", m);
++	str += sprintf(str, "%02us / ", s);
++
++	s = elapsed_sec % 60;
++	elapsed_sec /= 60;
++	m = elapsed_sec % 60;
++	elapsed_sec /= 60;
++	h = elapsed_sec % 24;
++	elapsed_sec /= 24;
++	d = elapsed_sec;
++
++	if (d) {
++		disp_hour = 1;
++		str += sprintf(str, "%02ud:", d);
++	}
++
++	if (h || disp_hour)
++		str += sprintf(str, "%02uh:", h);
++
++	str += sprintf(str, "%02um:", m);
+ 	str += sprintf(str, "%02us", s);
+ }
+ 
+@@ -243,6 +303,7 @@ int calc_thread_status(struct jobs_eta *je, int force)
+ 	static unsigned long long disp_io_bytes[2];
+ 	static unsigned long long disp_io_iops[2];
+ 	static struct timeval rate_prev_time, disp_prev_time;
++	static unsigned int first_min = 1;
+ 	int i2p = 0;
+ 
+ 	if (!force) {
+@@ -263,6 +324,10 @@ int calc_thread_status(struct jobs_eta *je, int force)
+ 
+ 	je->elapsed_sec = (mtime_since_genesis() + 999) / 1000;
+ 
++	fio_gettime(&now, NULL);
++	rate_time = mtime_since(&rate_prev_time, &now);
++	disp_time = mtime_since(&disp_prev_time, &now);
++
+ 	io_bytes[0] = io_bytes[1] = 0;
+ 	io_iops[0] = io_iops[1] = 0;
+ 	bw_avg_time = ULONG_MAX;
+@@ -298,6 +363,49 @@ int calc_thread_status(struct jobs_eta *je, int force)
+ 			io_iops[0] += td->io_blocks[0];
+ 			io_iops[1] += td->io_blocks[1];
+ 		}
++
++		calc_iops(disp_time, td->io_blocks, td->prev_io_blocks, je->iops);
++		td->total_iops[0] += je->iops[0];
++		td->total_iops[1] += je->iops[1];
++
++		calc_rate(disp_time, td->io_bytes, td->prev_io_bytes, je->rate);
++		td->total_bdws[0] += je->rate[0];
++		td->total_bdws[1] += je->rate[1];
++
++		if(je->iops[0] > td->max_iops[0])
++			td->max_iops[0] = je->iops[0];
++		if(je->iops[1] > td->max_iops[1])
++			td->max_iops[1] = je->iops[1];
++		if(je->rate[0] > td->max_bdws[0])
++			td->max_bdws[0] = je->rate[0];
++		if(je->rate[1] > td->max_bdws[1])
++			td->max_bdws[1] = je->rate[1];
++		if(first_min)
++		{
++			first_min = 0;
++			td->min_iops[0] = je->iops[0];
++			td->min_iops[1] = je->iops[1];
++			td->min_bdws[0] = je->rate[0];
++			td->min_bdws[1] = je->rate[1];
++		}
++		else
++		{
++			if(je->iops[0] && (je->iops[0] < td->min_iops[0]))
++				td->min_iops[0] = je->iops[0];
++			if(je->iops[1] && (je->iops[1] < td->min_iops[1]))
++				td->min_iops[1] = je->iops[1];
++			if(je->rate[0] && (je->rate[0] < td->min_bdws[0]))
++				td->min_bdws[0] = je->rate[0];
++			if(je->rate[1] && (je->rate[1] < td->min_bdws[1]))
++				td->min_bdws[1] = je->rate[1];
++		}
++
++		if((je->iops[0] && td->runstate == TD_VERIFYING ) || td_read(td))
++			td->samplecnt[0]++;
++		if(je->iops[1] && td_write(td) && td->runstate != TD_VERIFYING)
++			td->samplecnt[1]++;
++
++		je->total_error_count += td->total_err_count;
+ 	}
+ 
+ 	if (exitall_on_terminate)
+@@ -319,9 +427,6 @@ int calc_thread_status(struct jobs_eta *je, int force)
+ 
+ 	free(eta_secs);
+ 
+-	fio_gettime(&now, NULL);
+-	rate_time = mtime_since(&rate_prev_time, &now);
+-
+ 	if (write_bw_log && rate_time > bw_avg_time && !in_ramp_time(td)) {
+ 		calc_rate(rate_time, io_bytes, rate_io_bytes, je->rate);
+ 		memcpy(&rate_prev_time, &now, sizeof(now));
+@@ -329,7 +434,6 @@ int calc_thread_status(struct jobs_eta *je, int force)
+ 		add_agg_sample(je->rate[DDIR_WRITE], DDIR_WRITE, 0);
+ 	}
+ 
+-	disp_time = mtime_since(&disp_prev_time, &now);
+ 
+ 	/*
+ 	 * Allow a little slack, the target is to print it every 1000 msecs
+@@ -353,6 +457,63 @@ int calc_thread_status(struct jobs_eta *je, int force)
+ 
+ void display_thread_status(struct jobs_eta *je)
+ {
++	static int eta_good;
++	char output[512], *p = output;
++	char eta_str[128];
++	double perc = 0.0;
++	int i2p = 0;
++
++	if (je->eta_sec != INT_MAX && je->elapsed_sec) {
++		perc = (double) je->elapsed_sec / (double) (je->elapsed_sec + je->eta_sec);
++		eta_to_str(eta_str, je->elapsed_sec, je->eta_sec);
++	}
++
++	p += sprintf(p, "section=bit\r\n");	//total information
++
++	if (je->eta_sec != INT_MAX && je->nr_running) {
++		char perc_str[32];
++		char *iops_str[2];
++		char *rate_str[2];
++
++		if ((!je->eta_sec && !eta_good) || je->nr_ramp == je->nr_running)
++			strcpy(perc_str, "-.-%");
++		else {
++			eta_good = 1;
++			perc *= 100.0;
++			sprintf(perc_str, "%3.1f%%", perc);
++		}
++		p += sprintf(p, "progress=%s\r\n", perc_str);
++		sec_to_str(eta_str, je->elapsed_sec);
++		p += sprintf(p, "runtime=%s\r\n", eta_str);
++		sec_to_str(eta_str, je->eta_sec);
++		p += sprintf(p, "eta=%s\r\n", eta_str);
++
++		rate_str[0] = num2str(je->rate[0], 5, 10, i2p);
++		rate_str[1] = num2str(je->rate[1], 5, 10, i2p);
++		p += sprintf(p, "readspeed=%s\r\n", rate_str[0]);
++		p += sprintf(p, "writespeed=%s\r\n", rate_str[1]);
++
++		iops_str[0] = num2str(je->iops[0], 4, 1, 0);
++		iops_str[1] = num2str(je->iops[1], 4, 1, 0);
++		p += sprintf(p, "readiops=%s\r\n", iops_str[0]);
++		p += sprintf(p, "writeiops=%s\r\n", iops_str[1]);
++		p += sprintf(p, "errorcnt=%d\r\n", je->total_error_count);
++
++		free(rate_str[0]);
++		free(rate_str[1]);
++		free(iops_str[0]);
++		free(iops_str[1]);
++	}
++//	p += sprintf(p, "\n");
++	int len = (p - output);
++	reportmsg(output, len);
++
++	printf("%s", output);
++	fflush(stdout);
++}
++/*
++void display_thread_status(struct jobs_eta *je)
++{
+ 	static int linelen_last;
+ 	static int eta_good;
+ 	char output[512], *p = output;
+@@ -362,7 +523,7 @@ void display_thread_status(struct jobs_eta *je)
+ 
+ 	if (je->eta_sec != INT_MAX && je->elapsed_sec) {
+ 		perc = (double) je->elapsed_sec / (double) (je->elapsed_sec + je->eta_sec);
+-		eta_to_str(eta_str, je->eta_sec);
++		eta_to_str(eta_str, je->elapsed_sec, je->eta_sec);
+ 	}
+ 
+ 	p += sprintf(p, "Jobs: %d (f=%d)", je->nr_running, je->files_open);
+@@ -409,11 +570,15 @@ void display_thread_status(struct jobs_eta *je)
+ 		free(iops_str[0]);
+ 		free(iops_str[1]);
+ 	}
+-	p += sprintf(p, "\r");
++	p += sprintf(p, "\n");
++//	p += sprintf(p, "\n");
++	int len = (p - output);
++	reportmsg(output, len);
+ 
+ 	printf("%s", output);
+ 	fflush(stdout);
+ }
++*/
+ 
+ void print_thread_status(void)
+ {
+diff --git a/filesetup.c b/filesetup.c
+index 8f51592..cbe3be2 100644
+--- a/filesetup.c
++++ b/filesetup.c
+@@ -570,8 +571,8 @@ static int get_file_sizes(struct thread_data *td)
+ 			clear_error(td);
+ 		}
+ 
+-		if (f->real_file_size == -1ULL && td->o.size)
+-			f->real_file_size = td->o.size / td->o.nr_files;
++		if (f->real_file_size == -1ULL && td->o.verify_size)
++			f->real_file_size = td->o.verify_size / td->o.nr_files;
+ 	}
+ 
+ 	return err;
+@@ -667,6 +668,15 @@ int setup_files(struct thread_data *td)
+ 	if (td->o.read_iolog_file)
+ 		return 0;
+ 
++	if (!td->o.do_verify ||
++	    td->o.verify == VERIFY_NONE)
++		td->o.verify_size = td->o.size;
++
++/*	if(!td->o.size)
++		td->o.size = td->o.verify_size;
++	else */if(!td->o.verify_size)
++		td->o.verify_size = td->o.size;
++
+ 	/*
+ 	 * if ioengine defines a setup() method, it's responsible for
+ 	 * opening the files and setting f->real_file_size to indicate
+@@ -698,7 +708,7 @@ int setup_files(struct thread_data *td)
+ 	/*
+ 	 * device/file sizes are zero and no size given, punt
+ 	 */
+-	if ((!total_size || total_size == -1ULL) && !td->o.size &&
++	if ((!total_size || total_size == -1ULL) && !td->o.verify_size &&
+ 	    !(td->io_ops->flags & FIO_NOIO) && !td->o.fill_device) {
+ 		log_err("%s: you need to specify size=\n", td->o.name);
+ 		td_verror(td, EINVAL, "total_file_size");
+@@ -721,7 +731,7 @@ int setup_files(struct thread_data *td)
+ 			 * total size divided by number of files. if that is
+ 			 * zero, set it to the real file size.
+ 			 */
+-			f->io_size = td->o.size / td->o.nr_files;
++			f->io_size = td->o.verify_size / td->o.nr_files;
+ 			if (!f->io_size)
+ 				f->io_size = f->real_file_size - f->file_offset;
+ 		} else if (f->real_file_size < td->o.file_size_low ||
+@@ -762,9 +772,17 @@ int setup_files(struct thread_data *td)
+ 	if (td->o.size_percent)
+ 		total_size = (total_size * td->o.size_percent) / 100;
+ 
++	if (!td->o.verify_size || td->o.verify_size > total_size)
++		td->o.verify_size = total_size;
++
++	//if ((td->o.size < td->o.verify_size) || (!td->o.size))
+ 	if (!td->o.size || td->o.size > total_size)
+ 		td->o.size = total_size;
++	else if (td->o.size < td->o.verify_size)
++		td->o.size = td->o.verify_size;
+ 
++	td->verify_count = td->o.size / td->o.verify_size;
++	td->verify_first = 1;
+ 	/*
+ 	 * See if we need to extend some files
+ 	 */
+@@ -813,8 +831,10 @@ int setup_files(struct thread_data *td)
+ 	 * iolog already set the total io size, if we read back
+ 	 * stored entries.
+ 	 */
++
+ 	if (!td->o.read_iolog_file)
+ 		td->total_io_size = td->o.size * td->o.loops;
++
+ 	return 0;
+ err_offset:
+ 	log_err("%s: you need to specify valid offset=\n", td->o.name);
+diff --git a/fio.c b/fio.c
+index c18df12..e5a02cf 100644
+--- a/fio.c
++++ b/fio.c
+@@ -79,6 +79,7 @@ static struct flist_head *cgroup_list;
+ static char *cgroup_mnt;
+ 
+ unsigned long arch_flags = 0;
++unsigned int real_terminate = 0;
+ 
+ struct io_log *agg_io_log[2];
+ 
+@@ -177,11 +178,12 @@ static void sig_int(int sig)
+ 		else {
+ 			log_info("\nfio: terminating on signal %d\n", sig);
+ 			fflush(stdout);
+-			exit_value = 128;
++			exit_value = 137;
+ 		}
+ 
+ 		fio_terminate_threads(TERMINATE_ALL);
+ 	}
++	real_terminate = 1;
+ }
+ 
+ static void *disk_thread_main(void *data)
+@@ -237,6 +239,11 @@ static void set_sig_handlers(void)
+ 	act.sa_flags = SA_RESTART;
+ 	sigaction(SIGTERM, &act, NULL);
+ 
++	memset(&act, 0, sizeof(act));
++	act.sa_handler = sig_int;
++	act.sa_flags = SA_RESTART;
++	sigaction(SIGKILL, &act, NULL);
++
+ 	if (is_backend) {
+ 		memset(&act, 0, sizeof(act));
+ 		act.sa_handler = sig_int;
+@@ -672,7 +679,8 @@ static void do_io(struct thread_data *td)
+ 
+ 	while ( (td->o.read_iolog_file && !flist_empty(&td->io_log_list)) ||
+ 		(!flist_empty(&td->trim_list)) ||
+-	        ((td->this_io_bytes[0] + td->this_io_bytes[1]) < td->o.size) ) {
++	        ((td->this_io_bytes[0] + td->this_io_bytes[1]) < td->o.verify_size) ) {
++
+ 		struct timeval comp_time;
+ 		unsigned long bytes_done[2] = { 0, 0 };
+ 		int min_evts = 0;
+@@ -693,9 +701,21 @@ static void do_io(struct thread_data *td)
+ 		}
+ 
+ 		io_u = get_io_u(td);
++
++
++
++/*
++		if(io_u->ddir == DDIR_READ)
++			printf("DDIR_READ: %llx\n", io_u->offset);
++		else if(io_u->ddir == DDIR_WRITE)
++			printf("DDIR_WRITE: %llx\n", io_u->offset);
++*/
++
+ 		if (!io_u)
+ 			break;
+ 
++
++
+ 		/*
+ 		 * Add verification end_io handler, if asked to verify
+ 		 * a previously written file.
+@@ -731,6 +751,7 @@ static void do_io(struct thread_data *td)
+ 					break;
+ 				}
+ 
++				log_io_u(td, io_u);
+ 				io_u->xfer_buflen = io_u->resid;
+ 				io_u->xfer_buf += bytes;
+ 				io_u->offset += bytes;
+@@ -748,6 +769,7 @@ sync_done:
+ 				    __should_check_rate(td, 1))
+ 					fio_gettime(&comp_time, NULL);
+ 
++				log_io_u(td, io_u);
+ 				ret = io_u_sync_complete(td, io_u, bytes_done);
+ 				if (ret < 0)
+ 					break;
+@@ -830,10 +855,16 @@ sync_done:
+ 					usec_sleep(td, left);
+ 			}
+ 		}
++
++
++	}
++
++	if((td->this_io_bytes[0] + td->this_io_bytes[1]) >= td->o.verify_size) {
++		dprint(FD_PROCESS, "size meet do_io: %d\n", td->o.verify_size);
+ 	}
+ 
+ 	if (td->trim_entries)
+-		log_err("fio: %d trim entries leaked?\n", td->trim_entries);
++		log_err("bit: %d trim entries leaked?\n", td->trim_entries);
+ 
+ 	if (td->o.fill_device && td->error == ENOSPC) {
+ 		td->error = 0;
+@@ -1017,13 +1048,40 @@ static int switch_ioscheduler(struct thread_data *td)
+ static int keep_running(struct thread_data *td)
+ {
+ 	unsigned long long io_done;
++	struct fio_file *f;
++	unsigned int i;
++//	printf("verify count: %d\n\n", td->verify_count);
++//	fflush(stdout);
+ 
+ 	if (td->done)
+ 		return 0;
+ 	if (td->o.time_based)
+ 		return 1;
++	if(td->verify_count) {
++		td->verify_count--;
++		if(td->verify_first) {
++			td->verify_first = 0;
++			if (td->o.loops)
++			{
++				td->o.loops--;
++				td->o.sessionid++;
++			}
++		} else
++			for_each_file(td, f, i) {
++				f->file_offset += f->io_size;
++			}
++		return 1;
++	} 
+ 	if (td->o.loops) {
+ 		td->o.loops--;
++		td->o.sessionid++;
++		if (!td->o.read_iolog_file)
++		{
++			for_each_file(td, f, i) {
++				f->file_offset = td->o.start_offset;
++			}
++			td->verify_count = (td->o.size / td->o.verify_size) - 1;
++		}
+ 		return 1;
+ 	}
+ 
+@@ -1189,9 +1247,11 @@ static void *thread_main(void *data)
+ 	 */
+ 	if (init_iolog(td))
+ 		goto err;
++	dprint(FD_PROCESS, "init_iolog done\n");
+ 
+ 	if (init_io_u(td))
+ 		goto err;
++	dprint(FD_PROCESS, "init_io_u done\n");
+ 
+ 	if (td->o.verify_async && verify_async_init(td))
+ 		goto err;
+@@ -1217,8 +1277,10 @@ static void *thread_main(void *data)
+ 	if (!td->o.create_serialize && setup_files(td))
+ 		goto err;
+ 
++	dprint(FD_PROCESS, "td_io_init going\n");
+ 	if (td_io_init(td))
+ 		goto err;
++	dprint(FD_PROCESS, "td_io_init done\n");
+ 
+ 	if (init_random_map(td))
+ 		goto err;
+@@ -1236,8 +1298,10 @@ static void *thread_main(void *data)
+ 	fio_gettime(&td->epoch, NULL);
+ 	getrusage(RUSAGE_SELF, &td->ru_start);
+ 
++	dprint(FD_PROCESS, "going to main loop\n");
+ 	clear_state = 0;
+ 	while (keep_running(td)) {
++		dprint(FD_MEM, "starting to memcpy\n");
+ 		fio_gettime(&td->start, NULL);
+ 		memcpy(&td->bw_sample_time, &td->start, sizeof(td->start));
+ 		memcpy(&td->iops_sample_time, &td->start, sizeof(td->start));
+@@ -1247,12 +1311,16 @@ static void *thread_main(void *data)
+ 			memcpy(&td->lastrate, &td->bw_sample_time,
+ 							sizeof(td->lastrate));
+ 
++		dprint(FD_PROCESS, "starting to clear_state\n");
+ 		if (clear_state)
+ 			clear_io_state(td);
+ 
++		dprint(FD_PROCESS, "starting to prune_io_piece_log\n");
+ 		prune_io_piece_log(td);
+ 
++		dprint(FD_PROCESS, "starting to do_io\n");
+ 		do_io(td);
++		dprint(FD_PROCESS, "done to do_io\n");
+ 
+ 		clear_state = 1;
+ 
+@@ -1284,6 +1352,7 @@ static void *thread_main(void *data)
+ 		if (td->error || td->terminate)
+ 			break;
+ 	}
++	//printf("\nthread %d state: %d\n", td->thread_number, td->runstate);
+ 
+ 	update_rusage_stat(td);
+ 	td->ts.runtime[0] = (td->ts.runtime[0] + 999) / 1000;
+@@ -1338,7 +1407,7 @@ static void *thread_main(void *data)
+ 
+ err:
+ 	if (td->error)
+-		log_info("fio: pid=%d, err=%d/%s\n", (int) td->pid, td->error,
++		log_err("bit: pid=%d, err=%d/%s\n", (int) td->pid, td->error,
+ 							td->verror);
+ 
+ 	if (td->o.verify_async)
+@@ -1483,7 +1552,7 @@ reaped:
+ 			pending--;
+ 
+ 		if (td->error)
+-			exit_value++;
++			exit_value = (exit_value == 136)? 138: (exit_value+1);
+ 
+ 		done_secs += mtime_since_now(&td->epoch) / 1000;
+ 	}
+@@ -1607,6 +1677,7 @@ static void run_threads(void)
+ 		}
+ 	}
+ 
++//printf("here 1: %x\n", (unsigned int)td->io_ops); 
+ 	set_genesis_time();
+ 
+ 	while (todo) {
+@@ -1810,6 +1881,7 @@ int exec_run(void)
+ 
+ 	if (!fio_abort) {
+ 		show_run_stats();
++		printf("\n");
+ 		if (write_bw_log) {
+ 			__finish_log(agg_io_log[DDIR_READ], "agg-read_bw.log");
+ 			__finish_log(agg_io_log[DDIR_WRITE],
+ }
+diff --git a/fio.h b/fio.h
+index be684ca..2ef43d3 100644
+--- a/fio.h
++++ b/fio.h
+@@ -298,6 +300,9 @@ struct thread_data {
+ 	unsigned int last_was_sync;
+ 	enum fio_ddir last_ddir;
+ 
++	unsigned int verify_count;
++	unsigned int verify_first;
++
+ 	char *mmapfile;
+ 	int mmapfd;
+ 
+@@ -375,6 +380,18 @@ struct thread_data {
+ 	unsigned long long zone_bytes;
+ 	struct fio_mutex *mutex;
+ 
++	unsigned long max_iops[2];
++	unsigned long min_iops[2];
++	unsigned long avg_iops[2];
++	unsigned long max_bdws[2];
++	unsigned long min_bdws[2];
++	unsigned long avg_bdws[2];
++	unsigned long samplecnt[2];
++	unsigned long long prev_io_bytes[2];
++	unsigned long long prev_io_blocks[2];
++	unsigned long long total_bdws[2];
++	unsigned long long total_iops[2];
++
+ 	/*
+ 	 * State for random io, a bitmap of blocks done vs not done
+ 	 */
+@@ -507,6 +525,11 @@ extern const fio_fp64_t def_percentile_list[FIO_IO_U_LIST_MAX_LEN];
+ 
+ extern struct thread_data *threads;
+ 
++extern int server_sock;
++extern int local_sock;
++extern struct sockaddr_in server_addr;
++extern struct sockaddr_in local_addr;
++
+ static inline void fio_ro_check(struct thread_data *td, struct io_u *io_u)
+ {
+ 	assert(!(io_u->ddir == DDIR_WRITE && !td_write(td)));
+diff --git a/init.c b/init.c
+index ee6c139..93f2ffb 100644
+--- a/init.c
++++ b/init.c
+@@ -12,6 +12,11 @@
+ #include <sys/shm.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
++#include <sys/socket.h>
++#include <sys/un.h>
++#include <netinet/in.h>
++#include <arpa/inet.h>
++#include <netdb.h>
+ 
+ #include "fio.h"
+ #include "parse.h"
+@@ -44,6 +49,11 @@ static int def_timeout;
+ static struct thread_data def_thread;
+ struct thread_data *threads = NULL;
+ 
++int server_sock = -1;
++int local_sock;
++struct sockaddr_in server_addr;
++struct sockaddr_in local_addr;
++
+ int exitall_on_terminate = 0;
+ int terse_output = 0;
+ int eta_print;
+@@ -97,6 +107,8 @@ const fio_fp64_t def_percentile_list[FIO_IO_U_LIST_MAX_LEN] = {
+  * Command line options. These will contain the above, plus a few
+  * extra that only pertain to fio itself and not jobs.
+  */
++int exit_po = 0;
++int parse_only = 0;
+ static struct option l_opts[FIO_NR_OPTIONS] = {
+ 	{
+ 		.name		= (char *) "output",
+@@ -203,6 +216,26 @@ static struct option l_opts[FIO_NR_OPTIONS] = {
+ 		.val		= 'C',
+ 	},
+ 	{
++		.name		= (char *) "parseonly",
++		.has_arg	= optional_argument,
++		.val		= 'P',
++	},
++	{
++		.name		= (char *) "serverip",
++		.has_arg	= optional_argument,
++		.val		= 'Z',
++	},
++	{
++		.name		= (char *) "serverport",
++		.has_arg	= optional_argument,
++		.val		= 'z',
++	},
++	{
++		.name		= (char *) "localport",
++		.has_arg	= optional_argument,
++		.val		= 'X',
++	},
++	{
+ 		.name		= NULL,
+ 	},
+ };
+@@ -1423,18 +1457,52 @@ int parse_cmd_line(int argc, char *argv[])
+ 			break;
+ 		case 'C':
+ 			if (is_backend) {
+-				log_err("fio: can't be both client and server\n");
++				log_err("bit: can't be both client and server\n");
+ 				do_exit++;
+ 				exit_val = 1;
+ 				break;
+ 			}
+ 			if (fio_client_add(optarg, &cur_client)) {
+-				log_err("fio: failed adding client %s\n", optarg);
++				log_err("bit: failed adding client %s\n", optarg);
+ 				do_exit++;
+ 				exit_val = 1;
+ 				break;
+ 			}
+ 			break;
++		case 'P':
++			parse_only = 1;
++			break;
++		case 'Z':
++			if (inet_aton(optarg, &server_addr.sin_addr) != 1) {
++				struct hostent *hent;
++
++				hent = gethostbyname(optarg);
++				if (!hent) {
++					return 1;
++				}
++
++				memcpy(&server_addr.sin_addr, hent->h_addr, 4);
++			}
++			server_sock = socket(AF_INET, SOCK_DGRAM, 0);
++			if (server_sock < 0) {
++				log_err("bit failed to create message socket: %s\n", strerror(errno));
++				do_exit++;
++				exit_val = 1;
++			}
++			break;
++		case 'z':
++			server_addr.sin_family = AF_INET;
++			server_addr.sin_port = htons(atoi(optarg));
++			break;
++		case 'X':
++			local_addr.sin_family = AF_INET;
++			local_addr.sin_port = htons(atoi(optarg));
++   			if(bind(server_sock, (struct sockaddr*) &local_addr, sizeof(struct sockaddr_in)) < 0) {
++				log_err("bit failed to bind message socket: %s\n", strerror(errno));
++				do_exit++;
++				exit_val = 1;
++			}
++			break;
+ 		default:
+ 			do_exit++;
+ 			exit_val = 1;
+@@ -1493,19 +1561,29 @@ int parse_options(int argc, char *argv[])
+ 				free(ini_file[i]);
+ 			}
+ 		}
+ 	}
+ 
++	if (parse_only) {
++		exit(0);
++	}
++
+ 	free(ini_file);
+ 	fio_options_free(&def_thread);
+ 
+diff --git a/io_u.c b/io_u.c
+index d1f66a9..c8798c7 100644
+--- a/io_u.c
++++ b/io_u.c
+@@ -695,7 +695,7 @@ static int fill_io_u(struct thread_data *td, struct io_u *io_u)
+ out:
+ 	dprint_io_u(io_u, "fill_io_u");
+ 	td->zone_bytes += io_u->buflen;
+-	log_io_u(td, io_u);
++//	log_io_u(td, io_u);
+ 	return 0;
+ }
+ 
+@@ -1253,15 +1253,17 @@ void io_u_log_error(struct thread_data *td, struct io_u *io_u)
+ 
+ 
+ 
+-	log_err("fio: io_u error");
++	//log_err("bit: io_u error");
+ 
+ 	if (io_u->file)
+-		log_err(" on file %s", io_u->file->file_name);
+-
+-	log_err(": %s\n", strerror(io_u->error));
++		log_err("bit: io_u error on file %s: %s\n     %s offset=%llu, buflen=%lu\n", io_u->file->file_name, strerror(io_u->error)
++				, msg[io_u->ddir], io_u->offset, io_u->xfer_buflen);
++	else
++		log_err("bit: io_u error: %s\n     %s offset=%llu, buflen=%lu\n", strerror(io_u->error)
++				, msg[io_u->ddir], io_u->offset, io_u->xfer_buflen);
+ 
+-	log_err("     %s offset=%llu, buflen=%lu\n", msg[io_u->ddir],
+-					io_u->offset, io_u->xfer_buflen);
++	//log_err("     %s offset=%llu, buflen=%lu\n", msg[io_u->ddir],
++	//				io_u->offset, io_u->xfer_buflen);
+ 
+ 	if (!td->error)
+ 		td_verror(td, io_u->error, "io_u error");
+diff --git a/iolog.c b/iolog.c
+index f962864..fffbd87 100644
+--- a/iolog.c
++++ b/iolog.c
+@@ -29,9 +29,11 @@ void log_io_u(struct thread_data *td, struct io_u *io_u)
+ 	if (!td->o.write_iolog_file)
+ 		return;
+ 
++	long unsigned int bytes = io_u->xfer_buflen - io_u->resid;
+ 	fprintf(td->iolog_f, "%s %s %llu %lu\n", io_u->file->file_name,
+ 						act[io_u->ddir], io_u->offset,
+-						io_u->buflen);
++						//io_u->buflen);
++						bytes);
+ }
+ 
+ void log_file(struct thread_data *td, struct fio_file *f,
+diff --git a/log.c b/log.c
+index af974f8..14b7583 100644
+--- a/log.c
++++ b/log.c
+@@ -3,6 +3,11 @@
+ #include <string.h>
+ #include <stdarg.h>
+ #include <syslog.h>
++#include <sys/socket.h>
++#include <sys/un.h>
++#include <netinet/in.h>
++#include <arpa/inet.h>
++#include <netdb.h>
+ 
+ #include "fio.h"
+ 
+@@ -68,6 +73,40 @@ int log_info(const char *format, ...)
+ 		return fwrite(buffer, len, 1, f_out);
+ }
+ 
++int log_rept(int flag, const char *format, ...)
++{
++	static char buffer[8192];
++	va_list args;
++	static size_t len = 0;
++	size_t ret = 0;
++	char *buf;
++
++	buf = buffer + len;
++	va_start(args, format);
++	ret = vsnprintf(buf, 8192 - len, format, args);
++	va_end(args);
++
++	if(flag == 0) {
++		len += ret;
++		if(len >= 7777) {
++			reportmsg(buffer, len);
++			len = 0;
++		}
++	} else if(flag == 1) {
++		len += ret;
++		reportmsg(buffer, len);
++		len = 0;
++	}
++
++	if (is_backend)
++		return fio_server_text_output(buf, ret);
++	else if (log_syslog) {
++		syslog(LOG_INFO, "%s", buf);
++		return ret;
++	} else
++		return fwrite(buf, ret, 1, f_out);
++}
++
+ int log_err(const char *format, ...)
+ {
+ 	char buffer[1024];
+@@ -78,6 +117,8 @@ int log_err(const char *format, ...)
+ 	len = vsnprintf(buffer, sizeof(buffer), format, args);
+ 	va_end(args);
+ 
++	reportmsg(buffer, len);
++
+ 	if (is_backend)
+ 		return fio_server_text_output(buffer, len);
+ 	else if (log_syslog) {
+@@ -93,3 +134,34 @@ int log_err(const char *format, ...)
+ 		return fwrite(buffer, len, 1, f_err);
+ 	}
+ }
++
++void reportmsg(char *buf, int len)
++{
++	if(server_sock > 0)
++		sendto(server_sock, buf, len, 0, (struct sockaddr*) &server_addr, sizeof(struct sockaddr_in));
++}
++
++void log_smart()
++{
++	struct thread_data *td;
++	int i, ret;
++	char buffer[128];
++	
++	for_each_td(td, i) {
++		sprintf(buffer, "date +%%Y-%%m-%%d\\ %%H:%%M:%%S >> bit.smart");
++		ret = system(buffer);
++		sprintf(buffer, "smartctl -A %s >> bit.smart", td->o.filename);
++		ret = system(buffer);
++	}
++/*
++	char *buffer = NULL;
++	int len = 0;
++	FILE *f_smart;
++	f_smart = fopen("bit.smart", "w+");
++	if (!f_smart) {
++		perror("log_smart: fopen output");
++	}
++	fwrite(buffer, len, 1, f_smart);
++	fclose(f_smart);
++*/
++}
+diff --git a/log.h b/log.h
+index fdf3d7b..ec5f332 100644
+--- a/log.h
++++ b/log.h
+@@ -9,8 +9,11 @@ extern FILE *f_err;
+ 
+ extern int log_err(const char *format, ...);
+ extern int log_info(const char *format, ...);
++extern int log_rept(int flag, const char *format, ...);
+ extern int log_local(const char *format, ...);
+ extern int log_valist(const char *str, va_list);
+ extern int log_local_buf(const char *buf, size_t);
++extern void reportmsg(char *buf, int len);
++extern void log_smart();
+ 
+ #endif
+diff --git a/stat.c b/stat.c
+index d54ed2c..de335e2 100644
+--- a/stat.c
++++ b/stat.c
+@@ -196,10 +196,10 @@ static void show_clat_percentiles(unsigned int *io_u_plat, unsigned long nr,
+ 	 */
+ 	if (minv > 2000 && maxv > 99999) {
+ 		scale_down = 1;
+-		log_info("    clat percentiles (msec):\n     |");
++		log_rept(0, "    clat percentiles (msec):\n     |");
+ 	} else {
+ 		scale_down = 0;
+-		log_info("    clat percentiles (usec):\n     |");
++		log_rept(0, "    clat percentiles (usec):\n     |");
+ 	}
+ 
+ 	for (j = 0; j < len; j++) {
+@@ -207,7 +207,7 @@ static void show_clat_percentiles(unsigned int *io_u_plat, unsigned long nr,
+ 
+ 		/* for formatting */
+ 		if (j != 0 && (j % 4) == 0)
+-			log_info("     |");
++			log_rept(0, "     |");
+ 
+ 		/* end of the list */
+ 		is_last = (j == len - 1);
+@@ -220,13 +220,13 @@ static void show_clat_percentiles(unsigned int *io_u_plat, unsigned long nr,
+ 		if (scale_down)
+ 			ovals[j] = (ovals[j] + 999) / 1000;
+ 
+-		log_info(" %sth=[%5u]%c", fbuf, ovals[j], is_last ? '\n' : ',');
++		log_rept(0, " %sth=[%5u]%c", fbuf, ovals[j], is_last ? '\n' : ',');
+ 
+ 		if (is_last)
+ 			break;
+ 
+ 		if (j % 4 == 3)	/* for formatting */
+-			log_info("\n");
++			log_rept(0, "\n");
+ 	}
+ 
+ out:
+@@ -261,8 +261,9 @@ void show_group_stats(struct group_run_stats *rs)
+ 	char *p1, *p2, *p3, *p4;
+ 	const char *ddir_str[] = { "   READ", "  WRITE" };
+ 	int i;
++return;
+ 
+-	log_info("\nRun status group %d (all jobs):\n", rs->groupid);
++	log_rept(0, "\nRun status group %d (all jobs):\n", rs->groupid);
+ 
+ 	for (i = 0; i <= DDIR_WRITE; i++) {
+ 		const int i2p = is_power_of_2(rs->kb_base);
+@@ -275,7 +276,7 @@ void show_group_stats(struct group_run_stats *rs)
+ 		p3 = num2str(rs->min_bw[i], 6, rs->kb_base, i2p);
+ 		p4 = num2str(rs->max_bw[i], 6, rs->kb_base, i2p);
+ 
+-		log_info("%s: io=%sB, aggrb=%sB/s, minb=%sB/s, maxb=%sB/s,"
++		log_rept(0, "%s: io=%sB, aggrb=%sB/s, minb=%sB/s, maxb=%sB/s,"
+ 			 " mint=%llumsec, maxt=%llumsec\n", ddir_str[i], p1, p2,
+ 						p3, p4, rs->min_run[i],
+ 						rs->max_run[i]);
+@@ -285,6 +286,7 @@ void show_group_stats(struct group_run_stats *rs)
+ 		free(p3);
+ 		free(p4);
+ 	}
++	log_rept(1, "");
+ }
+ 
+ #define ts_total_io_u(ts)	\
+@@ -378,7 +380,7 @@ static void show_ddir_status(struct group_run_stats *rs, struct thread_stat *ts,
+ 	iops = (1000 * (uint64_t)ts->total_io_u[ddir]) / runt;
+ 	iops_p = num2str(iops, 6, 1, 0);
+ 
+-	log_info("  %s: io=%sB, bw=%sB/s, iops=%s, runt=%6llumsec\n",
++	log_rept(0, "  %s: io=%sB, bw=%sB/s, iops=%s, runt=%6llumsec\n",
+ 					ddir_str[ddir], io_p, bw_p, iops_p,
+ 					ts->runtime[ddir]);
+ 
+@@ -396,7 +398,7 @@ static void show_ddir_status(struct group_run_stats *rs, struct thread_stat *ts,
+ 		minp = num2str(min, 6, 1, 0);
+ 		maxp = num2str(max, 6, 1, 0);
+ 
+-		log_info("    slat %s: min=%s, max=%s, avg=%5.02f,"
++		log_rept(0, "    slat %s: min=%s, max=%s, avg=%5.02f,"
+ 			 " stdev=%5.02f\n", base, minp, maxp, mean, dev);
+ 
+ 		free(minp);
+@@ -412,7 +414,7 @@ static void show_ddir_status(struct group_run_stats *rs, struct thread_stat *ts,
+ 		minp = num2str(min, 6, 1, 0);
+ 		maxp = num2str(max, 6, 1, 0);
+ 
+-		log_info("    clat %s: min=%s, max=%s, avg=%5.02f,"
++		log_rept(0, "    clat %s: min=%s, max=%s, avg=%5.02f,"
+ 			 " stdev=%5.02f\n", base, minp, maxp, mean, dev);
+ 
+ 		free(minp);
+@@ -428,7 +430,7 @@ static void show_ddir_status(struct group_run_stats *rs, struct thread_stat *ts,
+ 		minp = num2str(min, 6, 1, 0);
+ 		maxp = num2str(max, 6, 1, 0);
+ 
+-		log_info("     lat %s: min=%s, max=%s, avg=%5.02f,"
++		log_rept(0, "     lat %s: min=%s, max=%s, avg=%5.02f,"
+ 			 " stdev=%5.02f\n", base, minp, maxp, mean, dev);
+ 
+ 		free(minp);
+@@ -455,7 +457,7 @@ static void show_ddir_status(struct group_run_stats *rs, struct thread_stat *ts,
+ 			bw_str = "MB";
+ 		}
+ 
+-		log_info("    bw (%s/s)  : min=%5lu, max=%5lu, per=%3.2f%%,"
++		log_rept(0, "    bw (%s/s)  : min=%5lu, max=%5lu, per=%3.2f%%,"
+ 			 " avg=%5.02f, stdev=%5.02f\n", bw_str, min, max,
+ 							p_of_agg, mean, dev);
+ 	}
+@@ -472,21 +474,21 @@ static int show_lat(double *io_u_lat, int nr, const char **ranges,
+ 		shown = 1;
+ 		if (new_line) {
+ 			if (line)
+-				log_info("\n");
+-			log_info("    lat (%s) : ", msg);
++				log_rept(0, "\n");
++			log_rept(0, "    lat (%s) : ", msg);
+ 			new_line = 0;
+ 			line = 0;
+ 		}
+ 		if (line)
+-			log_info(", ");
+-		log_info("%s%3.2f%%", ranges[i], io_u_lat[i]);
++			log_rept(0, ", ");
++		log_rept(0, "%s%3.2f%%", ranges[i], io_u_lat[i]);
+ 		line++;
+ 		if (line == 5)
+ 			new_line = 1;
+ 	}
+ 
+ 	if (shown)
+-		log_info("\n");
++		log_rept(0, "\n");
+ 
+ 	return shown;
+ }
+@@ -512,8 +514,148 @@ static void show_latencies(double *io_u_lat_u, double *io_u_lat_m)
+ {
+ 	show_lat_u(io_u_lat_u);
+ 	show_lat_m(io_u_lat_m);
++	log_rept(1, "");
+ }
+ 
++void show_thread_result(struct thread_data *td)
++{
++	char output[1024];
++	char* p=output;
++	
++//	show_ddir_status(rs, ts, p);
++	struct thread_stat *ts = &td->ts;
++	int i2p;
++
++	p += sprintf(p, "section=bit_result\r\n");
++	p += sprintf(p, "name=%s\r\n", td->o.name);
++	if(td->samplecnt[0])
++	{
++		td->avg_bdws[0] = td->total_bdws[0] / td->samplecnt[0];
++		td->avg_iops[0] = td->total_iops[0] / td->samplecnt[0];
++	}
++	if(td->samplecnt[1])
++	{
++		td->avg_bdws[1] = td->total_bdws[1] / td->samplecnt[1];
++		td->avg_iops[1] = td->total_iops[1] / td->samplecnt[1];
++	}
++
++	i2p = is_power_of_2(td->o.kb_base);
++	if (!ts->runtime[DDIR_READ])
++	{
++		p += sprintf(p, "maxreadspeed=%s\r\n", "0");
++		p += sprintf(p, "minreadspeed=%s\r\n", "0");
++		p += sprintf(p, "avereadspeed=%s\r\n", "0");
++		p += sprintf(p, "maxreadiops=%s\r\n", "0");
++		p += sprintf(p, "minreadiops=%s\r\n", "0");
++		p += sprintf(p, "avereadiops=%s\r\n", "0");
++		return;
++	}
++	else
++	{
++		char *p1, *p2, *p3;
++		p1 = num2str(td->max_bdws[0], 5, 10, i2p);
++		p2 = num2str(td->min_bdws[0], 5, 10, i2p);
++		p3 = num2str(td->avg_bdws[0], 5, 10, i2p);
++		p += sprintf(p, "maxreadspeed=%s\r\n", p1);
++		p += sprintf(p, "minreadspeed=%s\r\n", p2);
++		p += sprintf(p, "avereadspeed=%s\r\n", p3);
++		free(p1);
++		free(p2);
++		free(p3);
++
++		p1 = num2str(td->max_iops[0], 4, 1, 0);
++		p2 = num2str(td->min_iops[0], 4, 1, 0);
++		p3 = num2str(td->avg_iops[0], 4, 1, 0);
++		p += sprintf(p, "maxreadiops=%s\r\n", p1);
++		p += sprintf(p, "minreadiops=%s\r\n", p2);
++		p += sprintf(p, "avereadiops=%s\r\n", p3);
++		free(p1);
++		free(p2);
++		free(p3);
++/*
++		runt = ts->runtime[DDIR_READ];
++
++		bw = (1000 * ts->io_bytes[DDIR_READ]) / runt;
++		io_p = num2str(ts->io_bytes[DDIR_READ], 6, 1, i2p);
++		bw_p = num2str(bw, 6, 1, i2p);
++
++		iops = (1000 * (uint64_t)ts->total_io_u[DDIR_READ]) / runt;
++		iops_p = num2str(iops, 6, 1, 0);
++
++		p += sprintf(p, "avereadspeed=%s\r\n", bw_p);
++		p += sprintf(p, "avereadiops=%s\r\n", iops_p);
++
++		p += sprintf(p, "maxreadiops=%s\r\n", "0");
++		p += sprintf(p, "minreadiops=%s\r\n", "0");
++
++		free(io_p);
++		free(bw_p);
++		free(iops_p);
++
++		if (calc_lat(&ts->bw_stat[DDIR_READ], &min, &max, &mean, &dev)) {
++			double p_of_agg;
++			const char *bw_str = "KB";
++
++			p_of_agg = mean * 100 / (double) rs->agg[DDIR_READ];
++			if (p_of_agg > 100.0)
++				p_of_agg = 100.0;
++
++			if (mean > 999999.9) {
++				min /= 1000.0;
++				max /= 1000.0;
++				mean /= 1000.0;
++				dev /= 1000.0;
++				bw_str = "MB";
++			}
++
++			p += sprintf(p, "maxreadspeed=%5lu%s\r\n", min, bw_str);
++			p += sprintf(p, "minreadspeed=%5lu%s\r\n", max, bw_str);
++		}
++*/
++	}
++	if (!ts->runtime[DDIR_WRITE])
++	{
++		p += sprintf(p, "maxwritespeed=%s\r\n", "0");
++		p += sprintf(p, "minwritespeed=%s\r\n", "0");
++		p += sprintf(p, "avewritespeed=%s\r\n", "0");
++		p += sprintf(p, "maxwriteiops=%s\r\n", "0");
++		p += sprintf(p, "minwriteiops=%s\r\n", "0");
++		p += sprintf(p, "avewriteiops=%s\r\n", "0");
++		return;
++	}
++	else
++	{
++		char *p1, *p2, *p3;
++		p1 = num2str(td->max_bdws[1], 5, 10, i2p);
++		p2 = num2str(td->min_bdws[1], 5, 10, i2p);
++		p3 = num2str(td->avg_bdws[1], 5, 10, i2p);
++		p += sprintf(p, "maxwritespeed=%s\r\n", p1);
++		p += sprintf(p, "minwritespeed=%s\r\n", p2);
++		p += sprintf(p, "avewritespeed=%s\r\n", p3);
++		free(p1);
++		free(p2);
++		free(p3);
++
++		p1 = num2str(td->max_iops[1], 4, 1, 0);
++		p2 = num2str(td->min_iops[1], 4, 1, 0);
++		p3 = num2str(td->avg_iops[1], 4, 1, 0);
++		p += sprintf(p, "maxwriteiops=%s\r\n", p1);
++		p += sprintf(p, "minwriteiops=%s\r\n", p2);
++		p += sprintf(p, "avewriteiops=%s\r\n", p3);
++		free(p1);
++		free(p2);
++		free(p3);
++	}
++	p += sprintf(p, "errcnt=%d\r\n", td->total_err_count);
++
++	int len = (p - output);
++	reportmsg(output, len);
++
++	printf("%s", output);
++	fflush(stdout);
++	
++	return;
++}
+ void show_thread_status(struct thread_stat *ts, struct group_run_stats *rs)
+ {
+ 	double usr_cpu, sys_cpu;
+@@ -521,23 +663,24 @@ void show_thread_status(struct thread_stat *ts, struct group_run_stats *rs)
+ 	double io_u_dist[FIO_IO_U_MAP_NR];
+ 	double io_u_lat_u[FIO_IO_U_LAT_U_NR];
+ 	double io_u_lat_m[FIO_IO_U_LAT_M_NR];
++return;
+ 
+ 	if (!(ts->io_bytes[0] + ts->io_bytes[1]) &&
+ 	    !(ts->total_io_u[0] + ts->total_io_u[1]))
+ 		return;
+ 
+@@ -559,40 +702,42 @@ void show_thread_status(struct thread_stat *ts, struct group_run_stats *rs)
+ 		sys_cpu = 0;
+ 	}
+ 
+-		log_info("     errors    : total=%lu, first_error=%d/<%s>\n",
++		log_rept(0, "     errors    : total=%lu, first_error=%d/<%s>\n",
+ 					ts->total_err_count,
+ 					ts->first_error,
+ 					strerror(ts->first_error));
+ 	}
++
++	log_rept(1, "");
+ }
+ 
+ static void show_ddir_status_terse(struct thread_stat *ts,
+@@ -696,26 +841,27 @@ static void show_thread_status_terse_v2(struct thread_stat *ts,
+ 
+-		log_info(";%3.2f%%", io_u_lat_m[i]);
++		log_rept(0, ";%3.2f%%", io_u_lat_m[i]);
+ 	/* Additional output if continue_on_error set - default off*/
+ 	if (ts->continue_on_error)
+-		log_info(";%lu;%d", ts->total_err_count, ts->first_error);
+-	log_info("\n");
++		log_rept(0, ";%lu;%d", ts->total_err_count, ts->first_error);
++	log_rept(0, "\n");
+ 
+ 	/* Additional output if description is set */
+ 	if (ts->description)
+-		log_info(";%s", ts->description);
++		log_rept(0, ";%s", ts->description);
+ 
+-	log_info("\n");
++	log_rept(0, "\n");
++	log_rept(1, "");
+ }
+ 
+ #define FIO_TERSE_VERSION	"3"
+@@ -757,28 +903,29 @@ static void show_thread_status_terse_v3(struct thread_stat *ts,
+ 	/* Additional output if description is set */
+ 	if (strlen(ts->description))
+-		log_info(";%s", ts->description);
++		log_rept(0, ";%s", ts->description);
++	log_rept(1, "");
+ }
+ 
+ static void show_thread_status_terse(struct thread_stat *ts,
+@@ -1069,6 +1216,11 @@ void show_run_stats(void)
+ 	if (!terse_output)
+ 		log_info("\n");
+ 
++	for_each_td(td, i) {
++		show_thread_result(td);
++	}
++
++/*
+ 	for (i = 0; i < nr_ts; i++) {
+ 		ts = &threadstats[i];
+ 		rs = &runstats[ts->groupid];
+@@ -1095,6 +1247,7 @@ void show_run_stats(void)
+ 		fio_server_send_du();
+ 	else if (!terse_output)
+ 		show_disk_util(0);
++*/
+ 
+ 	free_disk_util();
+ 
+diff --git a/stat.h b/stat.h
+index 3115539..e7c83a5 100644
+--- a/stat.h
++++ b/stat.h
+@@ -180,6 +180,7 @@ struct jobs_eta {
+ 	uint32_t iops[2];
+ 	uint64_t elapsed_sec;
+ 	uint64_t eta_sec;
++	uint32_t total_error_count;
+ 
+ 	/*
+ 	 * Network 'copy' of run_str[]
+@@ -188,6 +189,7 @@ struct jobs_eta {
+ 	uint8_t run_str[0];
+ };
+ 
++extern void show_thread_result(struct thread_data *td);
+ extern void show_thread_status(struct thread_stat *ts, struct group_run_stats *rs);
+ extern void show_group_stats(struct group_run_stats *rs);
+ extern int calc_thread_status(struct jobs_eta *je, int force);
+diff --git a/verify.c b/verify.c
+index c450e88..6b20768 100644
+--- a/verify.c
++++ b/verify.c
+@@ -310,6 +310,7 @@ static void log_verify_failure(struct verify_header *hdr, struct vcont *vc)
+ 	}
+ 
+ 	dump_verify_buffers(hdr, vc);
++	log_smart();
+ }
+ 
+ /*
+@@ -690,6 +691,20 @@ int verify_io_u(struct thread_data *td, struct io_u *io_u)
+ 				io_u->offset + hdr_num * hdr->len, hdr->len);
+ 			return EILSEQ;
+ 		}
++		if (hdr->sessionid != td->o.sessionid) {
++			log_err("verify: bad session header %x, wanted %x at file %s offset %llu, length %u\n",
++				hdr->sessionid, td->o.sessionid,
++				io_u->file->file_name,
++				io_u->offset + hdr_num * hdr->len, hdr->len);
++			return EILSEQ;
++		}
++		if (hdr->offset != io_u->offset) {
++			log_err("verify: bad offset header %x, wanted %x at file %s offset %llu, length %u\n",
++				hdr->offset, io_u->offset,
++				io_u->file->file_name,
++				io_u->offset + hdr_num * hdr->len, hdr->len);
++			return EILSEQ;
++		}
+ 
+ 		switch (hdr->verify_type) {
+ 		case VERIFY_MD5:
+@@ -846,9 +861,11 @@ static void populate_hdr(struct thread_data *td, struct io_u *io_u,
+ 	p = (void *) hdr;
+ 
+ 	hdr->fio_magic = FIO_HDR_MAGIC;
++	hdr->sessionid = td->o.sessionid;
+ 	hdr->len = header_len;
+ 	hdr->verify_type = td->o.verify;
+ 	hdr->rand_seed = io_u->rand_seed;
++	hdr->offset = io_u->offset;
+ 	data_len = header_len - hdr_size(hdr);
+ 
+ 	data = p + hdr_size(hdr);
+diff --git a/verify.h b/verify.h
+index 49ce417..645c127 100644
+--- a/verify.h
++++ b/verify.h
+@@ -29,9 +29,11 @@ enum {
+  */
+ struct verify_header {
+ 	unsigned int fio_magic;
++	unsigned int sessionid;
+ 	unsigned int len;
+ 	unsigned int verify_type;
+ 	unsigned long rand_seed;
++	unsigned long long offset;
+ };
+ 
+ struct vhdr_md5 {
