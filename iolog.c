@@ -209,7 +209,7 @@ void log_io_piece(struct thread_data *td, struct io_u *io_u)
         ipo->nr_blk = (io_u->buflen + min_bs - 1) / min_bs;
         // insert to seg_2bitsmap.
         insert_seg(f->file_map2, ipo->block, ipo->nr_blk, overlap_divide, f);
-        dprintf("%p<<<ADD:%p,%llu-%llu\n", f->file_map2, ipo, ipo->block, ipo->block+ipo->nr_blk-1);
+        dprint(FD_BITMAP, "%p<<<ADD:%p,%llu-%llu\n", f->file_map2, ipo, ipo->block, ipo->block+ipo->nr_blk-1);
         // add to hashtable.
         iohist_hash_add(td, ipo);
         // add to io_hist_list.
